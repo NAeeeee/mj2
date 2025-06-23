@@ -89,7 +89,7 @@
                             <td scope="col">
                             @if($post->sta == 'A')
                             <!-- 삭제 버튼 (form으로 감싸기) -->
-                            <button type="button" lass="btn btn-sm btn-danger" 
+                            <button type="button" class="btn btn-sm btn-danger" 
                                 onclick="confirmDelete('{{ route('request.delete', $post->no) }}')">
                                 삭제
                             </button>

@@ -167,7 +167,7 @@ class RequestController extends Controller
             log::info($request);
         }
 
-        return t('/request?id=' . $post->auth()->id())->with('success', '글이 작성되었습니다!');
+        return redirect('/request?id=' . $post->auth()->id())->with('success', '글이 작성되었습니다!');
     }
 
 
@@ -182,7 +182,7 @@ class RequestController extends Controller
         $board->save();
 
         // 리다이렉트 및 플래시 메시지
-        return redirect('/')->with('success', '글이 삭제 처리되었습니다.');
+        return redirect()->back()->with('success', '글이 삭제 처리되었습니다.');
     }
 
 }
