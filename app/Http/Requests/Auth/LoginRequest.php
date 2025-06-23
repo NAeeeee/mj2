@@ -40,6 +40,14 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
+        // 유효 회원 분류
+        $user = \App\Models\User::where('email', $this->input('email'))->first();
+
+        if ($user && $user->status === 'N') {
+            throw ValidationException::withMessages([
+                'email' => [('탈퇴한 회원입니다.')],
+            ]);
+        }
 
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
