@@ -2,9 +2,7 @@
 
 <body>
 
-    <!-- <div class="container"> -->
-        @yield('content')
-    <!-- </div> -->
+    @yield('content')
 
     <!-- 공용 팝업 -->
     <div class="modal fade" id="alertModal" tabindex="-1" aria-hidden="true">
@@ -23,5 +21,10 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

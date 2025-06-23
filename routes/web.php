@@ -34,6 +34,7 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/pwChange', [ProfileController::class, 'popup'])->name('profile.popup');
+    Route::get('/phChange', [ProfileController::class, 'popup'])->name('profile.pwPopup');
     Route::post('/profile/{id}', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/profile/delete/{id}', [ProfileController::class, 'destroy'])->name('profile.destroy');
 

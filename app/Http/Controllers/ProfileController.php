@@ -72,49 +72,70 @@ class ProfileController extends Controller
 
         $user = User::where('id',$request->val)->first();
 
-        return view('profile.pw', compact('user'));
+        $div = $request->input('div');
+        $view = ($div === 'ph') ? 'profile.ph' : 'profile.pw';
+
+        return view($view, compact('user'));
     }
 
 
     public function update(Request $request, $id)
     {
         Log::info(__METHOD__);
-        log::info($request);
-        log::info('id = '.$id);
 
         $request->validate([
-            'pw' => 'required|min:7|confirmed',
+            'pw' => 'required|min:7',
         ]);
-        log::info("유효성 통과");
 
         // 유저 찾기
         $user = User::find($id);
 
+        $div = $request->div ?? '';
         $pw = $request->pw ?? '';
         $pw2 = $request->pw_confirmation ?? '';
+        $ph = $request->ph ?? '';
 
-        $pw_msg = '';
-        if( $pw != $pw2 )
+        $result_msg = '';
+        if( $div == '' )    // 비밀번호 변경
         {
-            // 비밀번호 다름 오류 처리
-            $pw_msg = '동일한 비밀번호를 입력해주세요.';
-        }
-        else if(Hash::check($request->pw, $user->password))
-        {
-            $pw_msg = '새 비밀번호가 기존 비밀번호와 같습니다.';
+            if( $pw != $pw2 )
+            {
+                // 비밀번호 다름 오류 처리
+                $result_msg = '동일한 비밀번호를 입력해주세요.';
+            }
+            else if( Hash::check($request->pw, $user->password) )
+            {
+                $result_msg = '새 비밀번호가 기존 비밀번호와 같습니다.';
+            }
+            else
+            {
+                // 비밀번호 변경
+                $user->password = Hash::make($pw);
+                $user->save();
+
+                $result_msg = '비밀번호가 성공적으로 변경되었습니다.';
+            }
         }
         else
         {
-            // 비밀번호 변경
-            $user->password = Hash::make($pw);
-            $user->save();
+            // 휴대폰 번호 변경
+            if( !Hash::check($request->pw, $user->password) )
+            {
+                $result_msg = '비밀번호가 일치하지 않습니다.';
+            }
+            else
+            {
+                $user->update([
+                    'ph' => $request->ph,
+                ]);
 
-            $pw_msg = '비밀번호가 성공적으로 변경되었습니다.';
-        }
-        log::info('msg = '.$pw_msg);
+                $result_msg = '휴대폰 번호가 성공적으로 변경되었습니다.';
+            }
+        } 
+        log::info('msg = '.$result_msg);
 
-        return redirect()->back()->with('pw_msg', $pw_msg);
-        // return response()->json(['message' => $pw_msg]);
+        return redirect()->back()->with('pw_msg', $result_msg);
+        // return response()->json(['message' => $result_msg]);
     }
 
     /**

@@ -38,7 +38,7 @@
             <span class="input-group-text" id="basic-addon1">
                 <img src="/img/ph.png" width="18">
             </span>
-            <input type="text" class="form-control" value="{{ $user->ph }}" disabled>
+            <input type="text" class="form-control" value="{{ $user->ph }}">
         </div>
 
         <div class="input-group mb-4">
@@ -52,13 +52,11 @@
             <button type="button" class="btn btn-primary" onclick="popup({{ $user->id }})">
                 비밀번호 변경
             </button>
-            <!-- <form action="{{ route('profile.destroy', $user->id) }}" method="GET" style="display: inline;" onsubmit="return confirm('정말 삭제하시겠습니까?');"> 
-                <button type="submit" class="btn btn-danger">
-                    회원탈퇴
-                </button>
-            </form> -->
+            <button type="button" class="btn btn-primary" onclick="phPopup({{ $user->id }})">
+                핸드폰 번호 변경
+            </button>
             @if($user->is_admin == 'N')
-            <button class="btn btn-danger" onclick="confirmDelete('{{ route('profile.destroy', $user->id) }}', 'GET')" >
+            <button class="btn btn-danger fr" onclick="confirmDelete('{{ route('profile.destroy', $user->id) }}', 'GET')" >
                 회원탈퇴
             </button>
             @endif
@@ -123,6 +121,17 @@ function popup(val)
         return false;
     }
     window.open('/pwChange?val='+val, 'msgPopup', 'width=600,height=450'); 
+    return false;
+}
+
+function phPopup(val)
+{
+    if( val == '' )
+    {
+        location.reload();
+        return false;
+    }
+    window.open('/phChange?val='+val+'&div=ph', 'msgPopup2', 'width=600,height=450'); 
     return false;
 }
 
