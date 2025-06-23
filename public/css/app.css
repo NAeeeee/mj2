@@ -1,0 +1,203 @@
+
+button {
+    &.dark {
+        --background: #2F3545;
+        --shadow: 0 2px 8px -1px #{rgba(#151924, .32)};
+        --shadow-hover: 0 4px 20px -2px #{rgba(#151924, .5)};
+    }
+    &.white {
+        --background: #fff;
+        --text: #275efe;
+        --shadow: 0 2px 8px -1px #{rgba(#121621, .04)};
+        --shadow-hover: 0 4px 20px -2px #{rgba(#121621, .12)};
+    }
+    &.fast {
+        --duration: .32s;
+    }
+}
+
+button {
+    --background: #275efe;
+    --text: #fff;
+    --font-size: 16px;
+    --duration: .44s;
+    --move-hover: -4px;
+    --shadow: 0 2px 8px -1px #{rgba(#275efe, .32)};
+    --shadow-hover: 0 4px 20px -2px #{rgba(#275efe, .5)};
+    --font-shadow: var(--font-size);
+    padding: 16px 32px;
+    font-family: 'Roboto';
+    font-weight: 500;
+    line-height: var(--font-size);
+    border-radius: 24px;
+    display: block;
+    outline: none;
+    appearance: none;
+    border: none;
+    text-decoration: none;
+    font-size: var(--font-size);
+    letter-spacing: .5px;
+    background: var(--background);
+    color: var(--text);
+    box-shadow: var(--shadow);
+    transform: translateY(var(--y)) translateZ(0);
+    transition: transform var(--duration) ease, box-shadow var(--duration) ease;
+    div {
+        display: flex;
+        overflow: hidden;
+        text-shadow: 0 var(--font-shadow) 0 var(--text);
+        span {
+            display: block;
+            backface-visibility: hidden;
+            font-style: normal;
+            transition: transform var(--duration) ease;
+            transform: translateY(var(--m)) translateZ(0);
+            $i: 1;
+            @while $i < 12 {
+                &:nth-child(#{$i}) {
+                    transition-delay: $i / 20 + s;
+                }
+                $i: $i + 1;
+            }
+        }
+    }
+    &:hover {
+        --y: var(--move-hover);
+        --shadow: var(--shadow-hover);
+        span {
+            --m: calc(var(--font-size) * -1);
+        }
+    }
+    &.reverse {
+        --font-shadow: calc(var(--font-size) * -1);
+        &:hover {
+            span {
+                --m: calc(var(--font-size));
+            }
+        }
+    }
+}
+
+html {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+* {
+    box-sizing: inherit;
+    &:before,
+    &:after {
+        box-sizing: inherit;
+    }
+}
+
+// Center & dribbble
+body {
+    min-height: 100vh;
+    display: flex;
+    font-family: 'Roboto', Arial;
+    justify-content: center;
+    align-items: center;
+    background: #E4ECFA;
+    .button-list {
+        display: flex;
+        button {
+            margin: 0 12px;
+        }
+    }
+    .dribbble {
+        position: fixed;
+        display: block;
+        right: 20px;
+        bottom: 20px;
+        img {
+            display: block;
+            height: 28px;
+        }
+    }
+}
+
+// 메인 폰트
+.main-font {
+    color: #4B5563; /* text-gray-600 */
+    text-decoration: none;
+    outline: none;
+}
+
+.main-font:hover {
+    color: #111827; /* text-gray-900 */
+}
+
+@media (prefers-color-scheme: dark) {
+    .main-font {
+        color: #9CA3AF; /* dark:text-gray-400 */
+    }
+
+    .main-font:hover {
+        color: #ffffff; /* dark:hover:text-white */
+    }
+}
+
+.main-font:focus {
+    outline: 2px solid #EF4444; /* outline-red-500 */
+    border-radius: 0.125rem; /* rounded-sm */
+}
+
+.with {
+    display: flex;
+    justify-content: space-between;
+}
+
+.with2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.with3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 글쓰기 위에 적용 */
+.up-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: self-start;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+}
+
+
+.mb_5 {
+    margin-bottom: 5px;
+}
+
+.msg_chk {
+    margin-bottom: 3px;
+    margin-right: 3px;
+}
+
+.file-zone {
+    display: flex;
+    flex-direction: column;
+}
+
+.textarea_content {
+    max-height: 140px;
+    width: 700px;
+}
+
+.with_gap {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.title_d {
+    flex: 7;
+}

@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.with {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* 글쓰기 위에 적용 */
+.up-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: self-start;
+}
