@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;  // 이메일 인증
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\CustomVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -46,4 +48,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
     ];
 
+     /**
+     * 이메일 인증 알림 커스텀 (테스트용)
+     */
+    public function sendEmailVerificationNotification()
+    {
+        Notification::route('mail', 'nazz0525z@gmail.com') // 네 테스트용 이메일
+            ->notify(new CustomVerifyEmail);
+    }
 }

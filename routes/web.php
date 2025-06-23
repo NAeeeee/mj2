@@ -38,21 +38,22 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/{id}', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/delete/{id}', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // 사용자가 이메일 인증 링크 눌렀을 때 처리
+    // 사용자 이메일 인증
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
         $request->fulfill(); // 인증 완료 처리
         return redirect('/home'); // 인증 완료 후 이동할 곳
     })->middleware(['signed'])->name('verification.verify');
 
-    // 인증 메일 재전송 버튼 누를 때 처리
+    // 인증 메일 재전송
     Route::post('/email/verification-notification', function (Request $request) {
         $request->user()->sendEmailVerificationNotification(); // 메일 다시 보내기
-        return back()->with('message', '인증 메일을 다시 보냈어!');
+        return back()->with('www', '재전송 완료!');
     })->middleware(['throttle:6,1'])->name('verification.send');
 
     Route::get('/email/update-form', function () {
         return view('auth.email-update');
     });
+
     // 인증 전 이메일 수정
     Route::post('/email/update', [RegisteredUserController::class, 'updateEmail'])->name('email.update');
 });

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app2')
 
 @section('content')
 <section class="pt-4">
@@ -58,6 +58,15 @@
 @push('scripts')
 <script>
 
+    @if(session('www'))
+        console.log('팝업 띄우기 직전');
+        alertc('완료', @json(session('www')));
+
+        setTimeout(() => {
+            console.log('10초 후 리다이렉트 실행');
+            window.location.href = '/';
+        }, 10000);
+    @endif
 function logoutChk()
 {
     document.getElementById('logout-form').submit();

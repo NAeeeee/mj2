@@ -1,8 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.app2')
 
 @section('content')
 <section class="pt-4">
-    <div class="container px-lg-5">
+    <div class="container px-lg-5" id="all-section">
     <form id="form" method="POST" action="{{ route('register') }}" class="mt-4">
         @csrf
 
@@ -69,6 +69,14 @@
         </div>
     </form>
     </div>
+ 
+    <div id="loading-section" style="display:none;">
+        <div class="d-flex justify-content-center align-items-center" style="height: 390px;">
+            <div class="spinner-border text-secondary" role="status" style="width: 4rem; height: 4rem;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
 </section>
 @endsection
 
@@ -83,7 +91,7 @@ function chk()
     var pw = document.getElementById('password').value;
     var pw2 = document.getElementById('password_confirmation').value;
 
-    if( name == '')
+    if( name == '' )
     {
         alertc('확인 요청','이름을 입력해주세요.');
         return false;
@@ -93,7 +101,7 @@ function chk()
         alertc('확인 요청','이메일을 입력해주세요.');
         return false;
     }
-    else if( ph == '')
+    else if( ph == '' )
     {
         alertc('확인 요청','휴대폰 번호를 입력해주세요.');
         return false;
@@ -113,13 +121,16 @@ function chk()
         return false;
     }
 
-    if (pw !== pw2) {
-        alertc('비밀번호가 일치하지 않습니다.');
+    if (pw !== pw2 ) {
+        alertc('확인 요청','비밀번호가 일치하지 않습니다.');
         return false;
     }
 
     var rgex = /[!@#$%^&*(),.?":{}|<>]/;
-    var emailrgex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;;
+    var emailrgex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    var all = document.getElementById('all-section');
+    var ls = document.getElementById('loading-section');
 
     if (!rgex.test(pw)) {
         alertc('확인 요청',"비밀번호에 특수문자를 최소 1개 이상 포함해야 합니다.");
@@ -131,6 +142,9 @@ function chk()
         return false;
     }
 
+    all.style.display = 'none';
+    ls.style.display = 'block';
+    
     document.getElementById('form').submit();
 }
 
