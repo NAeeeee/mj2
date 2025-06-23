@@ -56,7 +56,7 @@
                 핸드폰 번호 변경
             </button>
             @if($user->is_admin == 'N')
-            <button class="btn btn-danger fr" onclick="confirmDelete('{{ route('profile.destroy', $user->id) }}', 'GET')" >
+            <button class="btn btn-danger fr" onclick="confirmWithdraw('{{ route('profile.destroy', $user->id) }}', 'GET')" >
                 회원탈퇴
             </button>
             @endif
@@ -89,10 +89,10 @@
                             <td scope="col">
                             @if($post->sta == 'A')
                             <!-- 삭제 버튼 (form으로 감싸기) -->
-                            <form action="{{ route('request.delete', $post->no) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-                                @csrf
-                                <button type="submit" class="btn btn-sm btn-danger">삭제</button>
-                            </form>
+                            <button type="button" lass="btn btn-sm btn-danger" 
+                                onclick="confirmDelete('{{ route('request.delete', $post->no) }}')">
+                                삭제
+                            </button>
                             @endif
                             </td>
                         </tr>
@@ -105,6 +105,28 @@
             </table>
         </div>
         @endif
+    </div>
+
+    <!-- 탈퇴 확인 모달 -->
+    <div class="modal fade" id="withdrawModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="withdrawForm" method="POST">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">회원 탈퇴 확인</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    정말 탈퇴하시겠습니까? <br> 탈퇴 시 복구가 불가능합니다.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="submit" class="btn btn-danger">탈퇴</button>
+                </div>
+            </div>
+            </form>
+        </div>
     </div>
 </section>
 @endsection
