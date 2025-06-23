@@ -36,7 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pwChange', [ProfileController::class, 'popup'])->name('profile.popup');
     Route::get('/phChange', [ProfileController::class, 'popup'])->name('profile.pwPopup');
     Route::post('/profile/{id}', [ProfileController::class, 'update'])->name('profile.update');
-    Route::get('/profile/delete/{id}', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/profile/delete/{id}', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // 사용자가 이메일 인증 링크 눌렀을 때 처리
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {

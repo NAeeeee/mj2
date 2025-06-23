@@ -151,6 +151,17 @@ function confirmDelete(actionUrl, method='')
     modal.show();
 }
 
+// 탈퇴 확인 팝업
+function confirmWithdraw(url) 
+{
+    const form = document.getElementById('withdrawForm');
+    form.action = url;
+    form.method = 'POST';
+
+    const modal = new bootstrap.Modal(document.getElementById('withdrawModal'));
+    modal.show();
+}
+
 
 // 첨부파일 용량 체크
 function checkFiles() 
