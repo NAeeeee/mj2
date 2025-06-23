@@ -38,7 +38,7 @@
             <span class="input-group-text" id="basic-addon1">
                 <img src="/img/ph.png" width="18">
             </span>
-            <input type="text" class="form-control" value="{{ $user->ph }}">
+            <input type="text" class="form-control" value="{{ $user->ph }}" disabled>
         </div>
 
         <div class="input-group mb-4">
