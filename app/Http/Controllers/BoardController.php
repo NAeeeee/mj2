@@ -110,27 +110,6 @@ class BoardController extends Controller
     }
 
 
-    // 글저장
-    // public function store(Request $request)
-    // {
-    //     Log::info(__METHOD__);
-
-    //     $request->validate([
-    //         'title' => 'required|string|max:255',
-    //         'content' => 'required|string',
-    //     ]);
-
-    //     \App\Models\Post::create([
-    //         'title' => $request->title,
-    //         'content' => $request->content,
-    //         'user_id' => auth()->id() ?? 1, // 로그인 안 됐을 경우 대비 (또는 익명)
-    //     ]);
-
-
-    //     return redirect()->route('boards.index')->with('success', '글이 작성되었습니다!');
-    // }
-
-
     // 관리자가 견적요청상태 변경
     public function updateStatus(Request $request, $no)
     {

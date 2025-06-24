@@ -51,7 +51,7 @@
         <div class="mb-4">
         @if(auth()->user()->is_admin == 'Y')
             <a href="{{ route('boards.index') }}" class="btn btn-secondary">목록으로</a>
-            @if($post->save_status == 'Y' && $post->status == 'B')
+            @if($post->save_status == 'Y' && $post->status == 'B' && $post['user']->status == 'Y')
                 <button type="button" class="btn btn-danger" onclick="div()">관리자 답글달기</button>
             @endif
         @else
