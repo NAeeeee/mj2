@@ -156,10 +156,10 @@ class ProfileController extends Controller
         $uu->status = 'N';
         $uu->save();
 
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        // $request->session()->flash('message', '탈퇴가 완료되었습니다.');
 
-        return redirect('/')->with('message', '탈퇴가 완료되었습니다.');
+        Auth::logout();
+
+        return redirect('/login')->with('msg_s', '탈퇴가 완료되었습니다.');
     }
 }

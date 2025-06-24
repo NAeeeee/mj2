@@ -118,9 +118,14 @@ function alertc(title, contents='', mh='')
 
     $("#modal-header-s").removeClass('bg-danger');
     $("#modal-header-s").removeClass('bg-primary');
+    $("#modal-header-s").removeClass('bg-secondary');
     if( mh == 'p' )
     {
         $("#modal-header-s").addClass('bg-primary');
+    }
+    else if( mh == 's' )
+    {
+        $("#modal-header-s").addClass('bg-secondary');
     }
     else
     {
@@ -134,18 +139,13 @@ function alertc(title, contents='', mh='')
 }
 
 // 삭제 확인 팝업
-function confirmDelete(actionUrl, method='') 
+function confirmDelete(actionUrl, param='', method='') 
 {
     const form = document.getElementById('deleteForm');
     form.action = actionUrl;
-    if( method === 'GET' )
-    {
-        form.method = 'GET';
-    }
-    else
-    {
-        form.method = 'POST';
-    }
+    form.method = method === 'GET' ? 'GET' : 'POST';
+    // div
+    document.getElementById('delete_div').value = param;
 
     const modal = new bootstrap.Modal(document.getElementById('delModal'));
     modal.show();
@@ -175,10 +175,10 @@ function checkFiles()
         if (!input) return;
         for (let file of input.files) {
             if (!allowedTypes.includes(file.type)) {
-                errors.push(`${file.name} : 허용되지 않는 형식`);
+                errors.push(`${file.name} : 확장자를 확인해주세요.(첨부 가능한 확장자 : jpg, png)`);
             }
             if (file.size > maxSize) {
-                errors.push(`${file.name} : 3MB 초과`);
+                errors.push(`${file.name} : 3MB 까지만 첨부 가능합니다.`);
             }
         }
     });

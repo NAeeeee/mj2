@@ -31,12 +31,13 @@
         <div class="with mb-1">
             <div>
                 <label for="content" class="form-label">content</label>
-                <textarea class="form-control textarea_content" id="content" name="content" rows="5"></textarea>
+                <textarea class="form-control textarea_content" id="content" name="content" rows="5" style="width: 650px;"></textarea>
             </div>
 
             <div class="file-zone">
                 <div class="mb-3">
                     <div class="form-text2 form-label" id="basic-addon5">✔ 첨부 가능한 확장자 : jpg, png</div></label>
+                    <div class="form-text2 form-label" id="basic-addon5">✔ 파일 1개당 3MB 까지 첨부 가능</div></label>
                     <input class="form-control" type="file" id="file" name="file[]">
                 </div>
                 <div class="mb-3">

@@ -18,37 +18,6 @@
 
         @yield('content')
 
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-
-            <script>
-                // 3초(3000ms) 후 이전 페이지로 이동
-                setTimeout(function() {
-                    // window.location.href = '/';
-                    location.reload();
-                }, 3000);
-            </script>
-        @endif
-
-        @if(session('msg'))
-            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-                {{ session('msg') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
-        @if(session('message'))
-            <script>
-                alertc('완료',"{{ session('message') }}"); // 혹은 커스텀 모달로
-                setTimeout(() => {
-                    window.location.href = '/';
-                }, 2000); // 2초 뒤 홈으로 이동
-            </script>
-        @endif
-
 
     <!-- 공용 팝업 -->
     <div class="modal fade" id="alertModal" tabindex="-1" aria-hidden="true">
@@ -73,6 +42,7 @@
         <div class="modal-dialog">
             <form id="deleteForm" method="POST">
             @csrf
+            <input type="hidden" name="delete_div" id="delete_div">
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title">삭제 확인</h5>
@@ -97,6 +67,29 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
+    
+    {{-- 팝업(primary) --}}
+    @if(session('msg'))
+        <script>
+            alertc('완료',"{{ session('msg') }}",'p');
+        </script>
+    @endif
+
+    {{-- 팝업(danger) --}}
+    @if(session('msg_d'))
+        <script>
+            alertc('완료',"{{ session('msg_d') }}");
+        </script>
+    @endif
+
+    {{-- 팝업(secondary) --}}
+    @if(session('msg_s'))
+        <script>
+            alertc('완료',"{{ session('msg_s') }}",'s');
+        </script>
+    @endif
+
+    
     {{-- 여기서 자식 뷰에서 푸시한 스크립트가 삽입됨 --}}
     @stack('scripts')
     <footer>

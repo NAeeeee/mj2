@@ -63,7 +63,7 @@
         </div>
 
         @if($user->is_admin == 'N')
-        <div class="input-group mb-4">
+        <div class="input-group mb-3">
             <table class="table table-striped">
                 <thead>
                     <tr class="table-dark">
@@ -79,7 +79,7 @@
                     @foreach ($board as $post)
                         <tr>
                             <td scope="col">
-                                <a href="{{ route('boards.show', $post->no) }}" class="text-blue-600 hover:underline">
+                                <a href="{{ route('request.show', $post->no) }}" class="text-blue-600 hover:underline">
                                     {{ $post->title }}
                                 </a>
                             </td>
@@ -105,6 +105,27 @@
             </table>
         </div>
         @endif
+        
+        {{-- 게시물 리스트에서 삭제 완료 팝업 --}}
+        @if(session('success'))
+        <div id="success-alert" class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <script>
+            window.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => {
+                    var alert = document.getElementById('success-alert');
+                    if (alert) {
+                        var bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                        bsAlert.close();
+                    }
+                }, 3000);
+            });
+        </script>
+        @endif
+
     </div>
 
     <!-- 탈퇴 확인 모달 -->
