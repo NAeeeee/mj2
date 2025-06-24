@@ -151,7 +151,9 @@ class BoardController extends Controller
         if( !$chkReply )
         {
             $msg = '관리자 답글이 없는 게시물입니다. ('.$no.'번)';
-            return redirect()->back()->with('msg', $msg);
+            return redirect()->back()
+                ->with('title_d', '확인 요청')
+                ->with('msg_d', $msg);
         }
         else
         {

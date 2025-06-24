@@ -78,7 +78,7 @@
     {{-- 팝업(danger) --}}
     @if(session('msg_d'))
         <script>
-            alertc('완료',"{{ session('msg_d') }}");
+            alertc("{{ session('title_d') }}","{{ session('msg_d') }}");
         </script>
     @endif
 
