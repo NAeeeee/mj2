@@ -180,6 +180,7 @@ class RequestController extends Controller
 
         $post = \App\Models\Post::with('user')->findOrFail($no);
         
+        log::info($post['user']->status);
         // 관리자외 삭제된 글 접근x
         if( !array_key_exists(auth()->user()->id, config('var.admin')) && $post->save_status == 'N' )
         {
