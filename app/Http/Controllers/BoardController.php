@@ -19,7 +19,7 @@ class BoardController extends Controller
         $this->middleware('auth'); // 로그인한 사용자만
     }
 
-    // 게시판 리스트
+    // 게시판 리스트(관리자용)
     public function index(Request $request)
     {
         Log::info(__METHOD__);
@@ -110,237 +110,26 @@ class BoardController extends Controller
     }
 
 
-    // 글쓰기
-    // public function create()
+    // 글저장
+    // public function store(Request $request)
     // {
     //     Log::info(__METHOD__);
 
-    //     return view('boards.create');
+    //     $request->validate([
+    //         'title' => 'required|string|max:255',
+    //         'content' => 'required|string',
+    //     ]);
+
+    //     \App\Models\Post::create([
+    //         'title' => $request->title,
+    //         'content' => $request->content,
+    //         'user_id' => auth()->id() ?? 1, // 로그인 안 됐을 경우 대비 (또는 익명)
+    //     ]);
+
+
+    //     return redirect()->route('boards.index')->with('success', '글이 작성되었습니다!');
     // }
 
-    // 글저장
-    public function store(Request $request)
-    {
-        Log::info(__METHOD__);
-
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-        ]);
-
-        \App\Models\Post::create([
-            'title' => $request->title,
-            'content' => $request->content,
-            'user_id' => auth()->id() ?? 1, // 로그인 안 됐을 경우 대비 (또는 익명)
-        ]);
-
-
-        return redirect()->route('boards.index')->with('success', '글이 작성되었습니다!');
-    }
-
-    public function show($no)
-    {
-        Log::info(__METHOD__);
-        log::info(auth()->user());
-
-        $post = \App\Models\Post::with('user')->findOrFail($no);
-        
-        // id가 관리자고 상태(status)가 'A'(요청접수)
-        if (array_key_exists(auth()->user()->id, config('var.admin')) && $post->status == 'A') 
-        {
-            $post->status = "B"; // 담당자 확인중
-            $post->save();
-        }
-
-        // 사진
-        $img = [];
-        $img = DB::table('post_file')
-                ->where('target_no', $no)
-                ->where('save_status', 'Y')
-                ->orderby('no','asc')
-                ->get();
-
-        // 날짜 추출
-        $img->transform(function ($i) {
-            $i->pathDate = explode('_', $i->savename)[0]; // "20250604"
-
-            return $i;
-        });
-
-
-        // 답글
-        $reply = [];
-        $reply = DB::table('post_replies')
-                ->where('post_no', $no)
-                ->where('save_status', 'Y')
-                ->orderby('no','desc')
-                ->first();
-
-        // 답글이 있고 글 상태가 'C'(관리자 답변 완료) 일때 회원이 확인하면
-        if( isset($reply->no) && $post->status='C' )
-        {
-            log::info($post->no.'번 게시물 상태 : '.$post->status);
-            log::info("글쓴이 no : ".$post->user_id);
-            if( auth()->user()->id == $post->user_id )
-            {
-                log::info('아이디 같음');
-                log::info('진입 아이디 : '.auth()->user()->id);
-
-                // 고객 확인 완료
-                $post->status = "D";
-                $post->save();
-
-                // 관리자 댓글 상태도 고객확인완료 업데이트
-                $reply_chk = \App\Models\Reply::findOrFail($reply->no);
-                $reply_chk->status = "D";
-                $reply_chk->save();
-            }
-            else
-            {
-                // 글쓴회원, 관리자만 진입가능
-                // log::info('아이디 다름');
-                // log::info('진입 아이디 : '.auth()->user()->id);
-            }
-;
-        }
-
-        $post->sta = config('var.status');
-        log::info($post);
-
-        return view('boards.show', compact('post', 'reply', 'img'));
-    }
-
-    // 수정 폼 보여주기
-    public function edit($id)
-    {
-        Log::info(__METHOD__);
-
-        $post = Post::findOrFail($id);
-
-        // 사진
-        $img = [];
-        $img = DB::table('post_file')
-                ->where('target_no', $id)
-                ->where('save_status', 'Y')
-                ->orderby('no','asc')
-                ->get();
-
-        // 날짜 추출
-        $img->transform(function ($i) {
-            $i->pathDate = explode('_', $i->savename)[0]; // "20250604"
-
-            return $i;
-        });
-
-        return view('boards.edit', compact('post' ,'img'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        Log::info(__METHOD__);
-
-        $post = Post::findOrFail($id);
-
-
-        $request->validate([
-            'div' => 'required',
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            // 추가 필드 있으면 넣기
-        ]);
-
-        // dd($request);
-
-        // 업로드한 파일 삭제
-        if( isset($request->delete_files) )
-        {
-            // 배열 형태로 옴
-            $del = $request->delete_files;
-
-            foreach($del as $d)
-            {
-                $ff = PostFile::findOrFail($d);
-
-                log::info("File ".$d."번 삭제");
-                $ff->save_status = "N";
-                $ff->save();
-            }
-        }
-
-        // 파일 저장
-        $files = $request->file('file');
-
-        if( isset($files) )
-        {
-            foreach ($files as $file) 
-            {
-                $filename = $file->getClientOriginalName();
-                log::info("파일명 : ".$filename);
-
-                // 경로 없으면 생성 (img/날짜)
-                $path = 'img/' . now()->format('Ymd');
-                $fullPath = public_path($path);
-                $size = $file->getSize();
-                Log::info("사이즈 : " . $size);
-
-                if (!\File::exists($fullPath)) {
-                    \File::makeDirectory($fullPath, 0755, true);
-                }
-
-                $saveName = now()->format('Ymd_His').'_'.$filename;
-                Log::info("경로 : " . $fullPath);
-                Log::info("저장 파일명 : ".$saveName);
-                $file->move($fullPath, $saveName); // ← 여기가 핵심
-
-                // DB에 저장
-                $postFile = new PostFile();
-                $postFile->target_no = $post->no; // posts 기본키가 no임에 유의
-                $postFile->filename = $filename;
-                $postFile->filepath = $fullPath;
-                $postFile->savename = $saveName;
-                $postFile->filesize = $size;
-                $postFile->filetype = $file->getClientMimeType();
-                $postFile->extension = $file->getClientOriginalExtension();
-                $postFile->save_status = 'Y';
-                $postFile->target_type = 'P';
-                $postFile->save();
-
-                Log::info("파일 저장 db 성공");
-
-            }
-        }
-        
-        Post::where('no', $id)->update([
-            'div' => $request->input('div'),
-            'title' => $request->input('title'),
-            'content' => $request->input('content'),
-        ]);
-
-        // 수정 내용 저장
-        // $post->div = $request->input('div');
-        // $post->title = $request->input('title');
-        // $post->content = $request->input('content');
-        // 필요하면 다른 필드도 저장
-        // $post->save();
-
-        return redirect()->route('boards.show', $post->no)
-                         ->with('success', '게시글이 수정되었습니다.');
-    }
-
-    // 삭제
-    public function delete($no)
-    {
-        Log::info(__METHOD__);
-
-        $board = Post::findOrFail($no);
-        // Log::info($board);
-
-        // 데이터 수정
-        $board->save_status = "N";
-        $board->save();
-        
-        return redirect()->back()->with('success', '삭제 완료');
-    }
 
     // 관리자가 견적요청상태 변경
     public function updateStatus(Request $request, $no)

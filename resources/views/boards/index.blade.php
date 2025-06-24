@@ -68,7 +68,7 @@
                         <th scope="col">{{ $post->no }}</th>
                         <td>{{ $post->div }}</td>
                         <td>
-                            <a href="{{ route('boards.show', $post->no) }}" class="text-decoration-none text-primary">
+                            <a href="{{ route('request.show', $post->no) }}" class="text-decoration-none text-primary">
                                 {{ $post->title }}
                             </a>
                         </td>

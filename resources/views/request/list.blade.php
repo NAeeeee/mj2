@@ -28,7 +28,7 @@
                             <td scope="col">{{ $post->no }}</td>
                             <td scope="col">{{ $post->div }}</td>
                             <td scope="col">
-                                <a href="{{ route('boards.show', $post->no) }}" class="text-blue-600 hover:underline">
+                                <a href="{{ route('request.show', $post->no) }}" class="text-blue-600 hover:underline">
                                     {{ $post->title }}
                                 </a>
                             </td>
@@ -41,7 +41,8 @@
                                 @csrf
                                 <button type="submit" class="btn btn-sm btn-danger">삭제</button>
                             </form> -->
-                            <button class="btn btn-sm btn-danger" onclick="confirmDelete('{{ route('request.delete', $post->no) }}')">
+                            <button type="button" class="btn btn-danger"
+                                onclick="confirmDelete('{{ route('request.delete', $post->no) }}', 'request')">
                                 삭제
                             </button>
                             @endif
