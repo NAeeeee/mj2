@@ -23,13 +23,11 @@ Route::get('/', function () {
     return view('welcome');
 })->middleware(['auth', 'verified']);
 
-Route::get('/gg', function () {
-    return view('welcome2');
-});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -58,10 +56,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/email/update', [RegisteredUserController::class, 'updateEmail'])->name('email.update');
 });
 
-// 관리자
-// Route::middleware(['auth'])->group(function () {
-//     Route::get('/admin/list', [AdminController::class, 'list'])->name('admin.list');
-// });
 
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/list', [AdminController::class, 'list'])->name('admin.list');
@@ -69,42 +63,46 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 });
 
 // 게시판
-// Route::resource('boards', BoardController::class);
-// Route::get('/boards', [BoardController::class, 'index'])->name('boards.index');
 Route::middleware(['auth'])->prefix('boards')->group(function () {
+    // 관리자 메인 진입
     Route::get('/', [BoardController::class, 'index'])->name('boards.index');
-    Route::post('/', [BoardController::class, 'store'])->name('boards.store');
-    Route::get('/show/{board}', [BoardController::class, 'show'])->name('boards.show');
-    // Route::get('/create', [BoardController::class, 'create'])->name('boards.create');
-    Route::post('/delete/{id}', [BoardController::class, 'delete'])->name('boards.delete');
-    // Route::post('/edit/{board}', [BoardController::class, 'edit'])->name('boards.edit');
-    // 글 수정 폼 보여주기 (GET)
-    Route::post('/{id}/edit', [BoardController::class, 'edit'])->name('boards.edit');
-    // 글 수정 처리 (PUT or PATCH)
-    Route::put('/edit/{id}', [BoardController::class, 'update'])->name('boards.update');
+    // 게시물 상태 변환(ex, 요청->검토)
     Route::put('/{id}/status', [BoardController::class, 'updateStatus'])->name('boards.updateStatus');
+    // 게시물 답변 달기
     Route::post('/reply', [BoardController::class, 'reply'])->name('boards.reply');
+    // 게시물 검색
     Route::get('/search', [BoardController::class, 'search'])->name('boards.search');
-    // Route::post('/search', [BoardController::class, 'search'])->name('boards.search');
 });
 
-// 요청견적게시판
-// Route::resource('request', RequestController::class);
-Route::get('/request', [RequestController::class, 'index'])->name('request.index');
-Route::post('/request', [RequestController::class, 'index'])->name('request.index');
-Route::post('/request', [RequestController::class, 'store'])->name('request.store');
-Route::get('/request/create', [RequestController::class, 'create'])->name('request.create');
-Route::get('/request/list', [RequestController::class, 'list'])->name('request.list');
-Route::post('/request/list', [RequestController::class, 'list'])->name('request.list');
-Route::post('/request/delete/{id}', [RequestController::class, 'delete'])->name('request.delete');
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/message/inbox', [MessageController::class, 'inbox'])->name('message.inbox');
-    Route::get('/message/sent', [MessageController::class, 'sent'])->name('message.sent');
-    Route::get('/message/{id}', [MessageController::class, 'show'])->name('message.show');
-    Route::post('/message', [MessageController::class, 'store'])->name('message.store');
+// 게시판 (회원)
+Route::middleware(['auth'])->prefix('request')->group(function () {
+    // 메인 진입
+    Route::get('/', [RequestController::class, 'index'])->name('request.index');
+    // 글쓰기 화면
+    Route::get('/create', [RequestController::class, 'create'])->name('request.create');
+    // 글 저장 처리
+    Route::post('/', [RequestController::class, 'store'])->name('request.store');
+    // 리스트
+    Route::get('/list', [RequestController::class, 'list'])->name('request.list');
+    // 게시글 상세 보기
+    Route::get('/show/{id}', [RequestController::class, 'show'])->name('request.show');
+    // 수정 화면
+    Route::get('/edit/{id}', [RequestController::class, 'edit'])->name('request.edit');
+    // 수정 처리
+    Route::put('/edit/{id}', [RequestController::class, 'update'])->name('request.update');
+    // 삭제
+    Route::post('/delete/{id}', [RequestController::class, 'delete'])->name('request.delete');
 });
 
+
+// 쪽지
+Route::middleware(['auth'])->prefix('message')->group(function () {
+    Route::get('/inbox', [MessageController::class, 'inbox'])->name('message.inbox');
+    Route::get('/{id}', [MessageController::class, 'show'])->name('message.show');
+    Route::post('/', [MessageController::class, 'store'])->name('message.store');
+});
+
+// php 정보
 Route::get('/phpinfo', function () {
     phpinfo();
 });
