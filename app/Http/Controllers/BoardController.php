@@ -61,7 +61,17 @@ class BoardController extends Controller
             {
                 // 게시물 분류 필터
                 $query->where('posts.div', $div);
-            } 
+            }
+            elseif ( $div === 'E' ) 
+            {
+                // 반려
+                $query->where('posts.status', 'E');
+            }
+            elseif ( $div === 'Z' ) 
+            {
+                // 처리완료
+                $query->where('posts.status', 'Z');
+            }
             elseif ( $div === 'del' ) 
             {
                 // 삭제된 게시물
@@ -116,7 +126,7 @@ class BoardController extends Controller
         Log::info(__METHOD__);
 
         $request->validate([
-            'status' => 'required|in:A,B,C', // 허용된 값만 통과
+            'status' => 'required|in:E,Z', // 허용된 값만 통과
         ]);
 
         // 답글 달렸는지 확인
@@ -140,7 +150,9 @@ class BoardController extends Controller
             $post->status = $request->status;
             $post->save();
 
-            return redirect()->back()->with('success', '상태가 변경되었습니다.');
+            return redirect()->back()
+                            ->with('title_d', '완료')
+                            ->with('msg_p2', '상태가 변경되었습니다.');
         }
 
     }
