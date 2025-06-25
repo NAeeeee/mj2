@@ -7,6 +7,16 @@
             @if (Auth::check())
                 @php
                     $user = Auth::user();
+
+                    if ($user->is_admin === 'Y') {
+                        $url = route('admin.list');
+                        $title = 'User';
+                        $class = 'bi bi-person-circle';
+                    } else {
+                        $url = route('profile.edit', ['id' => $user->id]);
+                        $title = 'Info';
+                        $class = 'bi bi-info-circle';
+                    }
                 @endphp
             @endif
         @endauth
@@ -27,12 +37,12 @@
                 <!-- Page Features-->
                 <div class="row gx-lg-5">
                     <!-- info -->
-                    <a class="col-lg-6 col-xxl-4 mb-5" href="{{ url('/profile?id=' . $user->id) }}">
+                    <a class="col-lg-6 col-xxl-4 mb-5" href="{{ $url }}">
                         <div>
                             <div class="card bg-light border-0 h-100">
                                 <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-info-circle"></i></div>
-                                    <h2 class="fs-4 fw-bold">Info</h2>
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="{{ $class }}"></i></div>
+                                    <h2 class="fs-4 fw-bold">{{ $title }}</h2>
                                     <!-- <p class="mb-0">With Bootstrap 5, we've created a fresh new layout for this template!</p> -->
                                 </div>
                             </div>

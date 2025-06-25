@@ -119,11 +119,11 @@ function alertc(title, contents='', mh='')
     $("#modal-header-s").removeClass('bg-danger');
     $("#modal-header-s").removeClass('bg-primary');
     $("#modal-header-s").removeClass('bg-secondary');
-    if( mh == 'p' )
+    if( mh === 'p' )
     {
         $("#modal-header-s").addClass('bg-primary');
     }
-    else if( mh == 's' )
+    else if( mh === 's' )
     {
         $("#modal-header-s").addClass('bg-secondary');
     }

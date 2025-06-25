@@ -10,7 +10,7 @@
         <div class="row mb-3">
             <label for="name" class="form-label">Name</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="name" name="name" oninput="onlyStr(this)" maxlength=20>
+                <input type="text" class="form-control" id="name" name="name" oninput="onlyStr(this)" maxlength=20 required>
             </div>
             @error('name')
                 <p class="mt-2">{{ $message }}</p>
@@ -21,7 +21,7 @@
         <div class="row mb-3">
             <label for="email" class="form-label">Email</label>
             <div class="col-sm-10">
-                <input type="email" class="form-control" id="email" name="email" oninput="onlyEmail(this);">
+                <input type="email" class="form-control" id="email" name="email" oninput="onlyEmail(this);" required>
             </div>
             @error('email')
                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -32,7 +32,7 @@
         <div class="row mb-3">
             <label for="ph" class="form-label">Phone</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="ph" name="ph" oninput="onlyNumber(this);" maxlength=11>
+                <input type="text" class="form-control" id="ph" name="ph" oninput="onlyNumber(this);" maxlength=11 required>
             </div>
             @error('ph')
                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -43,7 +43,7 @@
         <div class="row mb-3">
             <label for="password" class="form-label">Password</label>
             <div class="col-sm-10">
-                <input type="password" id="password" name="password" class="form-control" aria-describedby="passwordHelpInline">
+                <input type="password" id="password" name="password" class="form-control" aria-describedby="passwordHelpInline" required>
             </div>
             @error('password')
                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -54,7 +54,7 @@
         <div class="row mb-3">
             <label for="password_confirmation" class="form-label">Confirm Password</label>
             <div class="col-sm-10">
-                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" aria-describedby="passwordHelpInline">
+                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" aria-describedby="passwordHelpInline" required>
             </div>
             @error('password_confirmation')
                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
