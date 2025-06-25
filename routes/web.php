@@ -57,9 +57,15 @@ Route::middleware('auth')->group(function () {
 });
 
 
+// 관리자 기능
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/list', [AdminController::class, 'list'])->name('admin.list');
-    Route::get('/users', [AdminController::class, 'userIndex'])->name('admin.users.index');
+    Route::get('/add', function () {
+        return view('admin.admin-add');
+    });
+    Route::post('/add', [AdminController::class, 'add'])->name('admin.add');
+    Route::get('/info', [AdminController::class, 'info'])->name('admin.info');
+    Route::post('/info/{id}', [AdminController::class, 'infoEdit'])->name('admin.infoEdit');
 });
 
 // 게시판
