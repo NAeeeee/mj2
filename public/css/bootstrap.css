@@ -2185,16 +2185,22 @@ progress {
   color: var(--bs-danger);
 }
 
-.user-chk-ok {
+.status_div {
+  font-size: 1;
+  font-weight: bolder;
+  color: var(--bs-dark);
+}
+
+.status_div_p {
   font-size: 1;
   font-weight: bolder;
   color: var(--bs-primary);
 }
 
-.user-del {
+.status_div_d {
   font-size: 1;
   font-weight: bolder;
-  color: var(--bs-dark);
+  color: var(--bs-danger);
 }
 
 .del-zone {
@@ -2206,12 +2212,6 @@ progress {
   margin-bottom:5px;
   margin-right:5px;
   margin-left: 2px;
-}
-
-.no-chk-zone {
-  margin-bottom:5px;
-  margin-right:5px;
-  margin-left: 0.7px;
 }
 
 .form-text-del {
