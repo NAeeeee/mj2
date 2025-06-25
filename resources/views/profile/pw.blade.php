@@ -9,7 +9,7 @@
 
             // 성공 메시지면 창 닫기
             if (msg.includes('성공')) {
-                alertc('확인 요청',msg,'p');
+                alertc('완료',msg,'p');
                 setTimeout(() => {
                     window.close(); // 팝업 닫기
                     window.opener.location.reload();
