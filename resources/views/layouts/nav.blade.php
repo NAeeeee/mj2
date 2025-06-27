@@ -17,7 +17,12 @@
                             @if( auth()->user()->is_admin === 'Y' )
                             <li class="nav-item"><a class="nav-link" href="{{ route('profile.edit', ['id' => auth()->id()]) }}">Info</a></li>
                             @endif
-                            <li class="nav-item"><a class="nav-link" href="{{ route('message.inbox') }}">Message</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('message.inbox') }}">
+                                @if($msg)<i class="bi bi-envelope-check"></i>
+                                @else
+                                    Message
+                                @endif</a>
+                            </li>
                             <li class="nav-item"><a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
