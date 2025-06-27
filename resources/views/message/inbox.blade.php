@@ -11,13 +11,10 @@
         <!-- 쪽지탭 -->
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link" id="all" aria-current="page" href="/message/inbox">전체</a>
+                <a class="nav-link" id="recevie" href="/message/inbox?div=R">받은 쪽지함</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="send" href="/message/inbox?div=S">보낸 쪽지함</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="recevie" href="/message/inbox?div=R">받은 쪽지함</a>
             </li>
         </ul>
 
@@ -26,7 +23,8 @@
                 <tr>
                     <th scope="col" class="w-10">구분</th>
                     <th scope="col" class="w-20">제목</th>
-                    <th scope="col" class="w-10">보낸이</th>
+                    <th scope="col" class="w-10">발신자</th>
+                    @if( $div == 'S' )<th scope="col" class="w-10">수신자</th>@endif
                     <th scope="col" class="w-20">전송일</th>
                     <th scope="col" class="w-10">읽음</th>
                 </tr>
@@ -36,19 +34,19 @@
                     <tr>
                         <td>{{ $msg->div === 'S' ? '보낸 쪽지' : '받은 쪽지' }}</td>
                         <td>
-                            <!-- <a href="{{ route('message.show', $msg->no) }}" class="text-decoration-none text-primary">
-                                {{ $msg->title }}
-                            </a> -->
                             <a href="{{ route('message.show', $msg->no) }}" class="text-decoration-none text-primary"
-                                onclick="window.open(this.href, 'msgPopup', 'width=600,height=400'); return false;">
+                                onclick="window.open(this.href, 'msgPopup', 'width=600,height=450'); return false;">
                                 {{ $msg->title }}
                             </a>
                         </td>
-                        <td>{{ $msg->sender_id }}</td>
+                        <td>{{ $msg->name }}</td>
+                        @if( $div == 'S' )
+                        <td>{{ $msg->name_r ?? '' }}</td>
+                        @endif
                         <td>{{ $msg->created_at }}</td>
-                        <td class="text-center">
+                        <td>
                             @if( $msg->is_read == 1 )
-                                <img class="msg_chk" src="/img/check.png" width=20>
+                                <img class="msg_chk" src="/img/chk_ok.png" width=20>
                             @endif
                         </td>
                     </tr>
@@ -78,19 +76,11 @@
         if( div == 'S' )
         {
             $("#send").addClass('active');
-            $("#all").removeClass('active');
             $("#recevie").removeClass('active');
-        }
-        else if( div == 'R' )
-        {
-            $("#recevie").addClass('active');
-            $("#all").removeClass('active');
-            $("#send").removeClass('active');
         }
         else
         {
-            $("#all").addClass('active');
-            $("#recevie").removeClass('active');
+            $("#recevie").addClass('active');
             $("#send").removeClass('active');
         }
     };

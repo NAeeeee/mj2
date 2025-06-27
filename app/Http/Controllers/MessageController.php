@@ -28,42 +28,45 @@ class MessageController extends Controller
             $query->where('sender_id', auth()->id())
                     ->where('div','S');
         }
-        else if ($div === 'R') 
+        else
         {
             $query->where('receiver_id', auth()->id())
                     ->where('div','R');
         }
-        else
-        {
-            // 관리자는 전체에서는 2개 다 보여야함
-            if (array_key_exists(auth()->user()->id, config('var.admin'))) 
-            {
-                $query->where(function($q) {
-                    $q->where('sender_id', auth()->id())
-                    ->orWhere('receiver_id', auth()->id());
-                });
-            }
-            else
-            {
-                // div 없을 때 (전체 탭 등) → 사용자에게는 중복 방지!
-                // 예: 받은 메시지 위주로 보여주기
-                $query->where('receiver_id', auth()->id())
-                        ->where('div','R');
-            }
-        }
         $query->where('save_status','Y');
 
         $message = $query
-                ->orderby('no','asc')
+                ->orderby('no','desc')
                 ->paginate(5)
                 ->withQueryString();
 
-        $message->transform(function ($msg) {
-            if( $msg->sender_id = 2 ) // 관리자라면
+        $message->transform(function ($msg) use ($div) {
+
+            $user = User::find($msg->sender_id);
+
+            if( array_key_exists($msg->sender_id, config('var.admin')) )
             {
-                $msg->sender_id = '관리자';
+                $msg->name = '관리자';
             }
-            // $msg->created_at = Carbon::parse($msg->created_at)->format('Y-m-d');
+            else
+            {
+                $msg->name = $user?->name ?? '';
+            }
+            
+            // 보낸쪽지함
+            if( isset($div) && $div === 'S' )
+            {
+                $user_r = User::find($msg->receiver_id);
+
+                if( array_key_exists($msg->receiver_id, config('var.admin')) )
+                {
+                    $msg->name_r = '관리자';
+                }
+                else
+                {
+                    $msg->name_r = $user_r?->name ?? '';
+                }
+            }
 
             return $msg;
         });
@@ -80,17 +83,30 @@ class MessageController extends Controller
         $message = Message::where('no', $no)
                 ->first();
 
-        if( isset($message->sender_id) && $message->sender_id = 2 ) // 관리자라면
+        if( array_key_exists($message->sender_id, config('var.admin')) ) // 관리자라면
         {
-            $message->sender_id = '관리자';
+            $message->name = '관리자';
+        }
+        else
+        {
+            $user = User::find($message->sender_id);
+            $message->name = $user->name;
         }
 
         // 읽음표시 업데이트
-        $msg = Message::findOrFail($no);
+        \App\Models\Message::where('post_no', $message->post_no)
+                            ->where('save_status', 'Y')
+                            ->update(['is_read' => 1]);
 
-        // 데이터 수정
-        $msg->is_read = 1;
-        $msg->save();
+        // 게시물 상태 조회
+        $postSta = \App\Models\Post::where('no', $message->post_no)
+                        ->where('save_status', 'Y')
+                        ->first();
+        
+        if( isset($postSta->status) && $postSta->status == 'D' )
+        {
+            $message->status = 'Y';
+        }
 
         return view('message.show', compact('message'));
     }
