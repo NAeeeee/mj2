@@ -48,7 +48,7 @@
         @endif
 
         
-        <div class="mb-4">
+        <div id="d-with" class="mb-4">
         @if(auth()->user()->is_admin == 'Y')
             <a href="{{ route('boards.index') }}" class="btn btn-secondary">목록으로</a>
             @if($post->save_status == 'Y' && $post->status == 'B' && $post['user']->status == 'Y')
@@ -56,6 +56,21 @@
             @endif
         @else
             <a href="{{ route('request.list') }}?id={{ $post->user['id'] }}" class="btn btn-secondary">목록으로</a>
+            {{-- 글상태가 '고객확인완료'일때 --}}
+            @if( $post->status == 'D' && $post->user_ok === 'N' )
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    $("#d-with").addClass('with2');
+                });
+            </script>
+            <form id="confirmForm" action="{{ route('request.submit') }}" method="POST" >
+                @csrf
+                <input type="hidden" name="no" id="no" value="{{ $post->no }}">
+                <button type="button" class="btn btn-danger" onclick="okChk();">확인완료</button>
+            </form>
+            @endif
+            {{-- 글상태가 '반려'일때 --}}
+            <a href="{{ route('request.create', ['id' => Auth::user()->id ]) }}" class="btn btn-danger">추가문의하기</a>
         @endif
         </div>
 
@@ -141,6 +156,15 @@
         }
 
         document.getElementById('replyForm').submit();
+    }
+
+    function okChk()
+    {
+        alertc('확인 요청', '해당 게시물을 완료 처리 하시겠습니까?', 'p');
+
+        $('#modal_btn').on('click', function () {
+            $('#confirmForm').submit();
+        });
     }
 </script>
 @endpush

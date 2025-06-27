@@ -221,7 +221,7 @@ class RequestController extends Controller
                 ->first();
 
         // 답글이 있고 글 상태가 'C'(관리자 답변 완료) 일때 회원이 확인하면
-        if( isset($reply->no) && $post->status='C' )
+        if( isset($reply->no) && $post->status=='C' )
         {
             log::info($post->no.'번 게시물 상태 : '.$post->status);
             log::info("글쓴이 no : ".$post->user_id);
@@ -242,13 +242,29 @@ class RequestController extends Controller
             else
             {
                 // 글쓴회원, 관리자만 진입가능
-                // log::info('아이디 다름');
-                // log::info('진입 아이디 : '.auth()->user()->id);
+                abort(403, '잘못된 접근입니다.');
             }
 
         }
 
+        // 글 상태가 'D'(고객확인) 고객이 '확인완료' 버튼을 눌렀을때
+        if( $post->status == 'D' ) 
+        {
+            $check_msg = DB::table('messages')
+                ->where('post_no', $no)
+                ->where('sender_id', $post->user_id)
+                ->where('div', 'S')
+                ->where('save_status', 'Y')
+                ->first();
+            
+            if( !$check_msg )
+            {
+                $post->user_ok == 'N';
+            }
+        }
+
         $post->sta = config('var.status');
+        log::info(print_r($post,true));
 
         return view('request.show', compact('post', 'reply', 'img'));
     }
@@ -398,6 +414,69 @@ class RequestController extends Controller
             // 리다이렉트 및 플래시 메시지
             return redirect()->back()->with('msg', '글이 성공적으로 삭제되었습니다.');
         }
+    }
+
+
+    //.고객 확인 완료 상태에서 '확인완료' 버튼 눌렀을때
+    public function submitCustomer(Request $request)
+    {
+        Log::info(__METHOD__);
+
+        $no = $request->no ?? '';
+
+        if( $no === '' )
+        {
+            abort(403, '잘못된 접근입니다.');
+        }
+
+        // 게시물 상태, 댓글 유무 체크
+        $board = DB::table('posts as p')
+                ->join('post_replies as r', 'p.no', 'r.post_no')
+                ->select(
+                    'p.no', 'p.title', 'p.status', 'p.user_id', 'p.div',
+                    'r.admin_id', 'r.status as r_status'
+                )
+                ->where('p.no',$no)
+                ->where('p.save_status','Y')
+                ->where('r.save_status','Y')
+                ->where('p.status','D')
+                ->orderby('p.no')
+                ->first();
+
+        $url = route('request.show', ['id' => $no]);
+        $content = '<a target="_blank" href="' . $url . '">' . $board->title . '</a><br><br> 요청건은 '
+         . date('Y년 m월 d일') . '에 고객님께서 확인 완료하신 것으로 반영되었습니다. '
+         . '문의사항이 있으시면 추가 문의를 이용해 주세요.';
+
+        // 보낸쪽지
+        \App\Models\Message::create([
+            'title' => '고객 확인 완료 [ '.date('Y-m-d').' ]',
+            'sender_id' => $board->user_id,
+            'receiver_id' => $board->admin_id,
+            'div' => 'S',                // 보낸
+            'content' => $content,
+            'is_read' => 0,
+            'post_no' => $board->no,
+            'status' => 'E',            // 고객->관리자 확인완료표시
+            'save_status' => 'Y',
+        ]);
+
+        // 받은쪽지
+        \App\Models\Message::create([
+            'title' => '고객 확인 완료 [ '.date('Y-m-d').' ]',
+            'sender_id' => $board->user_id,
+            'receiver_id' => $board->admin_id,
+            'div' => 'R',                // 보낸
+            'content' => $content,
+            'is_read' => 0,
+            'post_no' => $board->no,
+            'status' => 'E',            // 고객->관리자 확인완료표시
+            'save_status' => 'Y',
+        ]);
+
+
+        return redirect()->route('request.show', ['id' => $board->no])
+                ->with('msg', '해당 요청글이 정상적으로 확인 완료 처리되었습니다.');
     }
 
 }
