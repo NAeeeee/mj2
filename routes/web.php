@@ -98,6 +98,8 @@ Route::middleware(['auth'])->prefix('request')->group(function () {
     Route::put('/edit/{id}', [RequestController::class, 'update'])->name('request.update');
     // 삭제
     Route::post('/delete/{id}', [RequestController::class, 'delete'])->name('request.delete');
+    // 고객 확인 완료 상태에서 '확인완료' 버튼 눌렀을때
+    Route::post('/submit', [RequestController::class, 'submitCustomer'])->name('request.submit');
 });
 
 

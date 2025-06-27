@@ -4,14 +4,13 @@
 <section class="pt-3 mt-4">
     <div class="container px-lg-5">
     
-    <form id="hiddenForm" method="POST" action="{{ route('request.list') }}">
-        @csrf
+    <form id="hiddenForm" method="GET" action="{{ route('request.list') }}">
         <input type="hidden" name="id" value="{{ $request->id }}">
     </form>
 
     <div class="mb-4 with3">
         <h2 class="text-2xl font-bold">글작성</h2>
-        <button type="button" class="btn btn-dark" onclick="submitForm()">견적 확인</button>
+        <button type="button" class="btn btn-dark" onclick="submitForm()">게시물 확인</button>
     </div>
     
     <form id="Form" method="POST" action="{{ route('request.store') }}" class="mt-4" enctype="multipart/form-data">
