@@ -459,6 +459,7 @@ class RequestController extends Controller
             'post_no' => $board->no,
             'status' => 'E',            // 고객->관리자 확인완료표시
             'save_status' => 'Y',
+            'type' => 'confirm_done',
         ]);
 
         // 받은쪽지
@@ -472,6 +473,7 @@ class RequestController extends Controller
             'post_no' => $board->no,
             'status' => 'E',            // 고객->관리자 확인완료표시
             'save_status' => 'Y',
+            'type' => 'confirm_done',
         ]);
 
 
