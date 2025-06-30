@@ -11,7 +11,7 @@ class Message extends Model
 
     protected $primaryKey = 'no'; // ← PK가 id가 아님을 Laravel에게 알려줌
 
-    protected $fillable = ['title', 'sender_id', 'receiver_id', 'div', 'content', 'is_read', 'post_no', 'save_status'];
+    protected $fillable = ['title', 'sender_id', 'receiver_id', 'div', 'content', 'is_read', 'post_no', 'save_status', 'type'];
 
     public function sender() 
     {

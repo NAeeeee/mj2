@@ -105,13 +105,42 @@ class BoardController extends Controller
 
         $posts = $query->paginate(5)->withQueryString();
 
-        $posts->transform(function ($post) {
-            $rdiv = config('var.board_div');
+        // 답변완료
+        if( $div === 'O' )
+        {
+            // 게시물 번호 추출
+            $postNos = $posts->pluck('no')->toArray();
 
-            $post->div = $rdiv[$post->div] ?? $post->div;
+             // 확인완료 메시지가 존재하는 게시물 번호 목록
+            $statusDpost = DB::table('messages')
+                ->whereIn('post_no', $postNos)
+                ->where('type', 'confirm_done')
+                ->pluck('post_no')
+                ->toArray();
 
-            return $post;
-        });
+            $posts->transform(function ($post) use ($statusDpost) {
+                $rdiv = config('var.board_div');
+                $post->div = $rdiv[$post->div] ?? $post->div;
+
+                // 확인 완료 메시지 존재 여부에 따라 표시 상태 조정
+                $post->view_status = ( 
+                    $post->status === 'D' && in_array($post->no, $statusDpost)
+                ) ? 'Z' : $post->status;
+
+                return $post;
+            });
+        }
+        else
+        {
+            // 다른 탭에서는 기존 로직
+            $posts->transform(function ($post) {
+                $rdiv = config('var.board_div');
+                $post->div = $rdiv[$post->div] ?? $post->div;
+                $post->view_status = $post->status;  // 기본은 원래 status 그대로
+                
+                return $post;
+            });
+        }
 
         // $view = ($div == 'X') ? 'boards.index' : 'boards.index2';
         $view = 'boards.index';
@@ -128,6 +157,12 @@ class BoardController extends Controller
         $request->validate([
             'status' => 'required|in:E,Z', // 허용된 값만 통과
         ]);
+
+        if (auth()->user()->is_admin !== 'Y') {
+            abort(403, '관리자만 접근 가능합니다.');
+        }
+
+        $adminId = auth()->user()->id;
 
         // 답글 달렸는지 확인
         $chkReply = [];
@@ -149,6 +184,60 @@ class BoardController extends Controller
             $post = Post::findOrFail($no);
             $post->status = $request->status;
             $post->save();
+
+            log::info('상태 : '.$request->status);
+
+            $url = route('request.show', ['id' => $no]);
+            if( $request->status === 'E' ) // 반려
+            {
+                log::info('상태 : 반려');
+                $content = '<a target="_blank" href="' . $url . '">' . $post->title . '</a><br><br>'
+                . '요청하신 건은 ' . date('Y년 m월 d일') . '에 <strong>반려 처리</strong>되었습니다.<br>'
+                . '보다 나은 안내를 위해 추가 문의가 필요하실 경우 언제든지 문의해 주세요.';
+
+                \App\Models\Message::create([
+                    'title' => '반려 처리 안내 [ ' . date('Y-m-d') . ' ]',
+                    'sender_id' => $adminId,
+                    'receiver_id' => $post->user_id,
+                    'div' => 'S',
+                    'content' => $content,
+                    'is_read' => 0,
+                    'post_no' => $post->no,
+                    'type' => 'admin_returned',
+                    'save_status' => 'Y',
+                ]);
+
+                \App\Models\Message::create([
+                    'title' => '반려 처리 안내 [ ' . date('Y-m-d') . ' ]',
+                    'sender_id' => $adminId,
+                    'receiver_id' => $post->user_id,
+                    'div' => 'R',
+                    'content' => $content,
+                    'is_read' => 0,
+                    'post_no' => $post->no,
+                    'type' => 'admin_returned',
+                    'save_status' => 'Y',
+                ]);
+            }
+            else // 처리완료
+            {
+                log::info('상태 : 처리완료');
+                $content = '<a target="_blank" href="' . $url . '">' . $post->title . '</a><br><br> 요청건은 '
+                    . date('Y년 m월 d일') . '에 확인되어 처리 완료되었습니다. '
+                    . '이후에도 궁금한 점이 있다면 언제든지 문의해 주세요.';
+
+                \App\Models\Message::create([
+                    'title' => '처리 완료 안내 [ ' . date('Y-m-d') . ' ]',
+                    'sender_id' => $adminId,
+                    'receiver_id' => $post->user_id,
+                    'div' => 'S',
+                    'content' => $content,
+                    'is_read' => 0,
+                    'post_no' => $post->no,
+                    'type' => 'admin_done',
+                    'save_status' => 'Y',
+                ]);
+            }
 
             return redirect()->back()
                             ->with('title_d', '완료')
