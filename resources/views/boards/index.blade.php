@@ -173,7 +173,9 @@
                                 @method('PUT')
                                 <select name="status" class="form-select form-select-sm w-auto d-inline-block me-2">
                                     <option value="E" {{ old('status', $post->status) === 'E' ? 'selected' : '' }}>반려</option>
+                                    @if( $post->view_status == 'Z' )
                                     <option value="Z" {{ old('status', $post->status) === 'Z' ? 'selected' : '' }}>완료</option>
+                                    @endif
                                 </select>
                                 <button type="submit" class="btn btn-primary btn-sm mb_5">상태 변경</button>
                             </form>
