@@ -117,21 +117,21 @@
                                 {{-- 상태가 '요청 접수' 관리자 열람,답글 X --}}
                                 @if( $post->status == 'A' )
                                     <div class="status_div" id="chk_no">
-                                        <img class="chk-zone" src="/img/chk.png" width="18.5" >
+                                        <img class="chk-zone" src="/img/chk.png" width="14.5" >
                                         요청접수
                                     </div>
                                 {{-- 검토 --}}
                                 {{-- 상태가 '담당자 확인 중'이고 답글이 달리지 않음 --}}
                                 @elseif( $post->status == 'B' && $post->reply_at == '' )
                                     <div class="status_div" id="chk_no">
-                                        <img class="chk-zone" src="/img/chk.png" width="18.5">
+                                        <img class="chk-zone" src="/img/chk.png" width="15">
                                         담당자 확인중
                                     </div>
                                 {{-- 처리 --}}
                                 {{-- 상태 '담당자 답변 완료' 달린 답글 고객 확인 완료 --}}
                                 @elseif($post->status == 'C')
                                     <div class="status_div" id="user_chk_ok">
-                                        <img class="chk-zone" src="/img/chk.png" width="18.5">
+                                        <img class="chk-zone" src="/img/chk.png" width="15">
                                         답변 완료
                                     </div>
                                 {{-- 상태 '담당자 답변 완료' 달린 답글 고객 확인 완료 --}}
@@ -143,20 +143,20 @@
                                     </div>
                                     @else
                                     <div class="status_div" id="user_chk_ok">
-                                        <img class="chk-zone" src="/img/chk.png" width="18.5">
+                                        <img class="chk-zone" src="/img/chk.png" width="15.5">
                                         고객 확인 완료
                                     </div>
                                     @endif
                                 {{-- 상태 '반려' 처리불가 / 반려 --}}
                                 @elseif($post->status == 'E')
                                     <div class="status_div" id="user_chk_ok">
-                                        <img class="del-zone" src="img/user_del2.png" width="22">
+                                        <img class="del-zone" src="img/user_del2.png" width="18.5">
                                         반려
                                     </div>
                                 {{-- 상태 '완료' 처리 완료 --}}
                                 @elseif($post->status == 'Z')
                                     <div class="status_div_p" id="user_chk_ok">
-                                        <img class="chk-zone" src="/img/chk_ok.png" width="18.5">
+                                        <img class="chk-zone" src="/img/chk_ok.png" width="15">
                                         처리 완료
                                     </div>
                                 @else
