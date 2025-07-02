@@ -12,8 +12,8 @@
 
         <table class="table table-hover">
             <thead>
-                <tr class="table-active">
-                    <th scope="col" class="w-10">번호</th>
+                <tr class="table-active text-center">
+                    <th scope="col" class="w-5">번호</th>
                     <th scope="col" class="w-10">항목</th>
                     <th scope="col" class="w-20">제목</th>
                     <th scope="col" class="w-15">작성일</th>
@@ -25,23 +25,19 @@
                 @if(!empty($posts) && count($posts) > 0)
                     @foreach ($posts as $post)
                         <tr>
-                            <td scope="col">{{ $post->no }}</td>
-                            <td scope="col">{{ $post->div }}</td>
-                            <td scope="col">
-                                <a href="{{ route('request.show', $post->no) }}" class="text-blue-600 hover:underline">
-                                    {{ $post->title }}
-                                </a>
-                            </td>
-                            <td scope="col">{{ $post->updated_at }}</td>
-                            <td scope="col">{{ $post->status }}</td>
-                            <td scope="col">
+                            <td scope="col" class="text-center">{{ $post->no }}</td>
+                            <td scope="col" class="text-center">{{ $post->div }}</td>
+                            <td scope="col" onclick="location.href='{{ route('request.show', $post->no) }}'" style="cursor: pointer;"><strong>{{ $post->title }}</strong></td>
+                            <td scope="col" class="text-center">{{ $post->updated_at }}</td>
+                            <td scope="col" class="text-center">{{ $post->status }}</td>
+                            <td scope="col" class="text-center">
                             @if($post->sta == 'A')
                             <!-- 삭제 버튼 (form으로 감싸기) -->
                             <!-- <form action="{{ route('request.delete', $post->no) }}" method="POST" class="flex-center" onclick="delChk()">
                                 @csrf
                                 <button type="submit" class="btn btn-sm btn-danger">삭제</button>
                             </form> -->
-                            <button type="button" class="btn btn-danger"
+                            <button type="button" class="btn btn-sm btn-danger"
                                 onclick="confirmDelete('{{ route('request.delete', $post->no) }}', 'request')">
                                 삭제
                             </button>
