@@ -55,7 +55,8 @@ class BoardController extends Controller
             elseif ( $div === 'O' ) 
             {
                 // 답변 완료만
-                $query->whereNotNull('post_replies.no');
+                $query->whereNotNull('post_replies.no')
+                        ->whereIn('posts.status',['C', 'D']);
             } 
             elseif ( in_array($div, ['A', 'B', 'C', 'D']) ) 
             {
