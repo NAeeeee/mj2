@@ -115,7 +115,9 @@ class BoardController extends Controller
              // 확인완료 메시지가 존재하는 게시물 번호 목록
             $statusDpost = DB::table('messages')
                 ->whereIn('post_no', $postNos)
+                ->where('save_status','Y')
                 ->where('type', 'confirm_done')
+                ->where('div', 'R')
                 ->pluck('post_no')
                 ->toArray();
 
@@ -160,7 +162,7 @@ class BoardController extends Controller
         ]);
 
         if (auth()->user()->is_admin !== 'Y') {
-            abort(403, '관리자만 접근 가능합니다.');
+            abort(403);
         }
 
         $adminId = auth()->user()->id;
@@ -191,6 +193,7 @@ class BoardController extends Controller
             $url = route('request.show', ['id' => $no]);
             if( $request->status === 'E' ) // 반려
             {
+                $div = 'E';
                 log::info('상태 : 반려');
                 $content = '<a target="_blank" href="' . $url . '">' . $post->title . '</a><br><br>'
                 . '요청하신 건은 ' . date('Y년 m월 d일') . '에 <strong>반려 처리</strong>되었습니다.<br>'
@@ -223,12 +226,13 @@ class BoardController extends Controller
             else // 처리완료
             {
                 log::info('상태 : 처리완료');
-                $content = '<a target="_blank" href="' . $url . '">' . $post->title . '</a><br><br> 요청건은 '
-                    . date('Y년 m월 d일') . '에 확인되어 처리 완료되었습니다. '
+                $div = 'Z';
+                $content = '요청건은 '
+                    . date('Y년 m월 d일') . '에 확인되어 처리 완료되었습니다. <br>'
                     . '이후에도 궁금한 점이 있다면 언제든지 문의해 주세요.';
 
                 \App\Models\Message::create([
-                    'title' => '처리 완료 안내 [ ' . date('Y-m-d') . ' ]',
+                    'title' => '게시물 처리 완료 안내 [ ' . date('Y-m-d') . ' ]',
                     'sender_id' => $adminId,
                     'receiver_id' => $post->user_id,
                     'div' => 'S',
@@ -238,9 +242,21 @@ class BoardController extends Controller
                     'type' => 'admin_done',
                     'save_status' => 'Y',
                 ]);
+
+                \App\Models\Message::create([
+                    'title' => '게시물 처리 완료 안내 [ ' . date('Y-m-d') . ' ]',
+                    'sender_id' => $adminId,
+                    'receiver_id' => $post->user_id,
+                    'div' => 'R',
+                    'content' => $content,
+                    'is_read' => 0,
+                    'post_no' => $post->no,
+                    'type' => 'admin_done',
+                    'save_status' => 'Y',
+                ]);
             }
 
-            return redirect()->back()
+            return redirect()->route('boards.index', ['div' => $div])
                             ->with('title_d', '완료')
                             ->with('msg_p2', '상태가 변경되었습니다.');
         }
@@ -315,13 +331,16 @@ class BoardController extends Controller
         $post->status = 'C';
         $post->save();
 
+        $content = '요청하신 건에 대해 답변을 남겼습니다.<br> 내용을 확인해주시고, 이상이 없다면 <strong>확인 완료</strong> 버튼을 눌러주세요.<br>'
+        . '추가 문의사항이 있으시면 언제든지 추가 문의를 통해 알려주세요. 감사합니다.';
+
         // 보낸 쪽지 (관리자 보낸편지함용)
         \App\Models\Message::create([
             'title' => '게시물 답변 완료 [ '.date('Y-m-d').' ]',
             'sender_id' => $request->admin_id, // DB는 일단 관리자ID
             'receiver_id' => $request->user_id,
             'div' => 'S',                // 알림
-            'content' => $request->content,
+            'content' => $content,
             'is_read' => 0,
             'post_no' => $request->post_no,
             'save_status' => 'Y',
@@ -333,13 +352,14 @@ class BoardController extends Controller
             'sender_id' => $request->admin_id,   // 보낸 사람은 관리자 그대로
             'receiver_id' => $request->user_id,  // 받는 사람은 회원 그대로
             'div' => 'R',                         // 받은편지
-            'content' => $request->content,
+            'content' => $content,
             'is_read' => 0,
             'post_no' => $request->post_no,
             'save_status' => 'Y',
         ]);
 
-        return redirect()->route('boards.index')->with('success', '답글 작성되었습니다!');
+        return redirect()->route('request.show', ['id' => $post->no])
+                ->with('msg', '댓글이 작성되었습니다!');
     }
 
 }
