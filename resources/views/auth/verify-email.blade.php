@@ -58,15 +58,12 @@
 @push('scripts')
 <script>
 
-    @if(session('www'))
-        console.log('팝업 띄우기 직전');
-        alertc('완료', @json(session('www')));
+@if(session('status') == 'verification-link-sent')
+    document.addEventListener('DOMContentLoaded', function () {
+            alertc('성공', '이메일 인증 링크가 전송되었습니다.','p');
+    });
+@endif
 
-        setTimeout(() => {
-            console.log('10초 후 리다이렉트 실행');
-            window.location.href = '/';
-        }, 10000);
-    @endif
 function logoutChk()
 {
     document.getElementById('logout-form').submit();
