@@ -29,7 +29,7 @@ class AdminController extends Controller
         $search_div = $request->search_div ?? '';
         $keyword = $request->search ?? '';
 
-        if ( Auth::user()->is_admin == 'Y' ) 
+        if ( Auth::user()->is_admin === 'Y' ) 
         {
             $query = DB::table('users')
                 ->orderby('id','asc');
@@ -75,10 +75,28 @@ class AdminController extends Controller
                 return $uu;
             });
 
-            return view('admin.list', compact('users', 'div', 'search_div', 'keyword'));
+            // 활동중인 회원 수
+            $stats = [
+                'user_cnt' => User::where('status', 'Y')->count(),
+                'post_cnt' => Post::where('save_status', 'Y')
+                                    ->whereHas('user', function ($query) {
+                                        $query->where('status', 'Y');
+                                    })
+                                    ->count(),
+                'today_user_cnt'  => User::where('status', 'Y')
+                                        ->whereDate('created_at', today())
+                                        ->count(),
+                'today_post_cnt'  => Post::where('save_status', 'Y')
+                                        ->whereDate('created_at', today())
+                                        ->count(),
+            ];
+
+            $user_cnt = User::where('status', 'Y')->count();
+
+            return view('admin.list', compact('users', 'div', 'search_div', 'keyword', 'user_cnt'));
         } else 
         {
-            abort(403, '접근 권한이 없습니다.');
+            abort(403);
         }
     }
 
@@ -119,7 +137,7 @@ class AdminController extends Controller
 
         if( $id === '' )
         {
-            abort(403, '잘못된 접근입니다.');
+            abort(404);
         }
 
         $user = User::where('id',$id)
@@ -134,7 +152,7 @@ class AdminController extends Controller
 
         if( $id === '' )
         {
-            abort(403, '잘못된 접근입니다.');
+            abort(404);
         }
 
         $user = User::find($id);

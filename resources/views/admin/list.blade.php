@@ -13,7 +13,7 @@
                 <a class="nav-link" id="all" aria-current="page" href="{{ route('admin.list') }}">전체</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="divY" href="{{ route('admin.list', ['div' => 'Y' ]) }}">활동</a>
+                <a class="nav-link" id="divY" href="{{ route('admin.list', ['div' => 'Y' ]) }}">활동 ({{ $user_cnt ?? '' }})</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="divN" href="{{ route('admin.list', ['div' => 'N' ]) }}">탈퇴</a>
@@ -25,7 +25,7 @@
 
         <table class="table table-striped table-sm">
             <thead>
-                <tr>
+                <tr class="text-center">
                     <th scope="col" class="w-10">아이디</th>
                     <th scope="col" class="w-10">이름</th>
                     <th scope="col" class="w-20">이메일</th>
@@ -36,9 +36,9 @@
             </thead>
             <tbody class="table-group-divider">
                 @forelse($users as $user)
-                    <tr>
+                    <tr class="text-center" style="cursor:pointer;"scope="col" data-user-id="{{ $user->id }}" onclick="infoPopup(this)">
                         <td scope="col">{{ $user->id }}</td>
-                        <td scope="col"><a href="#" data-user-id="{{ $user->id }}" onclick="infoPopup(this)">{{ $user->name }}</a></td>
+                        <td scope="col"><strong>{{ $user->name }}</strong></td>
                         <td scope="col">{{ $user->email }}</td>
                         <td scope="col">{{ $user->created_at }}</td>
                         <td scope="col">{{ $user->ph }}</td>

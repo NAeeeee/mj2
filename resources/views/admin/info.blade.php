@@ -43,7 +43,15 @@
                     <span class="input-group-text" id="basic-addon2">
                         <img src="/img/email.png" width="18">
                     </span>
-                    <input type="email" class="form-control" id="email" name="email" oninput="onlyEmail(this)" value="{{ $user->email }}">
+                    @php
+
+                        if ( $user->email_verified_at === null) {
+                            $d = 'disabled';
+                        } else {
+                            $d = '';
+                        }
+                    @endphp
+                    <input type="email" class="form-control" id="email" name="email" oninput="onlyEmail(this)" value="{{ $user->email }}" {{ $d }}>
                 </div>
             </div>
 
