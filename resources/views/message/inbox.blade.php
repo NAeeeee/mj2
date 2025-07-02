@@ -20,7 +20,7 @@
 
         <table class="table table-bordered table-hover">
             <thead class="table-light">
-                <tr>
+                <tr class="text-center">
                     <th scope="col" class="w-10">구분</th>
                     <th scope="col" class="w-20">제목</th>
                     <th scope="col" class="w-10">발신자</th>
@@ -32,19 +32,16 @@
             <tbody>
                 @forelse ($message as $msg)
                     <tr>
-                        <td>{{ $msg->div === 'S' ? '보낸 쪽지' : '받은 쪽지' }}</td>
-                        <td>
-                            <a href="{{ route('message.show', $msg->no) }}" class="text-decoration-none text-primary"
-                                onclick="window.open(this.href, 'msgPopup', 'width=600,height=450'); return false;">
-                                {{ $msg->title }}
-                            </a>
+                        <td class="text-center">{{ $msg->div === 'S' ? '보낸 쪽지' : '받은 쪽지' }}</td>
+                        <td onclick="window.open('{{ route('message.show', $msg->no) }}', 'msgPopup', 'width=600,height=450'); return false;" style="cursor: pointer;">
+                            <strong>{{ $msg->title }}</strong>
                         </td>
-                        <td>{{ $msg->name }}</td>
+                        <td class="text-center">{{ $msg->name }}</td>
                         @if( $div == 'S' )
-                        <td>{{ $msg->name_r ?? '' }}</td>
+                        <td class="text-center">{{ $msg->name_r ?? '' }}</td>
                         @endif
-                        <td>{{ $msg->created_at }}</td>
-                        <td>
+                        <td class="text-center">{{ $msg->created_at }}</td>
+                        <td class="text-center">
                             @if( $msg->is_read == 1 )
                                 <img class="msg_chk" src="/img/chk_ok.png" width=20>
                             @endif

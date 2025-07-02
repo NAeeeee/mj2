@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <section class="pt-4 mt-5">
+    <section class="pt-4 mt-4">
     <div class="container px-lg-5">
         <!-- <div class="with mb-4">
             <h2 class="text-2xl font-bold">내정보</h1>
@@ -15,7 +15,7 @@
             <span class="input-group-text" id="basic-addon1">
                 <img src="/img/user.png" width="18">
             </span>
-            <input type="text" class="form-control" id="id" value="{{ $user->id }}" disabled>
+            <input type="text" class="form-control" id="id" value="{{ $user->name }}" disabled>
         </div>
 
         <div class="input-group mb-3">
@@ -66,11 +66,11 @@
         <div class="input-group mb-3">
             <table class="table table-striped">
                 <thead>
-                    <tr class="table-dark">
-                        <th scope="col" class="w-20">제목</th>
-                        <th scope="col" class="w-10">항목</th>
+                    <tr class="table-dark text-center">
+                        <th scope="col" class="w-7">항목</th>
+                        <th scope="col" class="w-50">제목</th>
                         <th scope="col" class="w-15">작성일</th>
-                        <th scope="col" class="w-10">상태</th>
+                        <th scope="col" class="w-20">상태</th>
                         <th scope="col" class="w-10">관리</th>
                     </tr>
                 </thead>
@@ -78,15 +78,13 @@
                 @if(!empty($board) && count($board) > 0)
                     @foreach ($board as $post)
                         <tr>
-                            <td scope="col">
-                                <a href="{{ route('request.show', $post->no) }}" class="text-blue-600 hover:underline">
-                                    {{ $post->title }}
-                                </a>
+                            <td class="text-center" scope="col">{{ $post->div }}</td>
+                            <td sclass="text-center" scope="col" onclick="location.href='{{ route('request.show', $post->no) }}'" style="cursor: pointer;">
+                                <strong>{{ $post->title }}</strong>
                             </td>
-                            <td scope="col">{{ $post->div }}</td>
-                            <td scope="col">{{ $post->updated_at }}</td>
-                            <td scope="col">{{ $post->status }}</td>
-                            <td scope="col">
+                            <td class="text-center" scope="col">{{ $post->updated_at }}</td>
+                            <td class="text-center" scope="col">{{ $post->status }}</td>
+                            <td class="text-center" scope="col">
                             @if($post->sta == 'A')
                             <!-- 삭제 버튼 (form으로 감싸기) -->
                             <button type="button" class="btn btn-sm btn-danger" 

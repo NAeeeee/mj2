@@ -52,7 +52,7 @@ class CustomVerifyEmail extends Notification
 
     protected function verificationUrl($notifiable)
     {
-        return URL::temporarySignedRoute(
+        $temporarySignedRoute = URL::temporarySignedRoute(
             'verification.verify',
             Carbon::now()->addMinutes(60),
             [
@@ -60,6 +60,7 @@ class CustomVerifyEmail extends Notification
                 'hash' => sha1($notifiable->getEmailForVerification()),
             ]
         );
+        return config('app.url') . parse_url($temporarySignedRoute, PHP_URL_PATH) . '?' . parse_url($temporarySignedRoute, PHP_URL_QUERY);
     }
 
     /**

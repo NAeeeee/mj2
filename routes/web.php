@@ -5,8 +5,10 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\VerifyEmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +21,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->middleware(['auth', 'verified']);
+// Route::get('/', function () {
+//     return view('welcome');
+// })->middleware(['auth', 'verified']);
 
 
 Route::get('/dashboard', function () {
@@ -30,23 +32,15 @@ Route::get('/dashboard', function () {
 
 
 Route::middleware('auth')->group(function () {
+    Route::get('/', [ProfileController::class, 'main'])
+        ->middleware('verified')
+        ->name('main');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/pwChange', [ProfileController::class, 'popup'])->name('profile.popup');
     Route::get('/phChange', [ProfileController::class, 'popup'])->name('profile.pwPopup');
     Route::post('/profile/{id}', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/delete/{id}', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // 사용자 이메일 인증
-    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-        $request->fulfill(); // 인증 완료 처리
-        return redirect('/home'); // 인증 완료 후 이동할 곳
-    })->middleware(['signed'])->name('verification.verify');
-
-    // 인증 메일 재전송
-    Route::post('/email/verification-notification', function (Request $request) {
-        $request->user()->sendEmailVerificationNotification(); // 메일 다시 보내기
-        return back()->with('www', '재전송 완료!');
-    })->middleware(['throttle:6,1'])->name('verification.send');
 
     Route::get('/email/update-form', function () {
         return view('auth.email-update');
@@ -110,9 +104,32 @@ Route::middleware(['auth'])->prefix('message')->group(function () {
     Route::post('/', [MessageController::class, 'store'])->name('message.store');
 });
 
+// 공지
+Route::get('/notice', [NoticeController::class, 'index'])->name('notice.index');
+Route::get('/notice/show/{no}', [NoticeController::class, 'show'])->name('notice.show');
+Route::middleware(['auth'])->prefix('notice')->group(function () {
+    Route::get('/create', [NoticeController::class, 'create'])->name('notice.create');
+    // 글 저장 처리
+    Route::post('/', [NoticeController::class, 'store'])->name('notice.store');
+    // 수정 화면
+    Route::get('/edit/{no}', [NoticeController::class, 'edit'])->name('notice.edit');
+    // 수정 처리
+    Route::put('/edit/{no}', [NoticeController::class, 'update'])->name('notice.update');
+    // 삭제
+    Route::post('/delete/{no}', [NoticeController::class, 'delete'])->name('notice.delete');
+});
+
 // php 정보
 Route::get('/phpinfo', function () {
     phpinfo();
+});
+
+Route::get('/error/404', function () {
+     return view('error.404');
+});
+
+Route::get('/error/403', function () {
+     return view('error.403');
 });
 
 require __DIR__.'/auth.php';

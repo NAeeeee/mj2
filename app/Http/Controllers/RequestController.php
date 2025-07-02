@@ -242,7 +242,7 @@ class RequestController extends Controller
             else
             {
                 // 글쓴회원, 관리자만 진입가능
-                abort(403, '잘못된 접근입니다.');
+                abort(403);
             }
 
         }
@@ -426,7 +426,7 @@ class RequestController extends Controller
 
         if( $no === '' )
         {
-            abort(403, '잘못된 접근입니다.');
+            abort(404);
         }
 
         // 게시물 상태, 댓글 유무 체크

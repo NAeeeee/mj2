@@ -10,12 +10,65 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 use App\Models\User;
+use App\Models\Notice;
 use Illuminate\Support\Carbon;
 use Log;
 use DB;
+use App\Models\Post;
 
 class ProfileController extends Controller
 {
+
+    public function main(Request $request)
+    {
+        Log::info(__METHOD__);
+
+        // 회원용 화면
+        $notice = Notice::where('save_status','Y')
+                    ->orderby('no','desc')
+                    ->limit(3)
+                    ->get();
+        
+        $notice->transform(function ($nn) {
+                $notice_div = config('var.notice_div');
+                $nn->created_date = Carbon::parse($nn->created_at)->format('Y-m-d');
+
+                $nn->div = $notice_div[$nn->div];
+
+                return $nn;
+            });
+
+        // 활동중인 회원 수
+        $state = [
+                'user_cnt' => User::where('status', 'Y')->count(),
+                'post_cnt' => Post::where('save_status', 'Y')
+                                    ->whereIn('status',['A','B'])
+                                    ->whereHas('user', function ($query) {
+                                        $query->where('status', 'Y');
+                                    })
+                                    ->count(),
+                'today_user_cnt'  => User::where('status', 'Y')
+                                        ->whereDate('created_at', today())
+                                        ->count(),
+                'today_post_cnt'  => Post::where('save_status', 'Y')
+                                        ->whereDate('created_at', today())
+                                        ->count(),
+        ];
+
+        $total = Post::where('save_status','Y')
+                        ->whereHas('user', function ($query) {
+                            $query->where('status', 'Y');
+                        })->count();
+        $sta_ab = Post::where('save_status','Y')
+                        ->whereIn('status',['A','B'])
+                        ->count();
+                        
+
+        $percentage = $total > 0 ? round(($state['post_cnt'] / $total) * 100, 1) : 0;
+
+
+        return view('welcome' ,compact('state', 'percentage', 'notice'));
+    }
     /**
      * Display the user's profile form.
      */
@@ -149,7 +202,7 @@ class ProfileController extends Controller
         $user = $request->user();
         if( $user->id != $id )
         {
-            abort(403, '잘못된 접근입니다.');
+            abort(403);
         }
 
         $uu = User::find($user->id); // 혹은 Auth::id() 사용
