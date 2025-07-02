@@ -34,9 +34,10 @@ class AdminController extends Controller
             $query = DB::table('users')
                 ->orderby('id','asc');
             
-            if ( $div === 'O' ) 
+            if ( $div === 'Y' ) 
             {
-                $query->where('status', 'Y');
+                $query->where('status', 'Y')
+                        ->where('is_admin', 'N');
             }
             else if ( $div === 'N' ) 
             {
@@ -91,7 +92,7 @@ class AdminController extends Controller
                                         ->count(),
             ];
 
-            $user_cnt = User::where('status', 'Y')->count();
+            $user_cnt = User::where('status', 'Y')->where('is_admin', 'N')->count();
 
             return view('admin.list', compact('users', 'div', 'search_div', 'keyword', 'user_cnt'));
         } else 

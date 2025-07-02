@@ -4,7 +4,7 @@
 <section class="pt-3 mt-4">
     <div class="container px-lg-5">
         <div class="mb-4-5 with3">
-            <h2 class="text-2xl font-bold">견적 요청 목록</h2>
+            <h2 class="text-2xl font-bold">게시판 목록</h2>
             <a href="{{ route('request.create', ['id' => Auth::user()->id ]) }}" class="btn btn-dark" style="float:right">
                 게시물 작성
             </a>
