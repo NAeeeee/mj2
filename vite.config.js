@@ -7,16 +7,15 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/css/app.css',
-                'resources/css/style.scss',
+                'resources/css/bootstrap.css',
+                'resources/css/style.css',
                 'resources/js/app.js',
             ],
             refresh: true,
         }),
     ],
     server: {
-        proxy: {
-            '/': 'http://localhost:8000',  // Laravel 백엔드 서버로 프록시
-        },
+        host: '127.0.0.1',
         port: 3000,
     },
 });
