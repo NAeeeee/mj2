@@ -57,20 +57,24 @@
         @else
             <a href="{{ route('request.list') }}?id={{ $post->user['id'] }}" class="btn btn-secondary">목록으로</a>
             {{-- 글상태가 '고객확인완료'일때 --}}
-            @if( $post->status == 'D' && $post->user_ok === 'N' )
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    $("#d-with").addClass('with2');
-                });
-            </script>
-            <form id="confirmForm" action="{{ route('request.submit') }}" method="POST" >
-                @csrf
-                <input type="hidden" name="no" id="no" value="{{ $post->no }}">
-                <button type="button" class="btn btn-danger" onclick="okChk();">확인완료</button>
-            </form>
+            @if( $post->status == 'D' && $post->user_ok == 'N' )
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        $("#d-with").addClass('with2');
+                    });
+                </script>
+                <form id="confirmForm" action="{{ route('request.submit') }}" method="POST" >
+                    @csrf
+                    <input type="hidden" name="no" id="no" value="{{ $post->no }}">
+                    <button type="button" class="btn btn-danger" onclick="okChk();">확인완료</button>
+                </form>
+            @else
+            <a href="{{ route('request.create', ['id' => Auth::user()->id ]) }}" class="btn btn-danger">추가문의하기</a>
             @endif
             {{-- 글상태가 '반려'일때 --}}
+            @if( $post->status == 'E' )
             <a href="{{ route('request.create', ['id' => Auth::user()->id ]) }}" class="btn btn-danger">추가문의하기</a>
+            @endif
         @endif
         </div>
 
