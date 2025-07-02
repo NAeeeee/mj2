@@ -74,21 +74,27 @@
     {{-- 팝업(primary) --}}
     @if(session('msg'))
         <script>
-            alertc('완료',"{{ session('msg') }}",'p');
+            document.addEventListener('DOMContentLoaded', function () {
+                alertc('완료',"{{ session('msg') }}",'p');
+            });
         </script>
     @endif
 
     {{-- 팝업(danger) --}}
     @if(session('msg_d'))
         <script>
-            alertc("{{ session('title_d') }}","{{ session('msg_d') }}");
+            document.addEventListener('DOMContentLoaded', function () {
+                alertc("{{ session('title_d') }}","{{ session('msg_d') }}");
+            });
         </script>
     @endif
 
     {{-- 팝업(secondary) --}}
     @if(session('msg_s'))
         <script>
-            alertc('완료',"{{ session('msg_s') }}",'s');
+            document.addEventListener('DOMContentLoaded', function () {
+                alertc('완료',"{{ session('msg_s') }}",'s');
+            });
         </script>
     @endif
 

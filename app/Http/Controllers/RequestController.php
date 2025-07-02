@@ -180,7 +180,6 @@ class RequestController extends Controller
 
         $post = \App\Models\Post::with('user')->findOrFail($no);
         
-        log::info($post['user']->status);
         // 관리자외 삭제된 글 접근x
         if( !array_key_exists(auth()->user()->id, config('var.admin')) && $post->save_status == 'N' )
         {
@@ -225,7 +224,7 @@ class RequestController extends Controller
         {
             log::info($post->no.'번 게시물 상태 : '.$post->status);
             log::info("글쓴이 no : ".$post->user_id);
-            if( auth()->user()->id == $post->user_id )
+            if( array_key_exists(auth()->user()->id, config('var.admin')) || auth()->user()->id == $post->user_id )
             {
                 log::info('아이디 같음');
                 log::info('진입 아이디 : '.auth()->user()->id);
@@ -255,16 +254,16 @@ class RequestController extends Controller
                 ->where('sender_id', $post->user_id)
                 ->where('div', 'S')
                 ->where('save_status', 'Y')
+                ->where('type', 'confirm_done')
                 ->first();
             
             if( !$check_msg )
             {
-                $post->user_ok == 'N';
+                $post->user_ok = 'N';
             }
         }
 
         $post->sta = config('var.status');
-        log::info(print_r($post,true));
 
         return view('request.show', compact('post', 'reply', 'img'));
     }

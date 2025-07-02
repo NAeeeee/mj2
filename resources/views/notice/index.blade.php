@@ -22,7 +22,7 @@
                 <tr class="table-dark text-center">
                     <th scope="col" class="w-5">번호</th>
                     <th scope="col" class="w-10">항목</th>
-                    <th scope="col" class="w-60">제목</th>
+                    <th scope="col" class="w-70">제목</th>
                     <th scope="col" class="w-10">작성일</th>
                 </tr>
             </thead>

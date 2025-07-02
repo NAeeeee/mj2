@@ -136,10 +136,17 @@
                                     </div>
                                 {{-- 상태 '담당자 답변 완료' 달린 답글 고객 확인 완료 --}}
                                 @elseif($post->status == 'D')
+                                    @if( $post->view_status == 'Z' )
                                     <div class="status_div_p" id="user_chk_ok">
                                         <img class="chk-zone" src="/img/chk_ok.png" width="18.5">
                                         고객 확인 완료
                                     </div>
+                                    @else
+                                    <div class="status_div" id="user_chk_ok">
+                                        <img class="chk-zone" src="/img/chk.png" width="18.5">
+                                        고객 확인 완료
+                                    </div>
+                                    @endif
                                 {{-- 상태 '반려' 처리불가 / 반려 --}}
                                 @elseif($post->status == 'E')
                                     <div class="status_div" id="user_chk_ok">
@@ -172,10 +179,10 @@
                                 @csrf
                                 @method('PUT')
                                 <select name="status" class="form-select form-select-sm w-auto d-inline-block me-2">
-                                    <option value="E" {{ old('status', $post->status) === 'E' ? 'selected' : '' }}>반려</option>
                                     @if( $post->view_status == 'Z' )
                                     <option value="Z" {{ old('status', $post->status) === 'Z' ? 'selected' : '' }}>완료</option>
                                     @endif
+                                    <option value="E" {{ old('status', $post->status) === 'E' ? 'selected' : '' }}>반려</option>
                                 </select>
                                 <button type="submit" class="btn btn-primary btn-sm mb_5">상태 변경</button>
                             </form>
