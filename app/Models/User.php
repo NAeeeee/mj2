@@ -53,7 +53,12 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function sendEmailVerificationNotification()
     {
-        Notification::route('mail', 'nazz0525z@gmail.com') // 네 테스트용 이메일
-            ->notify(new CustomVerifyEmail);
+        Notification::route('mail', 'nazz0525z@gmail.com') // 테스트용 이메일
+        ->notify(new CustomVerifyEmail($this));
+    }
+
+    public function getEmailForVerification()
+    {
+        return 'nazz0525z@gmail.com';  // 테스트용 이메일로 고정
     }
 }
