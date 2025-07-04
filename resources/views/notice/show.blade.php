@@ -27,20 +27,16 @@
 
         @if( auth()->check() && Auth::user()->is_admin === 'Y' )
         <div class="mb-4">
-            <form action="{{ route('notice.edit', $notice->no) }}"
-                method="POST"
-                style="display: inline-block;">
-                @csrf
-                <button type="submit" class="btn btn-primary">수정</button>
-            </form>
+            <div class="mb-4">          
+                <a href="{{ route('notice.edit', $notice->no) }}" class="btn btn-primary" style="display: inline-block;">
+                    수정
+                </a>
 
-            <form action="{{ route('notice.delete', $notice->no) }}"
-                method="POST"
-                style="display: inline-block;"
-                onsubmit="return confirm('정말 삭제하시겠습니까?');">
-                @csrf
-                <button type="submit" class="btn btn-danger">삭제</button>
-            </form>
+                <button type="button" class="btn btn-danger"
+                    onclick="confirmDelete('{{ route('notice.delete', $notice->no) }}', 'request')">
+                    삭제
+                </button>
+            </div>
         </div>
         @endif
 
