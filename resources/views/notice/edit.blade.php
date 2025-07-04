@@ -38,21 +38,9 @@
 
         <div class="with mb-3">
         {{-- 기존 업로드된 이미지 출력 --}}
-        {{-- @foreach ($img as $image)
-            <div class="file-upload-box mb-4">
-                <div class="mb-2">
-                    <img src="{{ asset('img/' . $image->pathDate . '/' . $image->savename) }}" width="300">
-                    <label>
-                        <input type="checkbox" name="delete_files[]" value="{{ $image->no }}">
-                        삭제
-                    </label>
-                </div>
-            </div>
-        @endforeach --}}
-
         @foreach ($img as $image)
             <div class="d-inline-block position-relative" style="width: 300px;">
-                <img src="{{ asset('img/' . $image->pathDate . '/' . $image->savename) }}" 
+                <img src="{{ asset('storage/img/' . $image->pathDate . '/' . $image->savename) }}" 
                     class="img-thumbnail w-100">
 
                 <input type="checkbox" name="delete_files[]" value="{{ $image->no }}" 
@@ -61,7 +49,7 @@
                 <label for="delete_file_{{ $image->no }}" 
                     class="position-absolute top-0 end-0 m-1 btn btn-sm btn-danger rounded-circle"
                     style="cursor: pointer; user-select:none; display:flex; align-items:center; justify-content:center; width:24px; height:24px;">
-                    <i class="bi bi-x-circle"></i>  <!-- fontawesome x 아이콘 예시 -->
+                    <i class="bi bi-x-circle"></i>
                 </label>
             </div>
         @endforeach

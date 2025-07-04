@@ -24,7 +24,7 @@
                 <p class="card-text mt-3">{{ $post->content }}</p>
                 @forelse ($img as $i)
                     @if( $i->target_type == 'P' )
-                        <img src="{{ asset('img/' . $i->pathDate . '/' . $i->savename) }}" width="200">
+                        <img src="{{ asset('storage/img/' . $i->pathDate . '/' . $i->savename) }}" width="200">
                     @endif
                 @empty
                     
@@ -92,7 +92,7 @@
                     <p class="card-text mt-3">{{ $reply->content }}</p>
                     @forelse ($img as $i)
                         @if( $i->target_type == 'R' )
-                            <img src="{{ asset('img/' . $i->pathDate . '/' . $i->savename) }}" width="200">
+                            <img src="{{ asset('storage/img/' . $i->pathDate . '/' . $i->savename) }}" width="200">
                         @endif
                     @empty
                                 

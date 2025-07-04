@@ -98,20 +98,34 @@ class RequestController extends Controller
                     $filename = $file->getClientOriginalName();
                     log::info("파일명 : ".$filename);
 
-                    // 경로 없으면 생성 (img/날짜)
-                    $path = 'img/' . now()->format('Ymd');
-                    $fullPath = public_path($path);
+                    // 1. 경로: storage/app/public/img/날짜
+                    $path = 'public/img/' . now()->format('Ymd');
+
+                    // 2. 절대경로 구하기(storage/app/public/img/날짜)
+                    $fullPath = storage_path('app/public/img/' . now()->format('Ymd'));
+                    Log::info('저장 경로: ' . $fullPath);
+
+                    // 파일 사이즈 로그
                     $size = $file->getSize();
                     Log::info("사이즈 : " . $size);
 
+                    // 3. 경로가 없으면 Laravel File 클래스로 생성 (0755 권한, 재귀 생성)
                     if (!\File::exists($fullPath)) {
                         \File::makeDirectory($fullPath, 0755, true);
                     }
 
-                    $saveName = now()->format('Ymd_His').'_'.$filename;
+                    // 4. 저장할 파일명
+                    $saveName = now()->format('Ymd_His') . '_' . $filename;
                     Log::info("경로 : " . $fullPath);
-                    Log::info("저장 파일명 : ".$saveName);
-                    $file->move($fullPath, $saveName); // ← 여기가 핵심
+                    Log::info("저장 파일명 : " . $saveName);
+
+                    // 5. 이동 (storage/app/public/img/날짜/파일명)
+                    $file->move($fullPath, $saveName);
+
+                    // 6. 웹에서 접근할 URL (public/storage/img/날짜/파일명)
+                    // 'public/'을 'storage/'로 치환해서 URL 생성
+                    $url = asset(str_replace('public/', 'storage/', $path . '/' . $saveName));
+                    Log::info("접근 URL : " . $url);
 
                     // DB에 저장
                     $postFile = new PostFile();
@@ -338,20 +352,34 @@ class RequestController extends Controller
                 $filename = $file->getClientOriginalName();
                 log::info("파일명 : ".$filename);
 
-                // 경로 없으면 생성 (img/날짜)
-                $path = 'img/' . now()->format('Ymd');
-                $fullPath = public_path($path);
+                // 1. 경로: storage/app/public/img/날짜
+                $path = 'public/img/' . now()->format('Ymd');
+
+                // 2. 절대경로 구하기(storage/app/public/img/날짜)
+                $fullPath = storage_path('app/public/img/' . now()->format('Ymd'));
+                Log::info('저장 경로: ' . $fullPath);
+
+                // 파일 사이즈 로그
                 $size = $file->getSize();
                 Log::info("사이즈 : " . $size);
 
+                // 3. 경로가 없으면 Laravel File 클래스로 생성 (0755 권한, 재귀 생성)
                 if (!\File::exists($fullPath)) {
                     \File::makeDirectory($fullPath, 0755, true);
                 }
 
-                $saveName = now()->format('Ymd_His').'_'.$filename;
+                // 4. 저장할 파일명
+                $saveName = now()->format('Ymd_His') . '_' . $filename;
                 Log::info("경로 : " . $fullPath);
-                Log::info("저장 파일명 : ".$saveName);
-                $file->move($fullPath, $saveName); // ← 여기가 핵심
+                Log::info("저장 파일명 : " . $saveName);
+
+                // 5. 이동 (storage/app/public/img/날짜/파일명)
+                $file->move($fullPath, $saveName);
+
+                // 6. 웹에서 접근할 URL (public/storage/img/날짜/파일명)
+                // 'public/'을 'storage/'로 치환해서 URL 생성
+                $url = asset(str_replace('public/', 'storage/', $path . '/' . $saveName));
+                Log::info("접근 URL : " . $url);
 
                 // DB에 저장
                 $postFile = new PostFile();
