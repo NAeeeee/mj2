@@ -42,7 +42,7 @@
         {{-- @foreach ($img as $image)
             <div class="file-upload-box mb-4">
                 <div class="mb-2">
-                    <img src="{{ asset('img/' . $image->pathDate . '/' . $image->savename) }}" width="300">
+                    <img src="{{ asset('storage/img/' . $image->pathDate . '/' . $image->savename) }}" width="300">
                     <label>
                         <input type="checkbox" name="delete_files[]" value="{{ $image->no }}">
                         삭제
@@ -53,7 +53,7 @@
 
         @foreach ($img as $image)
             <div class="d-inline-block position-relative" style="width: 300px;">
-                <img src="{{ asset('img/' . $image->pathDate . '/' . $image->savename) }}" 
+                <img src="{{ asset('storage/img/' . $image->pathDate . '/' . $image->savename) }}" 
                     class="img-thumbnail w-100">
 
                 <input type="checkbox" name="delete_files[]" value="{{ $image->no }}" 

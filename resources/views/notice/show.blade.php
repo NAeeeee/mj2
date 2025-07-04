@@ -16,7 +16,7 @@
                 <p class="card-text mt-3">{{ $notice->content }}</p>
                 @forelse ($img as $i)
                     @if( $i->target_type == 'N' )
-                        <img src="{{ asset('img/' . $i->pathDate . '/' . $i->savename) }}" width="200">
+                        <img src="{{ asset('storage/img/' . $i->pathDate . '/' . $i->savename) }}" width="200">
                     @endif
                 @empty
                     
