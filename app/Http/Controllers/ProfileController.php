@@ -40,7 +40,7 @@ class ProfileController extends Controller
 
         // 활동중인 회원 수
         $state = [
-                'user_cnt' => User::where('status', 'Y')->count(),
+                'user_cnt' => User::where('status', 'Y')->where('is_admin','N')->count(),
                 'post_cnt' => Post::where('save_status', 'Y')
                                     ->whereIn('status',['A','B'])
                                     ->whereHas('user', function ($query) {
