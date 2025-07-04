@@ -138,7 +138,7 @@
                                 @elseif($post->status == 'D')
                                     @if( $post->view_status == 'Z' )
                                     <div class="status_div_p" id="user_chk_ok">
-                                        <img class="chk-zone" src="/img/chk_ok.png" width="18.5">
+                                        <img class="chk-zone" src="/img/chk_ok.png" width="17.5">
                                         고객 확인 완료
                                     </div>
                                     @else
