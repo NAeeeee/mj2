@@ -69,13 +69,13 @@ function rateFormat1(n)
 }
 
 // 문자만 입력
-function onlyString(obj)
+window.onlyString = function (obj)
 {
     obj.value = obj.value.replace(/[^ㄱ-힣]/g, "");
 }
 
 // 문자,영문
-function onlyStr(obj)
+window.onlyStr = function (obj) 
 {
 	obj.value = obj.value.replace(/[^ㄱ-힣a-zA-Z ]/g, "");
 
@@ -87,31 +87,31 @@ function onlyStr(obj)
 }
 
 // 숫자만 입력
-function onlyNumber(obj)
+window.onlyNumber = function (obj)
 {
     obj.value = obj.value.replace(/[^0-9]/g, "");
 }
 
 // 숫자,영문
-function onlyEngNum(obj)
+window.onlyEngNum = function (obj) 
 {
     obj.value = obj.value.replace(/[^0-9a-zA-Z]/g, "");
 }
 
 // 이메일
-function onlyEmail(obj)
+window.onlyEmail = function (obj)
 {
     obj.value = obj.value.replace(/[^0-9a-zA-Z@.]/g, "");
 }
 
 // 비밀번호 !@#$%^&*()_+-=[]{};':"\\|,.<>/?
-function onlyEngNum(obj)
+window.onlyEngNum = function (obj)
 {
     obj.value = obj.value.replace(/[^a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g, "");
 }
 
 // 공용 팝업
-function alertc(title, contents='', mh='')
+window.alertc = function (title, contents='', mh='')
 {
     $("#global-alert-title").html(title);
     $("#alertModalMsg").html(contents);
@@ -139,7 +139,7 @@ function alertc(title, contents='', mh='')
 }
 
 // 삭제 확인 팝업
-function confirmDelete(actionUrl, param='', method='') 
+window.confirmDelete = function (actionUrl, param='', method='')
 {
     const form = document.getElementById('deleteForm');
     form.action = actionUrl;
@@ -152,7 +152,7 @@ function confirmDelete(actionUrl, param='', method='')
 }
 
 // 탈퇴 확인 팝업
-function confirmWithdraw(url) 
+window.confirmWithdraw = function (url)
 {
     const form = document.getElementById('withdrawForm');
     form.action = url;
@@ -164,10 +164,10 @@ function confirmWithdraw(url)
 
 
 // 첨부파일 용량 체크
-function checkFiles() 
+window.checkFiles = function ()
 {
     const allowedTypes = ['image/jpeg', 'image/png'];
-    const maxSize = 3 * 1024 * 1024; // 3MB
+    const maxSize = 4 * 1024 * 1024; // 3MB
     const inputs = [file, file2, file3];
     let errors = [];
 
@@ -191,10 +191,10 @@ function checkFiles()
     return true;
 }
 
-function checkFiles_edit()
+window.checkFiles_edit = function ()
 {
     const allowedTypes = ['image/jpeg', 'image/png'];
-    const maxSize = 3 * 1024 * 1024; // 3MB
+    const maxSize = 4 * 1024 * 1024; // 3MB
 
     const fileInputs = document.querySelectorAll('input[name="file[]"]');
     let errors = [];
@@ -220,7 +220,7 @@ function checkFiles_edit()
 }
 
 
-function upload(mode='')
+window.upload = function (mode='')
 {
     var d = document.getElementById('div').value;
     var t = document.getElementById('title').value;
