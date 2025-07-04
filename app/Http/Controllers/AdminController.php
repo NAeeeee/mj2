@@ -75,22 +75,7 @@ class AdminController extends Controller
 
                 return $uu;
             });
-
-            // 활동중인 회원 수
-            $stats = [
-                'user_cnt' => User::where('status', 'Y')->count(),
-                'post_cnt' => Post::where('save_status', 'Y')
-                                    ->whereHas('user', function ($query) {
-                                        $query->where('status', 'Y');
-                                    })
-                                    ->count(),
-                'today_user_cnt'  => User::where('status', 'Y')
-                                        ->whereDate('created_at', today())
-                                        ->count(),
-                'today_post_cnt'  => Post::where('save_status', 'Y')
-                                        ->whereDate('created_at', today())
-                                        ->count(),
-            ];
+            
 
             $user_cnt = User::where('status', 'Y')->where('is_admin', 'N')->count();
 

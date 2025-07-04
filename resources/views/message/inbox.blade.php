@@ -49,7 +49,13 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="text-center">메세지가 없습니다.</td>
+                        @php
+                            if( $div == 'S' )
+                            $colspan = '6';
+                            else
+                            $colspan = '5';
+                        @endphp 
+                        <td colspan="{{ $colspan }}" class="text-center">메세지가 없습니다.</td>
                     </tr>
                 @endforelse
             </tbody>

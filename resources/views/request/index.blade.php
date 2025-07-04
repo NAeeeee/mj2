@@ -34,15 +34,15 @@
             </div>
 
             <div class="file-zone">
-                <div class="mb-3">
+                <div class="mb-2">
                     <div class="form-text2 form-label" id="basic-addon5">✔ 첨부 가능한 확장자 : jpg, png</div></label>
-                    <div class="form-text2 form-label" id="basic-addon5">✔ 파일 1개당 3MB 까지 첨부 가능</div></label>
+                    <div class="form-text2 form-label" id="basic-addon5">✔ 파일 1개당 4MB 까지 첨부 가능</div></label>
                     <input class="form-control" type="file" id="file" name="file[]">
                 </div>
-                <div class="mb-3">
+                <div class="mb-2">
                     <input class="form-control" type="file" id="file2" name="file[]">
                 </div>
-                <div class="mb-3">
+                <div class="mb-2">
                     <input class="form-control" type="file" id="file3" name="file[]">
                 </div>
             </div>

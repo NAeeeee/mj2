@@ -190,16 +190,19 @@ class RequestController extends Controller
     public function show($no)
     {
         Log::info(__METHOD__);
-        // log::info(auth()->user());
 
         $post = \App\Models\Post::with('user')->findOrFail($no);
+
+        // 글쓴 회원, 관리자외에는 진입 불가
+        if( !array_key_exists(auth()->user()->id, config('var.admin')) || auth()->user()->id !== $post->user_id )
+        {
+            abort(403);
+        }
         
         // 관리자외 삭제된 글 접근x
         if( !array_key_exists(auth()->user()->id, config('var.admin')) && $post->save_status == 'N' )
         {
-            return redirect('/')
-                ->with('title_d', '확인 요청')
-                ->with('msg_d', '삭제된 글입니다.');
+            abort(403);
         }
 
         // id가 관리자고 상태(status)가 'A'(요청접수)

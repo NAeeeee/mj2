@@ -5,6 +5,15 @@
     <div class="container px-lg-5">
         <div class="mb-5">
             <h2 class="text-2xl font-bold ">게시글 상세보기</h2>
+            <strong>
+                @if($post->user->status == 'N')
+                    이 글은 탈퇴한 회원이 작성하였습니다.
+                @else
+                    @if( $post->save_status == 'N' )
+                        회원에 의해 삭제된 글입니다.
+                    @endif
+                @endif
+            </strong>
         </div>
 
         <div class="card mb-4">
@@ -49,7 +58,7 @@
 
         
         <div id="d-with" class="mb-4">
-        @if(auth()->user()->is_admin == 'Y')
+        @if(auth()->user()->is_admin === 'Y')
             <a href="{{ route('boards.index') }}" class="btn btn-secondary">목록으로</a>
             @if($post->save_status == 'Y' && $post->status == 'B' && $post['user']->status == 'Y')
                 <button type="button" class="btn btn-danger" onclick="div()">관리자 답글달기</button>
@@ -57,23 +66,30 @@
         @else
             <a href="{{ route('request.list') }}?id={{ $post->user['id'] }}" class="btn btn-secondary">목록으로</a>
             {{-- 글상태가 '고객확인완료'일때 --}}
-            @if( $post->status == 'D' && $post->user_ok == 'N' )
+            @if( $post->status == 'D' )
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
                         $("#d-with").addClass('with2');
                     });
                 </script>
+                @if( $post->user_ok == 'N' )
                 <form id="confirmForm" action="{{ route('request.submit') }}" method="POST" >
                     @csrf
                     <input type="hidden" name="no" id="no" value="{{ $post->no }}">
                     <button type="button" class="btn btn-danger" onclick="okChk();">확인완료</button>
                 </form>
-            @else
-            <a href="{{ route('request.create', ['id' => Auth::user()->id ]) }}" class="btn btn-danger">추가문의하기</a>
+                @else
+                <a href="{{ route('request.create', ['id' => Auth::user()->id ]) }}" class="btn btn-danger">추가문의하기</a>
+                @endif
             @endif
-            {{-- 글상태가 '반려'일때 --}}
-            @if( $post->status == 'E' )
-            <a href="{{ route('request.create', ['id' => Auth::user()->id ]) }}" class="btn btn-danger">추가문의하기</a>
+            {{-- 글상태가 '반려', '처리완료'일때 --}}
+            @if( $post->status == 'E' || $post->status == 'Z' )
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        $("#d-with").addClass('with2');
+                    });
+                </script>
+                <a href="{{ route('request.create', ['id' => Auth::user()->id ]) }}" class="btn btn-danger">추가문의하기</a>
             @endif
         @endif
         </div>
