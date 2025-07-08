@@ -68,7 +68,7 @@
             <div class="mb-3">
                 <label for="pw">비밀번호</label>
   
-            <div class="form-text2 form-label" id="basic-addon4">✔ 입력시에만 변경됩니다.</div>
+            <div class="form-text2 form-label" id="basic-addon4">✅ 입력시에만 변경됩니다.</div>
                 <div class="input-group">
                     <span class="input-group-text" id="basic-addon5">
                         <img src="/img/key.png" width="18">

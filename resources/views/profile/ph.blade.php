@@ -34,8 +34,8 @@
             @csrf
             <div class="mb-3">
                 <label for="pw">휴대폰번호</label>
-                <div class="form-text2 form-label" id="basic-addon4">✔ 하이픈('-') 제외하고 입력해주세요.</div>
-                <div class="form-text2 form-label" id="basic-addon5">✔ 보안을 위해 현재 비밀번호를 입력해주세요.</div>
+                <div class="form-text2 form-label" id="basic-addon4">✅ 하이픈('-') 제외하고 입력해주세요.</div>
+                <div class="form-text2 form-label" id="basic-addon5">✅ 보안을 위해 현재 비밀번호를 입력해주세요.</div>
                 <div class="input-group">
                     <span class="input-group-text" id="basic-addon1">
                         <img src="/img/ph.png" width="18">

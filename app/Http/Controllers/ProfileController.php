@@ -50,6 +50,7 @@ class ProfileController extends Controller
                                     ->count(),
                 'today_user_cnt'  => User::where('status', 'Y')
                                         ->whereDate('created_at', today())
+                                        ->where('is_admin','N')
                                         ->count(),
                 'today_post_cnt'  => Post::where('save_status', 'Y')
                                         ->whereDate('created_at', today())

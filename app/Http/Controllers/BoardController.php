@@ -148,7 +148,22 @@ class BoardController extends Controller
         // $view = ($div == 'X') ? 'boards.index' : 'boards.index2';
         $view = 'boards.index';
 
-        return view($view, compact('posts', 'div', 'search_div', 'keyword'));
+        $sta = [
+            'div_ab' => Post::where('save_status', 'Y')
+                                    ->whereIn('status',['A','B'])
+                                    ->whereHas('user', function ($query) {
+                                        $query->where('status', 'Y');
+                                    })
+                                    ->count(),
+            'div_cd' => Post::where('save_status', 'Y')
+                                    ->whereIn('status',['C','D'])
+                                    ->whereHas('user', function ($query) {
+                                        $query->where('status', 'Y');
+                                    })
+                                    ->count(),
+        ];
+
+        return view($view, compact('posts', 'div', 'search_div', 'keyword', 'sta'));
     }
 
 
