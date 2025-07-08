@@ -2,14 +2,14 @@
 
 @section('content')
 
-    <section class="pt-4 mt-4">
+    <section class="pt-4 {{ $user->is_admin == 'Y' ? '' : 'mt-4' }}">
     <div class="container px-lg-5">
-        <!-- <div class="with mb-4">
-            <h2 class="text-2xl font-bold">내정보</h1>
-            <a href="{{ url('/') }}">
-                <img src="/img/home.png" width="30px" style="align-content: center;float:right;">
-            </a>
-        </div> -->
+
+        @if($user->is_admin == 'Y')
+        <div class="me-2 px-2 py-1 bg-success text-white rounded-2 text-nowrap small mb-3 btn">
+            관리자
+        </div>
+        @endif
 
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">
@@ -52,7 +52,7 @@
             <button type="button" class="btn btn-primary" onclick="popup({{ $user->id }})">
                 비밀번호 변경
             </button>
-            <button type="button" class="btn btn-primary" onclick="phPopup({{ $user->id }})">
+            <button type="button" class="btn btn-primary" onclick="phPopup({{ $user->id }})" style="margin-left: 15px;">
                 핸드폰 번호 변경
             </button>
             @if($user->is_admin == 'N')
@@ -64,7 +64,7 @@
 
         @if($user->is_admin == 'N')
         <div class="input-group mb-3">
-            <table class="table table-striped">
+            <table class="table table-striped table-sm">
                 <thead>
                     <tr class="table-dark text-center">
                         <th scope="col" class="w-7">항목</th>
