@@ -7,7 +7,10 @@
         <div class="mb-4 with3">
             <h2 class="text-2xl font-bold">공지사항</h2>
             @if( auth()->check() && auth()->user()->is_admin === 'Y' )
-            <a class="btn btn-dark" href="{{ route('notice.create') }}">게시물 작성</a>
+            <div>
+                <a class="btn btn-dark" href="{{ route('notice.list') }}">공지 관리</a>
+                <a class="btn btn-dark" href="{{ route('notice.create') }}">공지 작성</a>
+            </div>
             @endif
         </div>
 

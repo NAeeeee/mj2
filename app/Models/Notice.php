@@ -13,5 +13,5 @@ class Notice extends Model
     
     protected $primaryKey = 'no';
 
-    protected $fillable = ['div', 'title', 'content', 'save_id', 'save_status'];
+    protected $fillable = ['div', 'title', 'content', 'save_id', 'save_status', 'is_visible'];
 }

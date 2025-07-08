@@ -11,12 +11,19 @@
     <form id="Form" method="POST" action="{{ route('notice.store') }}" class="mt-4" enctype="multipart/form-data">
         @csrf
         <div class="mb-3 with_gap">
-            <select name="div" id="div" class="form-select w-auto d-inline-block me-2">
-                <option value="">항목</option>
-                <option value="A">공지</option>
-                <option value="B">이벤트</option>
-                <option value="C">안내</option>
-            </select>
+            <div>
+                <select name="div" id="div" class="form-select w-auto d-inline-block me-2">
+                    <option value="">항목</option>
+                    <option value="A">공지</option>
+                    <option value="B">이벤트</option>
+                    <option value="C">안내</option>
+                </select>
+
+                <select name="is_visible" id="is_visible" class="form-select w-auto d-inline-block" required>
+                    <option value="Y">활성화</option>
+                    <option value="N">비활성화</option>
+                </select>
+            </div>
 
             <input type="input" class="form-control title_d" id="title" name="title">
         </div>
