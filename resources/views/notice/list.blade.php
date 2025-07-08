@@ -4,7 +4,7 @@
 <section class="pt-3 mt-4">
     <div class="container px-lg-5">
         <div class="mb-4-5 with3">
-            <h2 class="text-2xl font-bold">공지 목록</h2>
+            <h2 class="text-2xl font-bold">공지 관리</h2>
             <a href="{{ route('notice.create', ['id' => Auth::user()->id ]) }}" class="btn btn-dark" style="float:right">
                 공지 작성
             </a>
@@ -15,10 +15,10 @@
                 <a class="nav-link" id="all" href="{{ route('notice.list') }}">전체({{ $sta['all_cnt'] ?? '' }})</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="divY" href="{{ route('notice.list', ['div' => 'Y']) }}">활성화({{ $sta['y_cnt'] ?? '' }})</a>
+                <a class="nav-link" id="divY" href="{{ route('notice.list', ['div' => 'Y']) }}">노출({{ $sta['y_cnt'] ?? '' }})</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="divN" href="{{ route('notice.list', ['div' => 'N']) }}">비활성화({{ $sta['n_cnt'] ?? '' }})</a>
+                <a class="nav-link" id="divN" href="{{ route('notice.list', ['div' => 'N']) }}">비노출({{ $sta['n_cnt'] ?? '' }})</a>
             </li>
         </ul>
 

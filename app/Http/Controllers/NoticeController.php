@@ -85,7 +85,6 @@ class NoticeController extends Controller
         {
             if( $div === 'Y' )
             {
-                // 활성화
                 $query->where('save_status', 'Y')
                         ->where('is_visible', 'Y');
             }
@@ -118,7 +117,7 @@ class NoticeController extends Controller
             $nn->div = $notice_div[$nn->div];
             $nn->save_name = $user->name;
             $nn->ss = $nn->save_status === 'Y' ? '저장' : '삭제';
-            $nn->iv = $nn->is_visible === 'Y' ? '활성화' : '비활성화';
+            $nn->iv = $nn->is_visible === 'Y' ? '노출' : '비노출';
 
             return $nn;
         });
@@ -158,7 +157,7 @@ class NoticeController extends Controller
 
         return redirect()->route('notice.index')
                             ->with('title_d', '완료')
-                            ->with('msg_p2', '활성화 상태가 변경되었습니다.');
+                            ->with('msg_p2', '노출 여부가 변경되었습니다.');
     }
 
     // 글 쓰기
@@ -349,7 +348,7 @@ class NoticeController extends Controller
         {
             return redirect()->back()
                 ->with('title_d', '확인 요청')
-                ->with('msg_d', '삭제 상태인 글은 활성화할 수 없습니다.');
+                ->with('msg_d', '삭제 상태인 글은 노출 상태로 변경할 수 없습니다.');
         }
 
         // 업로드한 파일 삭제
