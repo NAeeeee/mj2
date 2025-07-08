@@ -25,6 +25,7 @@ class ProfileController extends Controller
 
         // 회원용 화면
         $notice = Notice::where('save_status','Y')
+                    ->where('is_visible','Y')
                     ->orderby('no','desc')
                     ->limit(3)
                     ->get();
