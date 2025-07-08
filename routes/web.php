@@ -108,6 +108,11 @@ Route::middleware(['auth'])->prefix('message')->group(function () {
 Route::get('/notice', [NoticeController::class, 'index'])->name('notice.index');
 Route::get('/notice/show/{no}', [NoticeController::class, 'show'])->name('notice.show');
 Route::middleware(['auth'])->prefix('notice')->group(function () {
+    // 리스트
+    Route::get('/list', [NoticeController::class, 'list'])->name('notice.list');
+    // 활성화 상태 변경
+    Route::put('/{no}/status', [NoticeController::class, 'updateStatus'])->name('notice.updateStatus');
+    // 작성 화면
     Route::get('/create', [NoticeController::class, 'create'])->name('notice.create');
     // 글 저장 처리
     Route::post('/', [NoticeController::class, 'store'])->name('notice.store');

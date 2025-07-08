@@ -1,0 +1,112 @@
+@extends('layouts.app2')
+
+@section('content')
+<section class="pt-3 mt-4">
+    <div class="container px-lg-5">
+        <div class="mb-4-5 with3">
+            <h2 class="text-2xl font-bold">공지 목록</h2>
+            <a href="{{ route('notice.create', ['id' => Auth::user()->id ]) }}" class="btn btn-dark" style="float:right">
+                공지 작성
+            </a>
+        </div>
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" id="all" href="{{ route('notice.list') }}">전체({{ $sta['all_cnt'] ?? '' }})</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="divY" href="{{ route('notice.list', ['div' => 'Y']) }}">활성화({{ $sta['y_cnt'] ?? '' }})</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="divN" href="{{ route('notice.list', ['div' => 'N']) }}">비활성화({{ $sta['n_cnt'] ?? '' }})</a>
+            </li>
+        </ul>
+
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr class="table-dark text-center">
+                    <th scope="col" class="w-5">번호</th>
+                    <th scope="col" class="w-10">항목</th>
+                    <th scope="col" class="w-30">제목</th>
+                    <th scope="col" class="w-15">작성일</th>
+                    <th scope="col" class="w-10">작성자</th>
+                    <th scope="col" class="w-20">상태</th>
+                    <th scope="col" class="w-10">관리</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(!empty($notice) && count($notice) > 0)
+                    @foreach ($notice as $nn)
+                        <tr onclick="location.href='{{ route('notice.edit', $nn->no) }}'" style="cursor: pointer;">
+                            <td scope="col" class="text-center">{{ $nn->no }}</td>
+                            <td scope="col" class="text-center">{{ $nn->div }}</td>
+                            <td scope="col"><strong>{{ $nn->title }}</strong></td>
+                            <td scope="col" class="text-center">{{ $nn->created_at }}</td>
+                            <td scope="col" class="text-center">{{ $nn->save_name }}</td>
+                            <td scope="col" class="text-center">{{ $nn->ss }}</td>
+                            <td scope="col" class="text-center">{{ $nn->iv }}</td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan=6 class="text-center">작성한 공지가 없습니다.</td>
+                    </tr>
+                @endif
+            </tbody>
+        </table>
+
+        <div class="mt-4 aaa mb-4" id="pagination-wrapper">
+            {{ $notice->appends(request()->query())->links() }}
+            <form id="searchForm" method="GET" action="{{ route('notice.list') }}">
+                @csrf
+                <input type="hidden" name="div" value="{{ $div ?? '' }}">
+                <input type="hidden" name="keyword" value="{{ $keyword ?? '' }}">
+                <div class="search-box pl30" id="sb">
+                    <select name="search_div" class="form-select w-auto d-inline-block me-2">
+                        <option value="title">제목</option>
+                        <option value="content">내용</option>
+                    </select>
+                    <input type="text" id="search" name="search" style="padding-top: 1px;">
+                    <button type="button" class="btn btn-primary btn-sm" style="margin-left: 10px;" onclick="qwer()">검색</button>
+                </div>
+            </form>
+        </div>
+    
+    </div>
+
+
+<script>
+function addUpload() 
+{
+    var form = document.getElementById('hiddenForm2');
+    form.submit();
+}
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const div = urlParams.get('div');
+
+        const activeTabId = div ? 'div' + div : 'all';
+
+        const navLinks = document.querySelectorAll('.nav-link, .dropdown-item');
+        navLinks.forEach(link => link.classList.remove('active'));
+
+        const activeTab = document.getElementById(activeTabId);
+        if (activeTab) 
+        {
+            activeTab.classList.add('active');
+        }
+
+        @if(session('msg_p2'))
+            alertc("{{ session('title_d') }}","{{ session('msg_p2') }}",'p');
+            setTimeout(() => {
+                    location.reload();
+                }, 18.500);
+        @endif
+    });
+
+</script>
+
+</section>
+@endsection
