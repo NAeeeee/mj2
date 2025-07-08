@@ -5,7 +5,7 @@
     <div class="container px-lg-5">
         <div class="mb-4-5">
             <input type="hidden" name="div" id="div" value="{{ $div ?? '' }}">
-            <h2 class="text-2xl font-bold">게시판 목록(관리자화면)</h2>
+            <h2 class="text-2xl font-bold">게시판 관리</h2>
         </div>
 
         <ul class="nav nav-tabs">
@@ -13,10 +13,10 @@
                 <a class="nav-link" id="all" href="/boards">전체</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="divX" href="/boards?div=X">미답변</a>
+                <a class="nav-link" id="divX" href="/boards?div=X">미답변 ({{ $sta['div_ab'] ?? '' }})</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="divO" href="/boards?div=O">답변완료</a>
+                <a class="nav-link" id="divO" href="/boards?div=O">답변완료 ({{ $sta['div_cd'] ?? '' }})</a>
             </li>
 
             {{-- 항목 --}}
