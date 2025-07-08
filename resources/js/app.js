@@ -154,7 +154,7 @@ window.alertc = function (title, contents='', mh='') {
     // 첨부파일 용량 체크
 
         const allowedTypes = ['image/jpeg', 'image/png'];
-        const maxSize = 3 * 1024 * 1024; // 3MB
+        const maxSize = 4 * 1024 * 1024;
         const inputs = [file, file2, file3];
         let errors = [];
 
@@ -165,7 +165,7 @@ window.alertc = function (title, contents='', mh='') {
                     errors.push(`${file.name} : 확장자를 확인해주세요.(첨부 가능한 확장자 : jpg, png)`);
                 }
                 if (file.size > maxSize) {
-                    errors.push(`${file.name} : 3MB 까지만 첨부 가능합니다.`);
+                    errors.push(`${file.name} : 4MB 까지만 첨부 가능합니다.`);
                 }
             }
         });
@@ -181,7 +181,7 @@ window.alertc = function (title, contents='', mh='') {
 
     window.checkFiles_edit = function () {
         const allowedTypes = ['image/jpeg', 'image/png'];
-        const maxSize = 3 * 1024 * 1024; // 3MB
+        const maxSize = 4 * 1024 * 1024;
 
         const fileInputs = document.querySelectorAll('input[name="file[]"]');
         let errors = [];
@@ -193,7 +193,7 @@ window.alertc = function (title, contents='', mh='') {
                     errors.push(`${file.name} : 허용되지 않는 형식`);
                 }
                 if (file.size > maxSize) {
-                    errors.push(`${file.name} : 3MB 초과`);
+                    errors.push(`${file.name} : 4MB 초과`);
                 }
             }
         });

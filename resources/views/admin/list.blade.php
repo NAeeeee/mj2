@@ -4,7 +4,7 @@
 <section class="pt-3 mt-4">
     <div class="container px-lg-5">
         <div class="mb-4 with3">
-            <h2 class="text-2xl font-bold">회원 목록</h2>
+            <h2 class="text-2xl font-bold">회원 관리</h2>
             <button type="button" class="btn btn-dark" onclick="add_admin()">관리자 계정 만들기</button>
         </div>
 

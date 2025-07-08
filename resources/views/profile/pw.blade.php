@@ -33,8 +33,8 @@
             @csrf
             <div class="mb-3">
                 <label for="pw">비밀번호</label>
-                <div class="form-text2 form-label" id="basic-addon4">✔ 최소8자이상(특수문자 포함)</div>
-                <div class="form-text2 form-label" id="basic-addon5">✔ 현재와 다른 비밀번호를 사용하셔야합니다.</div>
+                <div class="form-text2 form-label" id="basic-addon4">✅ 최소8자이상(특수문자 포함)</div>
+                <div class="form-text2 form-label" id="basic-addon5">✅ 현재와 다른 비밀번호를 사용하셔야합니다.</div>
                 <div class="input-group">
                     <span class="input-group-text" id="basic-addon1">
                         <img src="/img/key.png" width="18">

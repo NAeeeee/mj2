@@ -49,7 +49,7 @@
                     <input type="email" name="email" class="form-control" placeholder="이메일" id="email" required oninput="onlyEmail(this);">
                 </div>
                 @error('email')
-                    <div class="form-text2" id="basic-addon5">✔ 이메일을 확인해주세요.</div>
+                    <div class="form-text2" id="basic-addon5">✅ 이메일을 확인해주세요.</div>
                 @enderror
             </div>
 
@@ -70,7 +70,7 @@
                     <input type="password" name="pw" class="form-control" placeholder="비밀번호" id="pw" required>
                 </div>
                 @error('pw')
-                    <div class="form-text2 form-label" id="basic-addon4">✔ 비밀번호는 8자 이상(특수문자 1개 포함) 으로 작성해주세요.</div>
+                    <div class="form-text2 form-label" id="basic-addon4">✅ 비밀번호는 8자 이상(특수문자 1개 포함) 으로 작성해주세요.</div>
                 @enderror
             </div>
             

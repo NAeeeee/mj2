@@ -167,7 +167,7 @@ window.confirmWithdraw = function (url)
 window.checkFiles = function ()
 {
     const allowedTypes = ['image/jpeg', 'image/png'];
-    const maxSize = 4 * 1024 * 1024; // 3MB
+    const maxSize = 4 * 1024 * 1024;
     const inputs = [file, file2, file3];
     let errors = [];
 
@@ -178,7 +178,7 @@ window.checkFiles = function ()
                 errors.push(`${file.name} : 확장자를 확인해주세요.(첨부 가능한 확장자 : jpg, png)`);
             }
             if (file.size > maxSize) {
-                errors.push(`${file.name} : 3MB 까지만 첨부 가능합니다.`);
+                errors.push(`${file.name} : 4MB 까지만 첨부 가능합니다.`);
             }
         }
     });
@@ -194,7 +194,7 @@ window.checkFiles = function ()
 window.checkFiles_edit = function ()
 {
     const allowedTypes = ['image/jpeg', 'image/png'];
-    const maxSize = 4 * 1024 * 1024; // 3MB
+    const maxSize = 4 * 1024 * 1024;
 
     const fileInputs = document.querySelectorAll('input[name="file[]"]');
     let errors = [];
@@ -206,7 +206,7 @@ window.checkFiles_edit = function ()
                 errors.push(`${file.name} : 허용되지 않는 형식`);
             }
             if (file.size > maxSize) {
-                errors.push(`${file.name} : 3MB 초과`);
+                errors.push(`${file.name} : 4MB 초과`);
             }
         }
     });
@@ -250,7 +250,7 @@ window.upload = function (mode='')
             return false;
         }
         else if ( iv === '' ) {
-            alertc('확인 요청','활성화 여부를 선택해주세요.');
+            alertc('확인 요청','노출 여부를 선택해주세요.');
             return false;
         }
 

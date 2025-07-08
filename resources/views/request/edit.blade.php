@@ -26,8 +26,8 @@
         </div>
 
         <!-- <div class="with mb-1"> -->
-        <div class="mb-4">
-            <label for="content" class="form-label">내용</label>
+        <div class="mb-3">
+            <!-- <label for="content" class="form-label">내용</label> -->
             <textarea name="content" id="content" rows="6" 
                     class="form-control w-full border rounded px-3 py-2" required>{{ old('content', $post->content) }}</textarea>
         </div>
@@ -36,6 +36,11 @@
             $cnt = count($img);
             $mct = $maxImages - $cnt;
         @endphp
+
+        <div class="mb-3">
+            <div class="form-text2 form-label" id="basic-addon5">✅ 첨부 가능한 확장자 : jpg, png</div></label>
+            <div class="form-text2 form-label" id="basic-addon5">✅ 파일 1개당 4MB 까지 첨부 가능</div></label>
+        </div>
 
         <div class="with mb-3">
         {{-- 기존 업로드된 이미지 출력 --}}
