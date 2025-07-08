@@ -22,13 +22,13 @@ function timeFormat(s)
 
 function numberFormat(n)
 {
-    var regexp = /\\B(?=(\\d{3})+(?!\\d))/g;
+    let regexp = /\\B(?=(\\d{3})+(?!\\d))/g;
     return n.toString().replace(regexp, ',');
 }
 
 function rateFormat(n)
 {
-    var nums = n.split(".");
+    let nums = n.split(".");
     if( nums.length == 2 )
     {
         if( nums[1].length==1 )
@@ -49,7 +49,7 @@ function rateFormat(n)
 
 function rateFormat1(n)
 {
-    var nums = n.split(".");
+    let nums = n.split(".");
     if( nums.length == 2 )
     {
         if( nums[1].length==0 )
@@ -222,9 +222,9 @@ window.checkFiles_edit = function ()
 
 window.upload = function (mode='')
 {
-    var d = document.getElementById('div').value;
-    var t = document.getElementById('title').value;
-    var c = document.getElementById('content').value;
+    let d = document.getElementById('div').value;
+    let t = document.getElementById('title').value;
+    let c = document.getElementById('content').value;
 
     // 검사
     if (d === '') {
@@ -240,9 +240,30 @@ window.upload = function (mode='')
         return false;
     }
 
+    if( mode == 'notice' )
+    {
+        let ss = document.getElementById('save_status').value;
+        let iv = document.getElementById('is_visible').value;
+
+        if ( ss === '' ) {
+            alertc('확인 요청','저장 상태를 선택해주세요.');
+            return false;
+        }
+        else if ( iv === '' ) {
+            alertc('확인 요청','활성화 여부를 선택해주세요.');
+            return false;
+        }
+
+        // if( ss === 'N' && iv === 'Y' )
+        // {
+        //     alertc('확인 요청',"삭제 상태인 글은 활성화할 수 없습니다.");
+        //     return false;
+        // }
+    }
+
     // 파일 용량/타입 체크
-    var atype = ['image/jpeg', 'image/png'];
-    var max = 3 * 1024 * 1024; // 2MB
+    let atype = ['image/jpeg', 'image/png'];
+    let max = 3 * 1024 * 1024; // 2MB
 
     if( mode == 'create' )
     {
