@@ -13,11 +13,15 @@
                         $url = route('admin.list');
                         $title = 'User';
                         $class = 'bi bi-person-circle';
+                        $row_c = 'row2';
+                        $a_c = 'col-lg-6-2';
                     } else {
                         $s_div = 'N';
                         $url = route('profile.edit', ['id' => $user->id]);
                         $title = 'Info';
                         $class = 'bi bi-info-circle';
+                        $row_c = 'row';
+                        $a_c = 'col-lg-6';
                     }
                 @endphp
             @endif
@@ -137,7 +141,7 @@
                                     <tr class="table-dark text-center">
                                         <th scope="col" class="w-5">번호</th>
                                         <th scope="col" class="w-10">항목</th>
-                                        <th scope="col" class="w-60">제목</th>
+                                        <th scope="col" class="w-70">제목</th>
                                         <th scope="col" class="w-10">작성일</th>
                                     </tr>
                                 </thead>
@@ -166,9 +170,9 @@
         <section class="pt-4 mt-5">
             <div class="container px-lg-5">
                 <!-- Page Features-->
-                <div class="row gx-lg-5">
+                <div class="{{ $row_c }} gx-lg-5">
                     <!-- info -->
-                    <a class="col-lg-6 col-xxl-4 mb-5" href="{{ $url }}">
+                    <a class="{{ $a_c }} col-xxl-4 mb-5" href="{{ $url }}">
                         <div>
                             <div class="card bg-light border-0 h-100">
                                 <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
@@ -188,30 +192,30 @@
                         }
                     @endphp
 
-                    <a class="col-lg-6 col-xxl-4 mb-5" href="{{ $url }}">
+                    <a class="{{ $a_c }} col-xxl-4 mb-5" href="{{ $url }}">
                         <div>
                             <div class="card bg-light border-0 h-100">
                                 <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
                                     <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-card-heading"></i></div>
                                     <h2 class="fs-4 fw-bold">Board</h2>
-                                    <!-- <p class="mb-0">Board</p> -->
                                 </div>
                             </div>
                         </div>
                     </a>
-                    <!-- 
-                    <div class="col-lg-6 col-xxl-4 mb-5">
-                        <div class="card bg-light border-0 h-100">
-                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-patch-check"></i></div>
-                                <h2 class="fs-4 fw-bold">A name you trust</h2>
-                                <p class="mb-0">Start Bootstrap has been the leader in free Bootstrap templates since 2013!</p>
+
+                    @if( Auth::user()->is_admin === 'Y' )
+                    <a class="{{ $a_c }} col-xxl-4 mb-5" href="{{ route('notice.list') }}">
+                        <div>
+                            <div class="card bg-light border-0 h-100">
+                                <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-clipboard2-check"></i></div>
+                                    <h2 class="fs-4 fw-bold">Notice</h2>
+                                </div>
                             </div>
                         </div>
-                    </div> -->
+                    </a>
+                    @endif
                 </div>
             </div>
         </section>
         @endsection
-
-
