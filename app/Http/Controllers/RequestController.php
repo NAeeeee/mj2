@@ -193,14 +193,13 @@ class RequestController extends Controller
 
         $post = \App\Models\Post::with('user')->findOrFail($no);
 
-        // 글쓴 회원, 관리자외에는 진입 불가
-        if( !array_key_exists(auth()->user()->id, config('var.admin')) || auth()->user()->id !== $post->user_id )
+        if ( $post->save_status == 'N' && !array_key_exists(auth()->user()->id, config('var.admin')) ) 
         {
             abort(403);
         }
-        
-        // 관리자외 삭제된 글 접근x
-        if( !array_key_exists(auth()->user()->id, config('var.admin')) && $post->save_status == 'N' )
+
+        // 2. 관리자 또는 글 작성자만 접근 가능
+        if ( !array_key_exists(auth()->user()->id, config('var.admin')) && auth()->user()->id !== $post->user_id ) 
         {
             abort(403);
         }
