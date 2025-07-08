@@ -207,3 +207,7 @@ body {
 .fr {
     float: right;
 }
+
+input[readonly] {
+    background-color: #f8f9fa;
+}

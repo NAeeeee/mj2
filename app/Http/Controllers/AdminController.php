@@ -71,7 +71,84 @@ class AdminController extends Controller
             $users = $query->paginate(5)->withQueryString();
 
             $users->transform(function ($uu) {
-                $uu->status = $uu->status === 'Y' ? '활동' : '탈퇴';
+                // 이름 마스킹
+                if ( $uu->name ) 
+                {
+                    if ( $uu->status === 'N' ) 
+                    {
+                        $len = mb_strlen($uu->name);
+                        if ( $len <= 1 ) 
+                        {
+                            $uu->name_r = '*';
+                        } 
+                        elseif ( $len === 2 ) 
+                        {
+                            $uu->name_r = mb_substr($uu->name, 0, 1) . '*';
+                        } 
+                        else 
+                        {
+                            $uu->name_r = mb_substr($uu->name, 0, 1) . str_repeat('*', $len - 2) . mb_substr($uu->name, -1);
+                        }
+                    }
+                    else 
+                    {
+                        $uu->name_r = $uu->name;
+                    }
+                }
+
+                // 이메일 마스킹
+                if ( $uu->email ) 
+                {
+                    if ( $uu->status === 'N' ) 
+                    {
+                        $parts = explode('@', $uu->email);
+                        $local = $parts[0];
+                        $domain = $parts[1] ?? '';
+
+                        $localLen = strlen($local);
+                        if ( $localLen <= 3 ) 
+                        {
+                            $maskedLocal = str_repeat('*', $localLen);
+                        } 
+                        else 
+                        {
+                            $maskedLocal = substr($local, 0, 3) . str_repeat('*', $localLen - 3);
+                        }
+
+                        $uu->email_r = $maskedLocal . '@' . $domain;
+                    } 
+                    else 
+                    {
+                        $uu->email_r = $uu->email;
+                    }
+                }
+
+                // 핸드폰 번호 마스킹
+                if ( $uu->ph ) 
+                {
+                    $ph = preg_replace('/[^0-9]/', '', $uu->ph);
+                    $ph_l = strlen($ph);
+
+                    if ( $ph_l === 11 ) 
+                    {
+                        $uu->ph_r = ( $uu->status === 'N' )
+                            ? substr($ph, 0, 3) . '-****-' . substr($ph, 7)
+                            : substr($ph, 0, 3) . '-' . substr($ph, 3, 4) . '-' . substr($ph, 7);
+                    } 
+                    elseif ( $ph_l === 10 ) 
+                    {
+                        $uu->ph_r = ( $uu->status === 'N' )
+                            ? substr($ph, 0, 3) . '-***-' . substr($ph, 6)
+                            : substr($ph, 0, 3) . '-' . substr($ph, 3, 3) . '-' . substr($ph, 6);
+                    } 
+                    else 
+                    {
+                        $uu->ph_r = $ph; // 포맷 안맞는 경우 그대로 출력
+                    }
+                }
+                
+
+                $uu->sta = $uu->status === 'Y' ? '활동' : '탈퇴';
 
                 return $uu;
             });
@@ -80,7 +157,8 @@ class AdminController extends Controller
             $user_cnt = User::where('status', 'Y')->where('is_admin', 'N')->count();
 
             return view('admin.list', compact('users', 'div', 'search_div', 'keyword', 'user_cnt'));
-        } else 
+        }
+        else 
         {
             abort(403);
         }
@@ -128,6 +206,94 @@ class AdminController extends Controller
 
         $user = User::where('id',$id)
                 ->first();
+
+        if( $user->status == 'N' )
+        {
+            $user->readonly = 'readonly';
+        }
+
+        if( $user->name )
+        {
+            if( $user->status == 'N' ) 
+            {
+                $len = mb_strlen($user->name);
+
+                if ( $len <= 1 ) 
+                {
+                    $user->user_name = '*';
+                } 
+                elseif ( $len === 2 ) 
+                {
+                    $user->user_name = mb_substr($user->name, 0, 1) . '*';
+                } 
+                else 
+                {
+                    $user->user_name = mb_substr($user->name, 0, 1) . str_repeat('*', $len - 2) . mb_substr($user->name, -1);
+                }
+            } 
+            else 
+            {
+                $user->user_name = $user->name;
+            }
+        }
+
+        if( $user->ph )
+        {
+            $ph = preg_replace('/[^0-9]/', '', $user->ph);
+
+            if ( strlen($ph) === 11 ) 
+            {
+                if ( $user->status === 'N' ) 
+                {
+                    $user->ph_r = substr($ph, 0, 3) . '-****-' . substr($ph, 7);
+                } 
+                else 
+                {
+                    $user->ph_r = substr($ph, 0, 3) . '-' . substr($ph, 3, 4) . '-' . substr($ph, 7);
+                }
+            } 
+            elseif ( strlen($ph) === 10 ) 
+            {
+                if ( $user->status === 'N' ) 
+                {
+                    $user->ph_r = substr($ph, 0, 3) . '-***-' . substr($ph, 6);
+                } 
+                else 
+                {
+                    $user->ph_r = substr($ph, 0, 3) . '-' . substr($ph, 3, 3) . '-' . substr($ph, 6);
+                }
+            } 
+            else 
+            {
+                $user->ph_r = $ph;
+            }
+        }
+
+        if( $user->email )
+        {
+            if ( $user->status === 'N' ) 
+            {
+                $parts = explode('@', $user->email);
+                $local = $parts[0];
+                $domain = $parts[1] ?? '';
+
+                $localLen = strlen($local);
+                if ( $localLen <= 3 ) 
+                {
+                    $maskedLocal = str_repeat('*', $localLen);
+                } 
+                else 
+                {
+                    $maskedLocal = substr($local, 0, 3) . str_repeat('*', $localLen - 3);
+                }
+
+                $user->email_r = $maskedLocal . '@' . $domain;
+            } 
+            else 
+            {
+                $user->email_r = $user->email;
+            }
+        }
 
         return view('admin.info', compact('user'));
     }
