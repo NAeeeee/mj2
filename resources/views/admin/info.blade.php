@@ -33,7 +33,7 @@
                     <span class="input-group-text" id="basic-addon1">
                         <img src="/img/user.png" width="18">
                     </span>
-                    <input type="text" class="form-control" id="name" name="name" oninput="onlyEngNum(this)" value="{{ $user->name }}">
+                    <input type="text" class="form-control" id="name" name="name" oninput="onlyEngNum(this)" value="{{ $user->user_name }}" >
                 </div>
             </div>
 
@@ -51,7 +51,7 @@
                             $d = '';
                         }
                     @endphp
-                    <input type="email" class="form-control" id="email" name="email" oninput="onlyEmail(this)" value="{{ $user->email }}" {{ $d }}>
+                    <input type="email" class="form-control" id="email" name="email" oninput="onlyEmail(this)" value="{{ $user->email_r }}" {{ $d }} >
                 </div>
             </div>
 
@@ -61,26 +61,30 @@
                     <span class="input-group-text" id="basic-addon3">
                         <img src="/img/ph.png" width="18">
                     </span>
-                    <input type="text" class="form-control" id="ph" name="ph" oninput="onlyNumber(this)" value="{{ $user->ph }}">
+                    <input type="text" class="form-control" id="ph" name="ph" oninput="onlyNumber(this)" value="{{ $user->ph_r }}" >
                 </div>
             </div>
 
             <div class="mb-3">
+            @if( $user->save_status == 'Y' )
                 <label for="pw">비밀번호</label>
   
-            <div class="form-text2 form-label" id="basic-addon4">✅ 입력시에만 변경됩니다.</div>
-                <div class="input-group">
-                    <span class="input-group-text" id="basic-addon5">
-                        <img src="/img/key.png" width="18">
-                    </span>
-                    <input type="password" class="form-control" id="pw" name="pw" oninput="onlyEngNum(this)" maxlength=20 >
+                <div class="form-text2 form-label" id="basic-addon4">✅ 입력시에만 변경됩니다.</div>
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon5">
+                            <img src="/img/key.png" width="18">
+                        </span>
+                        <input type="password" class="form-control" id="pw" name="pw" oninput="onlyEngNum(this)" maxlength=20 >
+                    </div>
                 </div>
-            </div>
 
-            <div class="mb-4">
-                <button type="button" class="btn btn-primary" style="float:right" onclick="editChk()">
-                    변경
-                </button>
+                <div class="mb-4">
+                    <button type="button" class="btn btn-primary" style="float:right" onclick="editChk()">
+                        변경
+                    </button>
+            @else
+                <div class="form-text2 form-label">탈퇴한 회원입니다.</div></label>
+            @endif
             </div>
 
         </form>

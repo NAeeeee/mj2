@@ -38,11 +38,11 @@
                 @forelse($users as $user)
                     <tr class="text-center" style="cursor:pointer;"scope="col" data-user-id="{{ $user->id }}" onclick="infoPopup(this)">
                         <td scope="col">{{ $user->id }}</td>
-                        <td scope="col"><strong>{{ $user->name }}</strong></td>
-                        <td scope="col">{{ $user->email }}</td>
+                        <td scope="col"><strong>{{ $user->name_r ?? '' }}</strong></td>
+                        <td scope="col">{{ $user->email_r ?? '' }}</td>
                         <td scope="col">{{ $user->created_at }}</td>
-                        <td scope="col">{{ $user->ph }}</td>
-                        <td scope="col">{{ $user->status }}</td>
+                        <td scope="col">{{ $user->ph_r ?? '' }}</td>
+                        <td scope="col">{{ $user->sta }}</td>
                     </tr>
                 @empty
                     <tr>
