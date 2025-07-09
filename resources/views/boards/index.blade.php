@@ -58,11 +58,11 @@
         <!-- 테이블 -->
         <table class="table table-bordered table-hover align-middle" style="font-size:14px">
             <thead class="table-light">
-                <tr>
+                <tr class="text-center">
                     <th scope="col" class="w-5">번호</th>
-                    <th scope="col" class="w-10">항목</th>
+                    <th scope="col" class="w-7">항목</th>
                     <th scope="col" class="w-25">제목</th>
-                    <th scope="col" class="w-10">작성자</th>
+                    <th scope="col" class="w-7">작성자</th>
                     <th scope="col" class="w-15">작성일</th>
                     @if( $div != 'X' && $hasComment )<th scope="col" class="w-15">댓글</th> @endif
                     <th scope="col" class="w-15">상태</th>
@@ -72,23 +72,23 @@
             <tbody id="post-table-body">
                 @forelse ($posts as $post)
                     <tr>
-                        <th scope="col">{{ $post->no }}</th>
-                        <td>{{ $post->div }}</td>
+                        <th scope="col" class="text-center">{{ $post->no }}</th>
+                        <td class="text-center">{{ $post->div }}</td>
                         <td>
                             <a href="{{ route('request.show', $post->no) }}" class="text-decoration-none text-primary">
                                 {{ $post->title }}
                             </a>
                         </td>
-                        <td>
+                        <td class="text-center">
                             @if($post->users_status == 'N')
                                 탈퇴회원
                             @else
                                 {{ $post->name ?? '익명' }}
                             @endif
                         </td>
-                        <td>{{ $post->created_at }}</td>
+                        <td class="text-center">{{ $post->created_at }}</td>
                         @if( $div != 'X' && $hasComment )
-                        <td>
+                        <td class="text-center">
                             {{ $post->reply_at ?? '' }}
                         </td>
                         @endif
@@ -138,7 +138,7 @@
                                 @elseif($post->status == 'D')
                                     @if( $post->view_status == 'Z' )
                                     <div class="status_div_p" id="user_chk_ok">
-                                        <img class="chk-zone" src="/img/chk_ok.png" width="17.5">
+                                        <img class="chk-zone" src="/img/chk_ok.png" width="17">
                                         고객 확인 완료
                                     </div>
                                     @else
@@ -166,7 +166,7 @@
                         </td>
                         {{-- 미답변, 답변완료 탭 --}}
                         @if( $div === 'O' || $div === 'X' )
-                        <td>
+                        <td class="text-center">
                             @if( $post->status == 'A' || $post->status == 'C' )
 
                             @elseif( $post->status == 'B' && $post->reply_at == '' )
@@ -184,7 +184,7 @@
                                     @endif
                                     <option value="E" {{ old('status', $post->status) === 'E' ? 'selected' : '' }}>반려</option>
                                 </select>
-                                <button type="submit" class="btn btn-primary btn-sm mb_5">상태 변경</button>
+                                <button type="submit" class="btn btn-primary btn-sm mb_3">상태 변경</button>
                             </form>
                             @endif
                         </td>
