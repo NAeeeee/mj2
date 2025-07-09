@@ -34,7 +34,7 @@
                             </button>
                         </form>
 
-                        <button type="button" class="btn btn-outline-primary" onclick="openEmailPopup()">이메일 수정</button>
+                        <button type="button" class="btn btn-outline-primary" onclick="openEmailPopup({{ auth()->user()->id }})">이메일 수정</button>
                     </div>
                 </div>
             </div>
@@ -69,9 +69,10 @@ function logoutChk()
     document.getElementById('logout-form').submit();
 }
 
-function openEmailPopup()
+function openEmailPopup(id) 
 {
-    window.open('/email/update-form', 'emailPopup', 'width=600,height=450');
+    const url = `/email/update-form?id=${encodeURIComponent(id)}`;
+    window.open(url, 'emailPopup', 'width=600,height=450');
 }
 
 </script>

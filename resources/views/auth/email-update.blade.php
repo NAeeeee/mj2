@@ -8,10 +8,19 @@
 
     <div class="card mb-4" id="form-section">
         <div class="card-body">
+            <div class="mb-3">
+                <label for="pw2" class="form-label">현재 이메일</label>
+                <div class="input-group">
+                    <span class="input-group-text" id="basic-addon1">
+                        <img src="/img/email.png" width="18">
+                    </span>
+                    <input type="input" name="old_email" id="old_email" class="form-control" value="{{ $info->email }}" readonly>
+                </div>
+            </div>
         <form method="POST" action="{{ route('email.update') }}" onsubmit="return handleSubmit(this);">
             @csrf
             <div class="mb-3">
-                <label for="pw2" class="form-label">이메일</label>
+                <label for="pw2" class="form-label">변경할 이메일</label>
                 <div class="input-group">
                     <span class="input-group-text" id="basic-addon1">
                         <img src="/img/email.png" width="18">
@@ -39,9 +48,19 @@
 </div>
 <script>
 function handleSubmit(form) {
-    var popUpName = document.getElementById('popup-name');
-    var formSection = document.getElementById('form-section');
-    var loadingSection = document.getElementById('loading-section');
+    let popUpName = document.getElementById('popup-name');
+    let formSection = document.getElementById('form-section');
+    let loadingSection = document.getElementById('loading-section');
+
+    let oe = document.getElementById('old_email').value;
+    let email = document.getElementById('email').value;
+
+    if( oe === email )
+    {
+        alertc('확인 요청','현재와 동일한 이메일로 변경할 수 없습니다.');
+        document.getElementById('email').value = '';
+        return false;
+    }
 
     popUpName.style.display = 'none';
     formSection.style.display = 'none';
@@ -67,7 +86,7 @@ function handleSubmit(form) {
         } 
         else if (response.status === 422) {
             // 유효성 검증 실패
-            alertc('확인 요청','이미 사용중인 이메일입니다. 다른 메일을 사용해주세요');
+            alertc('확인 요청','이미 사용중인 이메일입니다. 다른 메일을 사용해주세요.');
             popUpName.style.display = 'block';
             formSection.style.display = 'block';
             loadingSection.style.display = 'none';

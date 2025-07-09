@@ -42,9 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/delete/{id}', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-    Route::get('/email/update-form', function () {
-        return view('auth.email-update');
-    });
+    Route::get('/email/update-form', [ProfileController::class, 'emailEdit'])->name('profile.emailEdit');
 
     // 인증 전 이메일 수정
     Route::post('/email/update', [RegisteredUserController::class, 'updateEmail'])->name('email.update');
