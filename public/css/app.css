@@ -172,6 +172,9 @@ body {
     justify-content: center;
 }
 
+.mb_3 {
+    margin-bottom: 3px;
+}
 
 .mb_5 {
     margin-bottom: 5px;
@@ -214,4 +217,12 @@ input[readonly] {
 
 .cp {
     cursor: pointer;
+}
+
+.w-5 {
+  width: 5% !important;
+}
+
+.w-10 {
+  width: 10% !important;
 }
