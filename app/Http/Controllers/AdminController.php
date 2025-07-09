@@ -157,9 +157,13 @@ class AdminController extends Controller
             });
             
 
-            $user_cnt = User::where('status', 'Y')->where('is_admin', 'N')->count();
+            $sta = 
+            [   
+                'user_cnt' => User::where('status', 'Y')->where('is_admin', 'N')->count(),
+                'admin_cnt' => User::where('is_admin', 'Y')->count(),
+            ];
 
-            return view('admin.list', compact('users', 'div', 'search_div', 'keyword', 'user_cnt'));
+            return view('admin.list', compact('users', 'div', 'search_div', 'keyword', 'sta'));
         }
         else 
         {
