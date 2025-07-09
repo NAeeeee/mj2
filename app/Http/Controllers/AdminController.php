@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Post;
+use App\Models\Reply;
+use App\Models\Notice;
+use App\Models\Message;
 use DB;
 use Log;
 use Carbon\Carbon;
@@ -298,6 +301,7 @@ class AdminController extends Controller
         return view('admin.info', compact('user'));
     }
 
+
     public function infoEdit(Request $request, $id)
     {
         Log::info(__METHOD__);
@@ -318,8 +322,64 @@ class AdminController extends Controller
 
         $user->update($data);
 
-        $result_msg = "정보가 수정되었습니다.";
+        $result_msg = "정보 수정이 완료되었습니다.";
 
         return redirect()->back()->with('pw_msg', $result_msg);
+    }
+
+
+    public function infoDel(Request $request, $id)
+    {
+        Log::info(__METHOD__);
+
+        log::info('[관리자 탈퇴] 요청자: '.auth()->user()->id);
+        log::info('[관리자 탈퇴] 대상자: '.$id);
+        
+        if ( (int)auth()->user()->id === (int)$id ) 
+        {
+            abort(403);
+        }
+
+        DB::beginTransaction();
+        try 
+        {
+            // 댓글 id 변경
+            Reply::where('admin_id', $id)->update([
+                'admin_id' => auth()->user()->id,
+            ]);
+
+            // 공지사항 작성자 변경
+            Notice::where('save_id', $id)->update([
+                'save_id' => auth()->user()->id,
+            ]);
+
+            // 메시지 id 변경
+            Message::where('sender_id', $id)->update(['sender_id' => auth()->user()->id]);
+            Message::where('receiver_id', $id)->update(['receiver_id' => auth()->user()->id]);
+
+            // 관리자 탈퇴 처리
+            User::where('id', $id)->update([
+                'status' => 'N',
+            ]);
+
+            DB::commit();
+
+            $msg = '수정이 완료되었습니다.';
+
+            return redirect()->back()->with('pw_msg', $msg);
+
+        } catch (\Throwable $e) 
+        {
+            DB::rollBack();
+            log::error('관리자 탈퇴 처리 중 오류: ' . $e->getMessage());
+            throw $e;
+
+            $msg = '관리자 탈퇴 처리 중 오류가 발생했습니다.';
+            
+            return redirect()->back()
+                ->with('pw_msg', $msg);
+        };
+
+
     }
 }
