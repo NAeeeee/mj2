@@ -13,13 +13,13 @@
                 <a class="nav-link" id="all" aria-current="page" href="{{ route('admin.list') }}">전체</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="divY" href="{{ route('admin.list', ['div' => 'Y' ]) }}">활동 ({{ $user_cnt ?? '' }})</a>
+                <a class="nav-link" id="divY" href="{{ route('admin.list', ['div' => 'Y' ]) }}">활동 ({{ $sta['user_cnt'] ?? '' }})</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="divN" href="{{ route('admin.list', ['div' => 'N' ]) }}">탈퇴</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="divA" href="{{ route('admin.list', ['div' => 'A' ]) }}">관리자</a>
+                <a class="nav-link" id="divA" href="{{ route('admin.list', ['div' => 'A' ]) }}">관리자({{ $sta['admin_cnt'] ?? '' }})</a>
             </li>
         </ul>
 

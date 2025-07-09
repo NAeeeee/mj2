@@ -26,7 +26,7 @@
                         작성자 : {{ $post->user->name ?? '익명' }}
                     @endif 
                     | 작성일 : {{ $post->created_at }}
-                    @if( $post->created_at != $post->updated_at )
+                    @if( $post->created_at != $post->updated_at && $post->status == 'A' )
                     | 수정일 : {{ $post->updated_at }}
                     @endif
                 </h6>
