@@ -217,4 +217,22 @@ class ProfileController extends Controller
 
         return redirect('/login')->with('msg_s', '탈퇴가 완료되었습니다.');
     }
+
+    
+    // 이메일 인증 전 이메일 변경
+    public function emailEdit(Request $request)
+    {
+        Log::info(__METHOD__);
+        
+        $id = $request->id ?? '';
+
+        if( $id == '' )
+        {
+            abort(404);
+        }
+
+        $info = User::find($id);
+
+        return view('auth.email-update', compact('info'));
+    }
 }
