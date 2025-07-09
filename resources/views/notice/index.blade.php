@@ -5,7 +5,7 @@
     <div class="container px-lg-5">
 
         <div class="mb-4 with3">
-            <h2 class="text-2xl font-bold">공지사항</h2>
+            <h2 class="text-2xl font-bold cp" onclick="location.href='{{ route('notice.index') }}'">공지사항</h2>
             @if( auth()->check() && auth()->user()->is_admin === 'Y' )
             <div>
                 <a class="btn btn-dark" href="{{ route('notice.list') }}">공지 관리</a>
