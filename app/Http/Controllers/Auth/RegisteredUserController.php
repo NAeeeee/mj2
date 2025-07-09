@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Log;
+use App\Mail\VerifyEmailWithSES;
+use Illuminate\Support\Facades\Mail;
 
 class RegisteredUserController extends Controller
 {
@@ -48,12 +50,20 @@ class RegisteredUserController extends Controller
             'status' => 'Y',
         ]);
 
-        // 임시 이메일 고정
-        $user->email = 'nazz0525z@gmail.com';
-
-        event(new Registered($user));
-
         Auth::login($user);
+
+        if (app()->environment('local')) {
+            // 개발계
+            // 임시 이메일 고정
+            $user->email = 'nazz0525z@gmail.com';
+
+            event(new Registered($user));
+        }
+        else
+        {
+            // 운영계: SES 커스텀 메일 전송
+            Mail::to($user->email)->send(new VerifyEmailWithSES($user));
+        }
 
         return redirect(RouteServiceProvider::HOME);
     }
@@ -73,11 +83,18 @@ class RegisteredUserController extends Controller
             'email_verified_at' => null,
         ]);
 
-        // 임시 이메일 고정
-        $user->email = 'nazz0525z@gmail.com';
+        if (app()->environment('local')) {
+            // 임시 이메일 고정
+            $user->email = 'nazz0525z@gmail.com';
 
-        // 인증 메일 다시 발송
-        event(new Registered($user));
+            // 인증 메일 다시 발송
+            event(new Registered($user));
+        } 
+        else
+        {
+            // 운영계: SES 커스텀 메일 전송
+            Mail::to($user->email)->send(new VerifyEmailWithSES($user));
+        }
 
         return back()->with('message', '이메일이 변경되었고 인증 메일이 다시 전송되었습니다.');
     }
