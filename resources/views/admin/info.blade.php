@@ -86,11 +86,17 @@
 
                 @else
                 <div class="mb-3">
-                    <div class="form-text2 form-label">탈퇴한 회원입니다.</div></label>
+                    @php
+                        if( $user->is_admin == 'Y' )
+                            $nn = '관리자';
+                        else
+                            $nn = '회원';
+                    @endphp
+                    <div class="form-text2 form-label">탈퇴한 {{ $nn }}입니다.</div></label>
                 </div>
                 @endif
             </form>
-            @if( auth()->user()->id != $user->id )
+            @if( $user->is_admin == 'Y' && auth()->user()->id != $user->id && $user->status == 'Y' )
             <div class="mb-2">
                 <button class="btn btn-danger" onclick="confirmWithdraw('{{ route('admin.infoDel', $user->id) }}', 'GET')" >
                     관리자 탈퇴
