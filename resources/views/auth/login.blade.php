@@ -37,13 +37,19 @@
 
 
             <div class="flex items-center justify-end mt-4 mb-7">
-                <button type="button" class="btn btn-secondary" style="margin-right:15px;" onclick="reg();">
-                    {{ __('register') }}
+                <a href="{{ route('register') }}" type="button" class="btn btn-secondary" style="margin-right:15px;" >
+                    회원가입
+                </a>
+
+                <button type="submit" class="btn btn-primary" style="margin-right:15px;">
+                    로그인
                 </button>
 
-                <button type="submit" class="btn btn-primary">
-                    {{ __('login') }}
-                </button>
+                @if (config('app.env') === 'production')
+                <a href="{{ route('password.request') }}" class="btn btn-primary">
+                    비밀번호 재설정
+                </a>
+                @endif
             </div>
         </form>
         </div>
