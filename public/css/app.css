@@ -211,3 +211,7 @@ body {
 input[readonly] {
     background-color: #f8f9fa;
 }
+
+.cp {
+    cursor: pointer;
+}
