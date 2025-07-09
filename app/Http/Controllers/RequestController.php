@@ -415,7 +415,7 @@ class RequestController extends Controller
         // $post->save();
 
         return redirect()->route('request.show', $post->no)
-                         ->with('success', '게시글이 수정되었습니다.');
+                         ->with('msg', '게시글이 수정되었습니다.');
     }
 
 
@@ -427,10 +427,22 @@ class RequestController extends Controller
         $div = $request->input('delete_div') ?? '';
 
         $board = Post::findOrFail($no);
+        log::info('[회원] 글 삭제 : '.$no);
 
         // 데이터 수정
         $board->save_status = 'N';
         $board->save();
+
+        $files = PostFile::where('target_no', $no)
+                        ->where('save_status', 'Y')
+                        ->where('target_type', 'P')
+                        ->get();
+
+        foreach($files as $f)
+        {
+            $f->save_status = "N";
+            $f->save();
+        }
 
         if( $div == 'request' )
         {
