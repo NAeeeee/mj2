@@ -90,6 +90,7 @@ function chk()
     var ph = document.getElementById('ph').value;
     var pw = document.getElementById('password').value;
     var pw2 = document.getElementById('password_confirmation').value;
+    var emailrgex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if( name == '' )
     {
@@ -99,6 +100,10 @@ function chk()
     else if( email == '')
     {
         alertc('확인 요청','이메일을 입력해주세요.');
+        return false;
+    }
+    if ( !emailrgex.test(email) ) {
+        alertc("확인 요청", "이메일을 확인해주세요.");
         return false;
     }
     else if( ph == '' )
@@ -127,18 +132,12 @@ function chk()
     }
 
     var rgex = /[!@#$%^&*(),.?":{}|<>]/;
-    var emailrgex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     
     var all = document.getElementById('all-section');
     var ls = document.getElementById('loading-section');
 
     if (!rgex.test(pw)) {
         alertc('확인 요청',"비밀번호에 특수문자를 최소 1개 이상 포함해야 합니다.");
-        return false;
-    }
-
-    if ( !emailrgex.test(email) ) {
-        alertc("확인 요청", "이메일을 확인해주세요.");
         return false;
     }
 
