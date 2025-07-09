@@ -60,6 +60,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::post('/add', [AdminController::class, 'add'])->name('admin.add');
     Route::get('/info', [AdminController::class, 'info'])->name('admin.info');
     Route::post('/info/{id}', [AdminController::class, 'infoEdit'])->name('admin.infoEdit');
+    Route::post('/delete/{id}', [AdminController::class, 'infoDel'])->name('admin.infoDel');
 });
 
 // 게시판
