@@ -106,23 +106,19 @@ Route::middleware(['auth'])->prefix('message')->group(function () {
 });
 
 // 공지
-Route::get('/notice', [NoticeController::class, 'index'])->name('notice.index');
-Route::get('/notice/show/{no}', [NoticeController::class, 'show'])->name('notice.show');
-Route::middleware(['auth'])->prefix('notice')->group(function () {
-    // 리스트
-    Route::get('/list', [NoticeController::class, 'list'])->name('notice.list');
-    // 활성화 상태 변경
-    // Route::put('/{no}/status', [NoticeController::class, 'updateStatus'])->name('notice.updateStatus');
-    // 작성 화면
-    Route::get('/create', [NoticeController::class, 'create'])->name('notice.create');
-    // 글 저장 처리
-    Route::post('/', [NoticeController::class, 'store'])->name('notice.store');
-    // 수정 화면
-    Route::get('/edit/{no}', [NoticeController::class, 'edit'])->name('notice.edit');
-    // 수정 처리
-    Route::put('/edit/{no}', [NoticeController::class, 'update'])->name('notice.update');
-    // 삭제
-    Route::post('/delete/{no}', [NoticeController::class, 'delete'])->name('notice.delete');
+Route::prefix('notice')->group(function () {
+    Route::get('/', [NoticeController::class, 'index'])->name('notice.index');
+    Route::get('/show/{no}', [NoticeController::class, 'show'])->name('notice.show');
+
+    // 로그인 필요
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/list', [NoticeController::class, 'list'])->name('notice.list');
+        Route::get('/create', [NoticeController::class, 'create'])->name('notice.create');
+        Route::post('/', [NoticeController::class, 'store'])->name('notice.store');
+        Route::get('/edit/{no}', [NoticeController::class, 'edit'])->name('notice.edit');
+        Route::put('/edit/{no}', [NoticeController::class, 'update'])->name('notice.update');
+        Route::post('/delete/{no}', [NoticeController::class, 'delete'])->name('notice.delete');
+    });
 });
 
 // php 정보
