@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\URL;
 
-class VerifyEmail extends Mailable
+class VerifyEmailWithSES extends Mailable
 {
     use Queueable, SerializesModels;
 
