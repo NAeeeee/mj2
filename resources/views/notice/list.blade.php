@@ -55,23 +55,29 @@
             </tbody>
         </table>
 
-        <div class="mt-4 aaa mb-4" id="pagination-wrapper">
-            {{ $notice->appends(request()->query())->links() }}
-            <form id="searchForm" method="GET" action="{{ route('notice.list') }}">
-                @csrf
-                <input type="hidden" name="div" value="{{ $div ?? '' }}">
-                <input type="hidden" name="keyword" value="{{ $keyword ?? '' }}">
-                <div class="search-box pl30" id="sb">
-                    <select name="search_div" class="form-select w-auto d-inline-block me-2">
-                        <option value="title">제목</option>
-                        <option value="content">내용</option>
-                    </select>
-                    <input type="text" id="search" name="search" style="padding-top: 1px;">
-                    <button type="button" class="btn btn-primary btn-sm" style="margin-left: 10px;" onclick="qwer()">검색</button>
+
+        {{ $notice->appends(request()->query())->links() }}
+        <div class="g-5 mb-3">
+            <form id="searchForm" method="GET" action="{{ route('notice.list') }}" onsubmit="return searchSumbit(this);">
+                <div class="row g-3">    
+                    @csrf
+                    <input type="hidden" name="div" value="{{ $div ?? '' }}">
+                    <input type="hidden" name="keyword" value="{{ $keyword ?? '' }}">
+                    <div class="col-md-1-5">
+                        <select name="search_div" class="form-select">
+                            <option value="title">제목</option>
+                            <option value="content">내용</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="search" name="search">
+                    </div>
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-primary btn">검색</button>
+                    </div>
                 </div>
             </form>
         </div>
-    
     </div>
 
 

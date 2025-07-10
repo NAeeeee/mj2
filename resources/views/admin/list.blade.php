@@ -52,21 +52,27 @@
             </tbody>
         </table>
 
-        <!-- 페이지네이션 -->
-        <div class="mt-4 mb-4" id="pagination-wrapper">
-            {{ $users->appends(request()->query())->links() }}
-            <form id="searchForm" method="GET" action="{{ route('admin.list') }}">
-                @csrf
-                <input type="hidden" name="div" value="{{ $div ?? '' }}">
-                <input type="hidden" name="keyword" value="{{ $keyword ?? '' }}">
-                <div class="search-box pl30" id="sb">
-                    <select name="search_div" class="form-select w-auto d-inline-block me-2">
-                        <option value="id">아이디</option>
-                        <option value="name">이름</option>
-                        <option value="email">이메일</option>
-                    </select>
-                    <input type="text" id="search" name="search" style="padding-top: 1px;">
-                    <button type="button" class="btn btn-primary btn-sm" style="margin-left: 10px;" onclick="admin_search()">검색</button>
+
+        {{ $users->appends(request()->query())->links() }}
+        <div class="g-5 mb-3">
+            <form id="searchForm" method="GET" action="{{ route('admin.list') }}" onsubmit="return searchSumbit(this);">
+                <div class="row g-3">
+                    @csrf
+                    <input type="hidden" name="div" value="{{ $div ?? '' }}">
+                    <input type="hidden" name="keyword" value="{{ $keyword ?? '' }}">
+                    <div class="col-md-1-5">
+                        <select name="search_div" class="form-select w-auto d-inline-block me-2">
+                            <option value="id">아이디</option>
+                            <option value="name">이름</option>
+                            <option value="email">이메일</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="search" name="search">
+                    </div>
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-primary btn">검색</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -79,19 +85,6 @@
         window.open('/admin/add', 'addPopup', 'width=600,height=500');
     }
 
-
-    function admin_search()
-    {
-        var search = $("#search").val();
-
-        if( search === '' )
-        {
-            alertc('확인 요청', '검색어를 입력해주세요.');
-            return false;
-        }
-
-        $("#searchForm").submit();
-    }
 
     function infoPopup(val)
     {
