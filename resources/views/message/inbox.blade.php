@@ -43,7 +43,7 @@
                         <td class="text-center">{{ $msg->created_at }}</td>
                         <td class="text-center">
                             @if( $msg->is_read == 1 )
-                                <img class="msg_chk" src="/img/chk_ok.png" width=20>
+                                <img class="msg_chk" src="/img/chk_ok.png" width=18>
                             @endif
                         </td>
                     </tr>
