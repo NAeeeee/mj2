@@ -283,3 +283,18 @@ window.upload = function (mode='')
     console.log('조건모두통과');
     document.getElementById('Form').submit();
 }
+
+
+window.searchSumbit = function ()
+{
+    let search = document.getElementById('search').value;
+
+    if( search == '' )
+    {
+        alertc('확인 요청', '검색어를 입력해주세요.');
+        return false;
+    }
+
+    var f = $("#searchForm");
+    f.submit();
+}
