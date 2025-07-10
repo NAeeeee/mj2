@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Notifications\CustomResetPassword;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -55,6 +56,12 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         Notification::route('mail', 'nazz0525z@gmail.com') // 테스트용 이메일
         ->notify(new CustomVerifyEmail($this));
+    }
+
+    // 비밀번호 재설정 커스텀
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new \App\Notifications\CustomResetPassword($token));
     }
 
     public function getEmailForVerification()
