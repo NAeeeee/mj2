@@ -17,7 +17,8 @@ class Post extends Model
         'user_id',
         'status',
         'save_status',
-        'div'
+        'div',
+        'confirm_status'
     ];
 
     public function user()
