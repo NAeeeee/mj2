@@ -104,7 +104,20 @@ class ProfileController extends Controller
                 $post->created_at = Carbon::parse($post->created_at)->format('Y-m-d');
                 $post->updated_at = Carbon::parse($post->updated_at)->format('Y-m-d');
                 $post->sta = $post->status;
-                $post->status = $status[$post->status];
+                if( $post->status === 'D' )
+                {
+                    if( $post->confirm_status === 'Y' )
+                    {
+                        $post->status = '고객 확인 완료';
+                    }
+                    else {
+                        $post->status = '고객 확인중';
+                    }
+                }
+                else
+                {
+                    $post->status = $status[$post->status];
+                }
                 $post->div = $board_div[$post->div];
 
                 return $post;

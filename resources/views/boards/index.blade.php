@@ -60,7 +60,7 @@
             <thead class="table-light">
                 <tr class="text-center">
                     <th scope="col" class="w-5">번호</th>
-                    <th scope="col" class="w-7">항목</th>
+                    <th scope="col" class="w-5">항목</th>
                     <th scope="col" class="w-25">제목</th>
                     <th scope="col" class="w-7">작성자</th>
                     <th scope="col" class="w-15">작성일</th>
@@ -136,15 +136,15 @@
                                     </div>
                                 {{-- 상태 '담당자 답변 완료' 달린 답글 고객 확인 완료 --}}
                                 @elseif($post->status == 'D')
-                                    @if( $post->view_status == 'Z' )
+                                    @if( $post->view_status == 'DY' )
                                     <div class="status_div_p" id="user_chk_ok">
-                                        <img class="chk-zone" src="/img/chk_ok.png" width="17">
+                                        <img class="chk-zone" src="/img/chk_ok.png" width="15.5">
                                         고객 확인 완료
                                     </div>
                                     @else
                                     <div class="status_div" id="user_chk_ok">
                                         <img class="chk-zone" src="/img/chk.png" width="15.5">
-                                        고객 확인 완료
+                                        고객 확인중
                                     </div>
                                     @endif
                                 {{-- 상태 '반려' 처리불가 / 반려 --}}
@@ -167,25 +167,19 @@
                         {{-- 미답변, 답변완료 탭 --}}
                         @if( $div === 'O' || $div === 'X' )
                         <td class="text-center">
-                            @if( $post->status == 'A' || $post->status == 'C' )
-
-                            @elseif( $post->status == 'B' && $post->reply_at == '' )
+                            @if( $post->status == 'B' && $post->reply_at == '' )
                             <div class="form-text-del" id="chk_no">
                                 <img class="chk-zone" src="/img/chk_no2.png" width="18.5">
                                 미답변
                             </div>
-                            @elseif($post->status == 'D')
-                            
+                            @elseif( $post->status == 'D' && $post->view_status == 'DY' )
                                 <select name="cha_status" id="boardSta" class="form-select form-select-sm w-auto d-inline-block me-2">
-                                    @if( $post->view_status == 'Z' )
                                     <option value="Z" {{ old('status', $post->status) === 'Z' ? 'selected' : '' }}>완료</option>
-                                    @endif
                                     <option value="E" {{ old('status', $post->status) === 'E' ? 'selected' : '' }}>반려</option>
                                 </select>
                                 <button type="button" class="btn btn-primary btn-sm mb_3" onclick="staUp('{{ e(route('boards.updateStatus', $post->no)) }}', this)">
                                     상태 변경
                                 </button>
-                            
                             @endif
                         </td>
                         @endif

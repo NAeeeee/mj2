@@ -45,7 +45,13 @@ class RequestController extends Controller
                 $post->created_at = Carbon::parse($post->created_at)->format('Y-m-d');
                 $post->updated_at = Carbon::parse($post->updated_at)->format('Y-m-d');
                 $post->sta = $post->status;
-                $post->status = $status[$post->status];
+                if( $post->status === 'D' )
+                {
+                    $post->status = $post->confirm_status === 'Y' ? $status[$post->status] : '답변 확인중';
+                }
+                else {
+                    $post->status = $status[$post->status];
+                }
                 $post->div = $board_div[$post->div];
 
                 return $post;
@@ -70,7 +76,7 @@ class RequestController extends Controller
     public function store(Request $request)
     {
         Log::info(__METHOD__);
-        log::info($request);
+        // log::info($request);
 
         $request->validate([
             'title' => 'required|string|max:255',
@@ -176,7 +182,13 @@ class RequestController extends Controller
             $post->created_at = Carbon::parse($post->created_at)->format('Y-m-d');
             $post->updated_at = Carbon::parse($post->updated_at)->format('Y-m-d');
             $post->sta = $post->status;
-            $post->status = $status[$post->status];
+            if( $post->status === 'D' )
+            {
+                $post->status = $post->confirm_status === 'Y' ? '고객 확인중' : '잉';
+            }
+            else {
+                $post->status = $status[$post->status];
+            }
             $post->div = $board_div[$post->div];
 
             return $post;
@@ -495,6 +507,18 @@ class RequestController extends Controller
                 ->orderby('p.no')
                 ->first();
 
+        if( !$board )
+        {
+            abort(404);
+        }
+
+        // confirm_status 업데이트
+        Post::where('no', $no)
+                        ->where('save_status', 'Y')
+                        ->where('status', 'D')
+                        ->update(['confirm_status' => 'Y']);
+
+
         $url = route('request.show', ['id' => $no]);
         $content = '<a target="_blank" href="' . $url . '">' . $board->title . '</a><br><br> 요청건은 '
          . date('Y년 m월 d일') . '에 고객님께서 확인 완료하신 것으로 반영되었습니다. '
@@ -530,7 +554,7 @@ class RequestController extends Controller
 
 
         return redirect()->route('request.show', ['id' => $board->no])
-                ->with('msg', '해당 요청글이 정상적으로 확인 완료 처리되었습니다.');
+                ->with('msg', '정상적으로 확인 완료 처리되었습니다.');
     }
 
 }
