@@ -30,7 +30,7 @@
                     | 수정일 : {{ $post->updated_at }}
                     @endif
                 </h6>
-                <p class="card-text mt-3">{{ $post->content }}</p>
+                <p class="card-text mt-3">{!! nl2br(e($post->content)) !!}</p>
                 @forelse ($img as $i)
                     @if( $i->target_type == 'P' )
                         <img src="{{ asset('storage/img/' . $i->pathDate . '/' . $i->savename) }}" width="200">
@@ -61,7 +61,7 @@
         @if(auth()->user()->is_admin === 'Y')
             <a href="{{ route('boards.index') }}" class="btn btn-secondary">목록으로</a>
             @if($post->save_status == 'Y' && $post->status == 'B' && $post['user']->status == 'Y')
-                <button type="button" class="btn btn-danger" onclick="div()">관리자 답글달기</button>
+                <button type="button" class="btn btn-danger" onclick="replyDivForm()">관리자 답글달기</button>
             @endif
         @else
             <a href="{{ route('request.list') }}?id={{ $post->user['id'] }}" class="btn btn-secondary">목록으로</a>
@@ -105,7 +105,7 @@
                     <h6 class="card-subtitle mb-2 text-muted">
                         작성일: {{ $reply->created_at }}
                     </h6>
-                    <p class="card-text mt-3">{{ $reply->content }}</p>
+                    <p class="card-text mt-3">{!! nl2br(e($reply->content)) !!}</p>
                     @forelse ($img as $i)
                         @if( $i->target_type == 'R' )
                             <img src="{{ asset('storage/img/' . $i->pathDate . '/' . $i->savename) }}" width="200">
@@ -137,16 +137,6 @@
                     <input class="form-control mb_5" type="file" id="file" name="file[]" multiple>
                 </div>
 
-                <!-- <div class="col-md-2">
-                    <select class="form-select" name="status" value="{{ old('status', $post->status) }}">
-                        <option value="A" {{ old('status', $post->status ?? '') == 'A' ? 'selected' : '' }}>{{ $post->sta['A'] }}</option>
-                        <option value="B" {{ old('status', $post->status ?? '') == 'B' ? 'selected' : '' }}>{{ $post->sta['B'] }}</option>
-                        <option value="C" {{ old('status', $post->status ?? '') == 'C' ? 'selected' : '' }}>{{ $post->sta['C'] }}</option>
-                        <option value="D" {{ old('status', $post->status ?? '') == 'D' ? 'selected' : '' }}>{{ $post->sta['D'] }}</option>
-                        <option value="E" {{ old('status', $post->status ?? '') == 'E' ? 'selected' : '' }}>{{ $post->sta['E'] }}</option>
-                        <option value="Z" {{ old('status', $post->status ?? '') == 'Z' ? 'selected' : '' }}>{{ $post->sta['Z'] }}</option>
-                    </select>
-                </div> -->
                 <div class="mb-4">
                     <button type="button" class="btn btn-primary" onclick="reply()">답글등록</a>
                 </div>
@@ -160,7 +150,7 @@
 
 @push('scripts')
 <script>
-    function div()
+    function replyDivForm()
     {
         $("#reply").show();
     }
