@@ -13,7 +13,7 @@
                 <h6 class="card-subtitle mb-2 text-muted">
                     관리자 | 작성일 : {{ $notice->created_at }}
                 </h6>
-                <p class="card-text mt-3">{{ $notice->content }}</p>
+                <p class="card-text mt-3">{!! nl2br(e($notice->content)) !!}</p>
                 @forelse ($img as $i)
                     @if( $i->target_type == 'N' )
                         <img src="{{ asset('storage/img/' . $i->pathDate . '/' . $i->savename) }}" width="200">

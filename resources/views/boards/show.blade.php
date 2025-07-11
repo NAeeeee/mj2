@@ -21,7 +21,7 @@
                     | 수정일 : {{ $post->updated_at }}
                     @endif
                 </h6>
-                <p class="card-text mt-3">{{ $post->content }}</p>
+                <p class="card-text mt-3">{!! nl2br(e($post->content)) !!}</p>
                 @forelse ($img as $i)
                     @if( $i->target_type == 'P' )
                         <img src="{{ asset('storage/img/' . $i->pathDate . '/' . $i->savename) }}" width="200">

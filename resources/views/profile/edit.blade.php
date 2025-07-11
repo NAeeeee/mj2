@@ -114,9 +114,9 @@
         <script>
             window.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
-                    var alert = document.getElementById('success-alert');
+                    let alert = document.getElementById('success-alert');
                     if (alert) {
-                        var bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                        let bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
                         bsAlert.close();
                     }
                 }, 3000);

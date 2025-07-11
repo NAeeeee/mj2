@@ -81,7 +81,19 @@ class MessageController extends Controller
 
         $message = [];
         $message = Message::where('no', $no)
+                ->where('save_status','Y')
                 ->first();
+
+        if ( !$message ) 
+        {
+            abort(404);
+        }
+
+        // 보낸 사람, 받는 사람아니면 접근금지
+        if( !in_array(auth()->user()->id, [$message->sender_id, $message->receiver_id]) )
+        {
+            abort(403);
+        }
 
         if( array_key_exists($message->sender_id, config('var.admin')) ) // 관리자라면
         {
@@ -93,10 +105,19 @@ class MessageController extends Controller
             $message->name = $user->name;
         }
 
-        // 읽음표시 업데이트
-        \App\Models\Message::where('post_no', $message->post_no)
+ 
+        // 접근자가 받는사람일때만 읽음표시 업데이트
+        if( auth()->user()->id === $message->receiver_id )
+        {
+            Message::where('post_no', $message->post_no)
                             ->where('save_status', 'Y')
                             ->update(['is_read' => 1]);
+        }
+        else
+        {
+            log::info('접근자 id = '.auth()->user()->id);
+            log::info('receiver_id = '.$message->receiver_id);
+        }
 
         // 게시물 상태 조회
         $postSta = \App\Models\Post::where('no', $message->post_no)

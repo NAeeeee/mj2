@@ -28,7 +28,7 @@
                     @endphp
                 @endauth
                 <a href="{{ $url }}" target="_blank" class="btn btn-primary">{{ $comment }}</a>
-                @If( $message->type === 'admin_returned' )
+                @If( $message->type === 'admin_returned' && auth()->user()->is_admin === 'N' )
                     <a href="{{ route('request.create', ['id' => Auth::user()->id ]) }}" target="_blank" class="btn btn-dark" style="float:right">추가 문의</a>
                 @endif
             </div>
