@@ -51,7 +51,7 @@
                     <span class="input-group-text" id="basic-addon1">
                         <img src="/img/key.png" width="18">
                     </span>
-                    <input type="password" class="form-control" id="pw" name="pw" oninput="onlyEngNum(this)" maxlength=20>
+                    <input type="password" class="form-control" id="pw" name="pw" maxlength=20>
                 </div>
             </div>
 
