@@ -104,11 +104,6 @@ window.onlyEmail = function (obj)
     obj.value = obj.value.replace(/[^0-9a-zA-Z@.]/g, "");
 }
 
-// 비밀번호 !@#$%^&*()_+-=[]{};':"\\|,.<>/?
-window.onlyEngNum = function (obj)
-{
-    obj.value = obj.value.replace(/[^a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g, "");
-}
 
 // 공용 팝업
 window.alertc = function (title, contents='', mh='')

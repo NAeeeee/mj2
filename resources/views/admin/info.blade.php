@@ -33,7 +33,7 @@
                         <span class="input-group-text" id="basic-addon1">
                             <img src="/img/user.png" width="18">
                         </span>
-                        <input type="text" class="form-control" id="name" name="name" oninput="onlyEngNum(this)" value="{{ $user->user_name }}" >
+                        <input type="text" class="form-control" id="name" name="name" oninput="onlyStr(this)" value="{{ $user->user_name }}" >
                     </div>
                 </div>
 
@@ -61,7 +61,7 @@
                         <span class="input-group-text" id="basic-addon3">
                             <img src="/img/ph.png" width="18">
                         </span>
-                        <input type="text" class="form-control" id="ph" name="ph" oninput="onlyNumber(this)" value="{{ $user->ph_r }}" >
+                        <input type="text" class="form-control" id="ph" name="ph" oninput="onlyNumber(this)" value="{{ $user->ph_r }}" maxlength=11>
                     </div>
                 </div>
 
