@@ -361,7 +361,7 @@ class BoardController extends Controller
         $post->save();
 
         $content = '요청하신 건에 대해 답변을 남겼습니다.<br> 내용을 확인해주시고, 이상이 없다면 <strong>확인 완료</strong> 버튼을 눌러주세요.<br>'
-        . '추가 문의사항이 있으시면 언제든지 추가 문의를 통해 알려주세요. 감사합니다.';
+        . '추가 문의사항이 있으시면 언제든지 추가 문의를 통해 알려주세요.<br><br> 감사합니다.';
 
         // 보낸 쪽지 (관리자 보낸편지함용)
         \App\Models\Message::create([
