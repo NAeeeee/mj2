@@ -175,17 +175,17 @@
                                 미답변
                             </div>
                             @elseif($post->status == 'D')
-                            <form action="{{ route('boards.updateStatus', $post->no) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <select name="status" class="form-select form-select-sm w-auto d-inline-block me-2">
+                            
+                                <select name="cha_status" id="boardSta" class="form-select form-select-sm w-auto d-inline-block me-2">
                                     @if( $post->view_status == 'Z' )
                                     <option value="Z" {{ old('status', $post->status) === 'Z' ? 'selected' : '' }}>완료</option>
                                     @endif
                                     <option value="E" {{ old('status', $post->status) === 'E' ? 'selected' : '' }}>반려</option>
                                 </select>
-                                <button type="submit" class="btn btn-primary btn-sm mb_3">상태 변경</button>
-                            </form>
+                                <button type="button" class="btn btn-primary btn-sm mb_3" onclick="staUp('{{ e(route('boards.updateStatus', $post->no)) }}', this)">
+                                    상태 변경
+                                </button>
+                            
                             @endif
                         </td>
                         @endif
@@ -221,6 +221,31 @@
                 </div>
             </form>
         </div>
+
+        <!-- 상태 변경 확인 모달 -->
+        <div class="modal fade" id="staUpdateModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <form id="staUpdateForm" method="POST">
+                <input type="hidden" id="changesta" name="status">
+                @method('PUT')
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">게시물 상태 변경 확인</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body" id="textdiv">
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">변경</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+
     </div>
 
 </section>
@@ -229,6 +254,46 @@
 
 @push('scripts')
 <script>
+
+    function staUp(url, val)
+    {
+        // 상태변경 값 가져오기
+        const select = val.previousElementSibling;
+        const selectVal = select.value;
+
+        // form 안에 값 세팅
+        document.getElementById('changesta').value = selectVal;
+
+        // 상태변경은 '완료', '반려'만 가능
+        if( selectVal !== 'Z' && selectVal !== 'E' )
+        {
+            return false;
+        }
+
+        // 보여줄 문구 세팅
+        let text = '';
+        if( selectVal === 'Z' )
+        {
+            text = '완료';
+        }
+        else if( selectVal === 'E' )
+        {
+            text = '반려';
+        }
+
+        const fullText = ' 상태로 변경하시겠습니까?';
+
+        const htmlText = text.replace(text, `<strong>${text}</strong>`)+fullText;
+
+        document.getElementById('textdiv').innerHTML = htmlText;
+
+        const form = document.getElementById('staUpdateForm');
+        form.action = url;
+        form.method = 'POST';
+
+        const modal = new bootstrap.Modal(document.getElementById('staUpdateModal'));
+        modal.show();
+    }
   
     document.addEventListener("DOMContentLoaded", function () {
         const urlParams = new URLSearchParams(window.location.search);
@@ -262,9 +327,6 @@
 
         @if(session('msg_p2'))
             alertc("{{ session('title_d') }}","{{ session('msg_p2') }}",'p');
-            setTimeout(() => {
-                    location.reload();
-                }, 18.500);
         @endif
     });
 
