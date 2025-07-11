@@ -245,14 +245,25 @@ class RequestController extends Controller
                 log::info('아이디 같음');
                 log::info('진입 아이디 : '.auth()->user()->id);
 
-                // 고객 확인 완료
-                $post->status = "D";
-                $post->save();
+                if( auth()->user()->id === $post->user_id )
+                {
+                    // 고객 확인 완료
+                    $post->status = "D";
+                    $post->save();
 
-                // 관리자 댓글 상태도 고객확인완료 업데이트
-                $reply_chk = \App\Models\Reply::findOrFail($reply->no);
-                $reply_chk->status = "D";
-                $reply_chk->save();
+                    // 관리자 댓글 상태도 고객확인완료 업데이트
+                    $reply_chk = \App\Models\Reply::findOrFail($reply->no);
+                    $reply_chk->status = "D";
+                    $reply_chk->save();
+                }
+                else
+                {
+                    log::info('진입 아이디 : '.auth()->user()->id);
+                    if( array_key_exists(auth()->user()->id, config('var.admin')) )
+                    {
+                        log::info('관리자');
+                    }
+                }
             }
             else
             {
