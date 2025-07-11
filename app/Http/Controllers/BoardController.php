@@ -38,7 +38,7 @@ class BoardController extends Controller
                 })
                 ->join('users', 'posts.user_id', '=', 'users.id')
                 ->select(
-                    'posts.no', 'posts.title', 'posts.user_id', 'posts.created_at', 'posts.status', 'posts.save_status', 'posts.div',
+                    'posts.no', 'posts.title', 'posts.user_id', 'posts.created_at', 'posts.status', 'posts.save_status', 'posts.div', 'posts.confirm_status',
                     'users.name',
                     'users.status as users_status',
                     'post_replies.created_at as reply_at'
@@ -106,48 +106,26 @@ class BoardController extends Controller
 
         $posts = $query->paginate(5)->withQueryString();
 
-        // 답변완료
-        if( $div === 'O' )
-        {
-            // 게시물 번호 추출
-            $postNos = $posts->pluck('no')->toArray();
-
-             // 확인완료 메시지가 존재하는 게시물 번호 목록
-            $statusDpost = DB::table('messages')
-                ->whereIn('post_no', $postNos)
-                ->where('save_status','Y')
-                ->where('type', 'confirm_done')
-                ->where('div', 'R')
-                ->pluck('post_no')
-                ->toArray();
-
-            $posts->transform(function ($post) use ($statusDpost) {
-                $rdiv = config('var.board_div');
-                $post->div = $rdiv[$post->div] ?? $post->div;
-
-                // 확인 완료 메시지 존재 여부에 따라 표시 상태 조정
-                $post->view_status = ( 
-                    $post->status === 'D' && in_array($post->no, $statusDpost)
-                ) ? 'Z' : $post->status;
-
-                return $post;
-            });
-        }
-        else
-        {
-            // 다른 탭에서는 기존 로직
-            $posts->transform(function ($post) {
-                $rdiv = config('var.board_div');
-                $post->div = $rdiv[$post->div] ?? $post->div;
-                $post->view_status = $post->status;  // 기본은 원래 status 그대로
+        
+        // 답변완료에서 '고객확인중', '고객확인완료' 구분
+        $posts->transform(function ($post) {
+            $rdiv = config('var.board_div');
+            $post->div = $rdiv[$post->div] ?? $post->div;
                 
-                return $post;
-            });
-        }
+            if( $post->status === 'D' )
+            {
+                $post->view_status = $post->confirm_status === 'Y' ? 'DY' : $post->status;
+            }
+            else
+            {
+                $post->view_status = $post->status;
+            }
+                
+            return $post;
+        });
 
-        // $view = ($div == 'X') ? 'boards.index' : 'boards.index2';
-        $view = 'boards.index';
 
+        // 미답변, 답변완료 cnt
         $sta = [
             'div_ab' => Post::where('save_status', 'Y')
                                     ->whereIn('status',['A','B'])
@@ -163,7 +141,7 @@ class BoardController extends Controller
                                     ->count(),
         ];
 
-        return view($view, compact('posts', 'div', 'search_div', 'keyword', 'sta'));
+        return view('boards.index', compact('posts', 'div', 'search_div', 'keyword', 'sta'));
     }
 
 
