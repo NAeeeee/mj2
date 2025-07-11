@@ -20,12 +20,8 @@ class EmailVerificationNotificationController extends Controller
             return redirect()->intended(RouteServiceProvider::HOME);
         }
 
-        // 기본 라라벨 방식
-        // $request->user()->sendEmailVerificationNotification();
+        $request->user()->notify(new CustomVerifyEmail());
 
-         // 테스트용 메일
-        Notification::route('mail', 'nazz0525z@gmail.com')
-            ->notify(new CustomVerifyEmail($request->user()));
 
         return back()->with('status', 'verification-link-sent');
     }

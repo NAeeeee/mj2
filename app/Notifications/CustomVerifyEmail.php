@@ -19,9 +19,9 @@ class CustomVerifyEmail extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct($notifiable)
+    public function __construct()
     {
-        $this->notifiable = $notifiable;
+
     }
 
 
@@ -40,27 +40,26 @@ class CustomVerifyEmail extends Notification
      */
     public function toMail($notifiable)
     {
-        $verifyUrl = $this->verificationUrl($this->notifiable);
-
+        $verifyUrl = $this->verificationUrl($notifiable);
 
         return (new MailMessage)
-                    ->subject('이메일 인증 (테스트용)')
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', $verifyUrl)
-                    ->line('Thank you for using our application!');
+                ->subject('[MJ] 이메일 인증을 완료해주세요')
+                ->view('email.verify_email', [
+                    'username' => $notifiable->name,
+                    'verificationUrl' => $verifyUrl,
+                ]);
     }
 
     protected function verificationUrl($notifiable)
     {
-        $temporarySignedRoute = URL::temporarySignedRoute(
+        return URL::temporarySignedRoute(
             'verification.verify',
             Carbon::now()->addMinutes(60),
             [
                 'id' => $notifiable->getKey(),
-                'hash' => sha1($notifiable->getEmailForVerification()),
+                'hash' => sha1($notifiable->getEmailForVerification()), // ← 직접 필드 접근
             ]
         );
-        return config('app.url') . parse_url($temporarySignedRoute, PHP_URL_PATH) . '?' . parse_url($temporarySignedRoute, PHP_URL_QUERY);
     }
 
     /**

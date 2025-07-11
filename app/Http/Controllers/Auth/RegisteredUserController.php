@@ -15,6 +15,7 @@ use Illuminate\View\View;
 use Log;
 use App\Mail\VerifyEmailWithSES;
 use Illuminate\Support\Facades\Mail;
+use App\Notifications\CustomVerifyEmail;
 
 class RegisteredUserController extends Controller
 {
@@ -53,11 +54,8 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         if (app()->environment('local')) {
-            // 개발계
-            // 임시 이메일 고정
-            $user->email = 'nazz0525z@gmail.com';
 
-            event(new Registered($user));
+            $user->notify(new CustomVerifyEmail());
         }
         else
         {
@@ -84,11 +82,8 @@ class RegisteredUserController extends Controller
         ]);
 
         if (app()->environment('local')) {
-            // 임시 이메일 고정
-            $user->email = 'nazz0525z@gmail.com';
 
-            // 인증 메일 다시 발송
-            event(new Registered($user));
+            $user->notify(new CustomVerifyEmail());
         } 
         else
         {
