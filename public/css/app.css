@@ -219,8 +219,16 @@ input[readonly] {
     cursor: pointer;
 }
 
+.w-4 {
+    width: 4% !important;
+}
+
 .w-5 {
     width: 5% !important;
+}
+
+.w-7 {
+    width: 7% !important;
 }
 
 .w-10 {
