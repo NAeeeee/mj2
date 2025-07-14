@@ -5,14 +5,16 @@ Laravel 기반의 게시판 시스템입니다.
 운영 환경은 AWS EC2 인스턴스에서 구축하여 실제 운영을 고려한 구성으로 제작하였습니다.
 또한 Apache + PHP-FPM 조합, SELinux, AWS SES 등 실무 요소를 적용했습니다.
 
-### ✨ 주요 기능
+
+## ✨ 주요 기능
 - 회원 가입 및 이메일 인증
 - 회원 : 게시글 작성 / 상태 관리 / 파일 첨부 (최대 3개)
 - 관리자 : 회원/게시글/공지 관리, 댓글 작성
 - 쪽지 전송 (댓글 작성, 게시글 상태 변경 시 자동 발송)
 - AWS SES를 통한 메일 발송
 
-### 🛠 기술 스택
+
+## 🛠 기술 스택
 
 - **Language**: PHP 8.2
 - **Framework**: Laravel 10
@@ -24,9 +26,12 @@ Laravel 기반의 게시판 시스템입니다.
 - **Dev Tools**: Composer, Git, Firewalld, systemctl 등
 
 
-### ⚙️ 개발 환경 설치 및 실행 (VirtualBox 기준)
+
+## ⚙️ 개발 환경 설치 및 실행 (VirtualBox 기준)
 ※ 운영계는 AWS EC2에 동일하게 Laravel 환경 구축 후 .env와 도메인, 메일 설정 등을 다르게 적용했습니다.
 
+
+```bash
 # 패키지 업데이트
 sudo dnf update -y
 
@@ -88,6 +93,9 @@ max_file_uploads = 20
 
 # PHP-FPM 재시작
 sudo systemctl restart php-fpm
+
+```
+
 
 ✨ 기타 참고
 - 개발계 서버는 VirtualBox + NAT 구성으로 포트포워딩 설정 (예: MySQL 3307, VSCode 2121 등)
