@@ -1,72 +1,97 @@
+### 📌 프로젝트 소개
+Laravel 기반의 게시판 시스템입니다.  
+회원/관리자 권한 분리, 이메일 인증, 게시물 상태 관리, 쪽지 기능 등을 포함합니다.  
+개발 환경은 VirtualBox 기반의 Rocky Linux 8,
+운영 환경은 AWS EC2 인스턴스에서 구축하여 실제 운영을 고려한 구성으로 제작하였습니다.
+또한 Apache + PHP-FPM 조합, SELinux, AWS SES 등 실무 요소를 적용했습니다.
+
+### ✨ 주요 기능
+- 회원 가입 및 이메일 인증
+- 회원 : 게시글 작성 / 상태 관리 / 파일 첨부 (최대 3개)
+- 관리자 : 회원/게시글/공지 관리, 댓글 작성
+- 쪽지 전송 (댓글 작성, 게시글 상태 변경 시 자동 발송)
+- AWS SES를 통한 메일 발송
+
+### 🛠 기술 스택
+
+- **Language**: PHP 8.2
+- **Framework**: Laravel 10
+- **Database**: MySQL
+- **Web Server**: Apache + PHP-FPM
+- **개발 서버**: VirtualBox + Rocky Linux 8
+- **운영 서버**: AWS EC2 (Rocky Linux 8 기반)
+- **Email**: AWS SES
+- **Dev Tools**: Composer, Git, Firewalld, systemctl 등
 
 
+### ⚙️ 개발 환경 설치 및 실행 (VirtualBox 기준)
+※ 운영계는 AWS EC2에 동일하게 Laravel 환경 구축 후 .env와 도메인, 메일 설정 등을 다르게 적용했습니다.
+
+# 패키지 업데이트
+sudo dnf update -y
+
+# 필수 패키지 설치
+sudo dnf install -y epel-release git unzip curl wget
+
+# PHP 8.1 설치 (Remi 저장소 이용)
+sudo dnf install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm
+sudo dnf module reset php
+sudo dnf module enable php:remi-8.1 -y
+sudo dnf install php php-cli php-common php-pdo php-mysqlnd php-mbstring php-xml php-bcmath php-opcache php-gd php-curl -y
+
+# Apache 설치 및 시작
+sudo dnf install -y httpd
+sudo systemctl enable httpd
+sudo systemctl start httpd
+
+# Firewall 설정
+sudo firewall-cmd --permanent --add-service=http
+sudo firewall-cmd --reload
+
+# Composer 설치
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+
+# Laravel 프로젝트 설치
+composer create-project laravel/laravel mj2
+cd mj2
+composer install
+
+# 환경 설정
+cp .env.example .env
+php artisan key:generate
+
+# .env DB 설정 예시
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=mj
+DB_USERNAME=mj
+DB_PASSWORD=mjUser1212!
+
+# 권한 설정
+sudo chown -R apache:apache storage bootstrap/cache
+sudo chmod -R 775 storage bootstrap/cache
+
+# 마이그레이션
+php artisan migrate
 
 
+📌 PHP 설정 예시 (파일 업로드 용량 관련)
+# php.ini 경로로 이동
+cd /etc
+sudo vi php.ini
 
+# 아래 설정값 수정
+upload_max_filesize = 10M
+max_file_uploads = 20
 
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# PHP-FPM 재시작
+sudo systemctl restart php-fpm
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
-
-## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+✨ 기타 참고
+- 개발계 서버는 VirtualBox + NAT 구성으로 포트포워딩 설정 (예: MySQL 3307, VSCode 2121 등)
+- 운영계 서버는 AWS EC2 인스턴스에 Laravel 배포 및 AWS 도메인(mjnadev.com) 연결
+- AWS EC2 보안그룹 설정을 통해 80, 443, 3306 등 포트 허용
+- AWS SES를 이용한 인증 메일 / 비밀번호 재설정 메일 발송 구성
+- 삭제 게시물, 탈퇴 회원 글 등도 관리하여 유지보수 고려한 설계
