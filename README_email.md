@@ -1,31 +1,96 @@
-✅ 이메일 전체 흐름 요약
-1. 회원가입 하면 User 모델이 MustVerifyEmail을 구현하고 있어서
-Laravel이 자동으로 이메일 인증 메일을 사용자에게 발송함
+# 📧 이메일 인증 처리 흐름 (Laravel + AWS SES)
 
-2. 사용자가 받은 이메일의 링크를 클릭하면
-라우트 /email/verify/{id}/{hash} 로 이동
-EmailVerificationRequest가 해당 사용자의 서명을 검증하고
-->fulfill() 메서드가 사용자 모델의 email_verified_at 필드를 채움 (즉, 인증 완료)
+## 1. 회원가입 → 인증 메일 전송(운영 서버)
 
-3. 그 이후 verified 미들웨어를 걸어둔 페이지에 들어갈 수 있게 됨
-인증 안 한 사용자는 /email/verify 페이지로 계속 리디렉트됨
+회원가입 시 `RegisteredUserController.php`에서 아래와 같이 인증 메일을 발송
 
+```php
+Mail::to($user->email)->send(new VerifyEmailWithSES($user));
+```
 
+---
 
-✅ 각 구성 요소 설명
-1. MustVerifyEmail
-이 인터페이스를 User 모델에 붙이면 Laravel이 "이 사용자는 이메일 인증이 필요해"라고 판단
-이게 있어야 인증 메일 자동 발송 + 인증 체크 기능들이 작동함.
+## 2. 인증 메일 클래스 (`App\Mail\VerifyEmailWithSES.php`)
 
-2. 인증 메일 발송
-회원가입 후 sendEmailVerificationNotification() 메서드가 자동 실행돼서 인증 링크가 담긴 메일을 발송함.
-링크에는 사용자 ID, 서명, 해시 정보가 담겨 있어서 보안적으로 안전함.
+```php
+class VerifyEmailWithSES extends Mailable
+{
+    use Queueable, SerializesModels;
 
-3. 인증 라우트
-/email/verify/{id}/{hash} 이 주소는 메일 속 인증 링크에서 넘어옴.
-여기서 EmailVerificationRequest가 요청 유효성(서명, 해시)을 확인한 후
-$request->fulfill() 을 호출해서 인증 처리 (DB에 email_verified_at 기록)
+    public $user;
+    public $verificationUrl;
 
-4. verified 미들웨어
-이 미들웨어가 붙은 라우트는 이메일 인증을 완료한 사용자만 접근 가능.
-인증 안 했으면 /email/verify 페이지로 리디렉션됨.
+    public function __construct($user)
+    {
+        $this->user = $user;
+        $this->verificationUrl = $this->generateVerificationUrl($user);
+    }
+
+    protected function generateVerificationUrl($user)
+    {
+        return URL::temporarySignedRoute(
+            'verification.verify',
+            Carbon::now()->addMinutes(60),
+            ['id' => $user->getKey(), 'hash' => sha1($user->getEmailForVerification())]
+        );
+    }
+
+    public function build()
+    {
+        return $this->subject('[MJ] 이메일 인증을 완료해주세요')
+                    ->view('email.verify_email')
+                    ->with([
+                        'username' => $this->user->name,
+                        'verificationUrl' => $this->verificationUrl,
+                    ])
+                    ->withSwiftMessage(function ($message) {
+                        $message->getHeaders()
+                                ->addTextHeader('X-SES-CONFIGURATION-SET', 'my-first-configuration-set');
+                    });
+    }
+}
+```
+
+---
+
+## 3. 인증 링크 클릭 시 흐름
+
+* 메일 내 인증 링크: `/email/verify/{id}/{hash}`
+* `routes/auth.php`에 등록된 `verification.verify` 라우트에서 처리
+* `VerifyEmailController`가 링크를 검증하고, `users.email_verified_at` 컬럼을 갱신하여 인증 완료 처리
+
+---
+
+## 4. 미들웨어 및 제한 처리
+
+* 인증되지 않은 사용자는 `verified` 미들웨어에 의해 기능 접근 제한
+* 인증된 사용자만 주요 기능 접근 가능 (ex: 게시물 작성, 쪽지 전송 등)
+* 인증 링크는 60분 유효 / URL 서명 기반으로 위조 방지
+* Laravel 기본 제공 인증 시스템을 기반으로 확장 구현함
+
+---
+
+## 5. SES 구성 요약
+
+* AWS SES에서 도메인 및 발신 이메일 인증 완료 후 사용
+* 인증 메일/비밀번호 재설정 메일 모두 SES를 통해 발송
+
+---
+
+## ✅ 참고
+
+* 인증 메일 뷰는 `resources/views/email/verify_email.blade.php` 에 위치
+* 비밀번호 재설정 뷰는 `resources/views/email/reset-password.blade.php` 에 위치
+* SES 설정은 `.env`에 다음과 같이 명시:
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=email-smtp.ap-northeast-2.amazonaws.com
+MAIL_PORT=587
+MAIL_USERNAME=발급받은 user
+MAIL_PASSWORD=발급받은 pass
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=admin@mjnadev.com
+MAIL_FROM_NAME="MJ 프로젝트"
+```
+
