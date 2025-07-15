@@ -49,7 +49,7 @@
                     @endforeach
                 @else
                     <tr>
-                        <td colspan=6 class="text-center">작성한 공지가 없습니다.</td>
+                        <td colspan=7 class="text-center">작성한 공지가 없습니다.</td>
                     </tr>
                 @endif
             </tbody>
