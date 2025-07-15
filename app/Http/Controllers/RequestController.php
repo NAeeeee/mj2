@@ -205,19 +205,23 @@ class RequestController extends Controller
 
         $post = \App\Models\Post::with('user')->findOrFail($no);
 
-        if ( $post->save_status == 'N' && !array_key_exists(auth()->user()->id, config('var.admin')) ) 
+        // 1. 삭제된 글 관리자만 접근 가능
+        if ( $post->save_status === 'N' )
         {
-            abort(403);
+            if( auth()->user()->is_admin !== 'Y' || auth()->user()->save_status !== 'Y' )
+            {
+                abort(403);
+            }
         }
 
         // 2. 관리자 또는 글 작성자만 접근 가능
-        if ( !array_key_exists(auth()->user()->id, config('var.admin')) && auth()->user()->id !== $post->user_id ) 
+        if ( auth()->user()->is_admin !== 'Y' && auth()->id() !== $post->user_id ) 
         {
             abort(403);
         }
 
         // id가 관리자고 상태(status)가 'A'(요청접수)
-        if ( array_key_exists(auth()->user()->id, config('var.admin')) && $post->status == 'A' ) 
+        if ( auth()->user()->is_admin === 'Y' && $post->status == 'A' )
         {
             $post->status = "B"; // 담당자 확인중
             $post->save();
@@ -252,7 +256,7 @@ class RequestController extends Controller
         {
             log::info($post->no.'번 게시물 상태 : '.$post->status);
             log::info("글쓴이 no : ".$post->user_id);
-            if( array_key_exists(auth()->user()->id, config('var.admin')) || auth()->user()->id == $post->user_id )
+            if ( auth()->user()->is_admin !== 'Y' && auth()->id() !== $post->user_id ) 
             {
                 log::info('아이디 같음');
                 log::info('진입 아이디 : '.auth()->user()->id);
@@ -271,10 +275,6 @@ class RequestController extends Controller
                 else
                 {
                     log::info('진입 아이디 : '.auth()->user()->id);
-                    if( array_key_exists(auth()->user()->id, config('var.admin')) )
-                    {
-                        log::info('관리자');
-                    }
                 }
             }
             else

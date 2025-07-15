@@ -20,7 +20,8 @@ class AdminController extends Controller
     // 관리자 페이지 접근 제어
     public function __construct()
     {
-        $this->middleware('auth'); // 로그인한 사용자만
+        $this->middleware('auth');
+        $this->middleware('is_admin'); // 관리자만 접근 가능
     }
 
     // 리스트 페이지
@@ -32,150 +33,141 @@ class AdminController extends Controller
         $search_div = $request->search_div ?? '';
         $keyword = $request->search ?? '';
 
-        if ( Auth::user()->is_admin === 'Y' ) 
+        $query = DB::table('users')
+            ->orderby('id','asc');
+        
+        if ( $div === 'Y' ) 
         {
-            $query = DB::table('users')
-                ->orderby('id','asc');
-            
-            if ( $div === 'Y' ) 
-            {
-                $query->where('status', 'Y')
-                        ->where('is_admin', 'N');
-            }
-            else if ( $div === 'N' ) 
-            {
-                $query->where('status', 'N');
-            }
-            else if ( $div === 'A' ) 
-            {
-                $query->where('is_admin', 'Y');
-            }
+            $query->where('status', 'Y')
+                    ->where('is_admin', 'N');
+        }
+        else if ( $div === 'N' ) 
+        {
+            $query->where('status', 'N');
+        }
+        else if ( $div === 'A' ) 
+        {
+            $query->where('is_admin', 'Y');
+        }
 
-            // 검색 조건 추가
-            if ($search_div && $keyword) 
+        // 검색 조건 추가
+        if ($search_div && $keyword) 
+        {
+            // 아이디
+            if( $search_div === 'id' )
             {
-                // 아이디
-                if( $search_div === 'id' )
-                {
-                    $query->where('id', 'like', "%{$keyword}%");
-                }
-                // 이름
-                if( $search_div === 'name' )
-                {
-                    $query->where('name', 'like', "%{$keyword}%");
-                }
-                // 이메일
-                if( $search_div === 'email' )
-                {
-                    $query->where('email', 'like', "%{$keyword}%");
-                }
+                $query->where('id', 'like', "%{$keyword}%");
             }
+            // 이름
+            if( $search_div === 'name' )
+            {
+                $query->where('name', 'like', "%{$keyword}%");
+            }
+            // 이메일
+            if( $search_div === 'email' )
+            {
+                $query->where('email', 'like', "%{$keyword}%");
+            }
+        }
 
-            $users = $query->paginate(5)->withQueryString();
+        $users = $query->paginate(5)->withQueryString();
 
-            $users->transform(function ($uu) {
-                // 이름 마스킹
-                if ( $uu->name ) 
+        $users->transform(function ($uu) {
+            // 이름 마스킹
+            if ( $uu->name ) 
+            {
+                if ( $uu->status === 'N' ) 
                 {
-                    if ( $uu->status === 'N' ) 
+                    $len = mb_strlen($uu->name);
+                    if ( $len <= 1 ) 
                     {
-                        $len = mb_strlen($uu->name);
-                        if ( $len <= 1 ) 
-                        {
-                            $uu->name_r = '*';
-                        } 
-                        elseif ( $len === 2 ) 
-                        {
-                            $uu->name_r = mb_substr($uu->name, 0, 1) . '*';
-                        } 
-                        else 
-                        {
-                            $uu->name_r = mb_substr($uu->name, 0, 1) . str_repeat('*', $len - 2) . mb_substr($uu->name, -1);
-                        }
-                    }
-                    else 
+                        $uu->name_r = '*';
+                    } 
+                    elseif ( $len === 2 ) 
                     {
-                        $uu->name_r = $uu->name;
-                    }
-                }
-
-                // 이메일 마스킹
-                if ( $uu->email ) 
-                {
-                    if ( $uu->status === 'N' ) 
-                    {
-                        $parts = explode('@', $uu->email);
-                        $local = $parts[0];
-                        $domain = $parts[1] ?? '';
-
-                        $localLen = strlen($local);
-                        if ( $localLen <= 3 ) 
-                        {
-                            $maskedLocal = str_repeat('*', $localLen);
-                        } 
-                        else 
-                        {
-                            $maskedLocal = substr($local, 0, 3) . str_repeat('*', $localLen - 3);
-                        }
-
-                        $uu->email_r = $maskedLocal . '@' . $domain;
+                        $uu->name_r = mb_substr($uu->name, 0, 1) . '*';
                     } 
                     else 
                     {
-                        $uu->email_r = $uu->email;
+                        $uu->name_r = mb_substr($uu->name, 0, 1) . str_repeat('*', $len - 2) . mb_substr($uu->name, -1);
                     }
                 }
-
-                // 핸드폰 번호 마스킹
-                if ( $uu->ph ) 
+                else 
                 {
-                    $ph = preg_replace('/[^0-9]/', '', $uu->ph);
-                    $ph_l = strlen($ph);
+                    $uu->name_r = $uu->name;
+                }
+            }
 
-                    if ( $ph_l === 11 ) 
+            // 이메일 마스킹
+            if ( $uu->email ) 
+            {
+                if ( $uu->status === 'N' ) 
+                {
+                    $parts = explode('@', $uu->email);
+                    $local = $parts[0];
+                    $domain = $parts[1] ?? '';
+
+                    $localLen = strlen($local);
+                    if ( $localLen <= 3 ) 
                     {
-                        $uu->ph_r = ( $uu->status === 'N' )
-                            ? substr($ph, 0, 3) . '-****-' . substr($ph, 7)
-                            : substr($ph, 0, 3) . '-' . substr($ph, 3, 4) . '-' . substr($ph, 7);
-                    } 
-                    elseif ( $ph_l === 10 ) 
-                    {
-                        $uu->ph_r = ( $uu->status === 'N' )
-                            ? substr($ph, 0, 3) . '-***-' . substr($ph, 6)
-                            : substr($ph, 0, 3) . '-' . substr($ph, 3, 3) . '-' . substr($ph, 6);
+                        $maskedLocal = str_repeat('*', $localLen);
                     } 
                     else 
                     {
-                        $uu->ph_r = $ph; // 포맷 안맞는 경우 그대로 출력
+                        $maskedLocal = substr($local, 0, 3) . str_repeat('*', $localLen - 3);
                     }
+
+                    $uu->email_r = $maskedLocal . '@' . $domain;
+                } 
+                else 
+                {
+                    $uu->email_r = $uu->email;
                 }
+            }
+
+            // 핸드폰 번호 마스킹
+            if ( $uu->ph ) 
+            {
+                $ph = preg_replace('/[^0-9]/', '', $uu->ph);
+                $ph_l = strlen($ph);
+
+                if ( $ph_l === 11 ) 
+                {
+                    $uu->ph_r = ( $uu->status === 'N' )
+                        ? substr($ph, 0, 3) . '-****-' . substr($ph, 7)
+                        : substr($ph, 0, 3) . '-' . substr($ph, 3, 4) . '-' . substr($ph, 7);
+                } 
+                elseif ( $ph_l === 10 ) 
+                {
+                    $uu->ph_r = ( $uu->status === 'N' )
+                        ? substr($ph, 0, 3) . '-***-' . substr($ph, 6)
+                    : substr($ph, 0, 3) . '-' . substr($ph, 3, 3) . '-' . substr($ph, 6);
+                } 
+                else 
+                {
+                    $uu->ph_r = $ph; // 포맷 안맞는 경우 그대로 출력
+                }
+            }
                 
+            $uu->sta = $uu->status === 'Y' ? '활동' : '탈퇴';
 
-                $uu->sta = $uu->status === 'Y' ? '활동' : '탈퇴';
-
-                return $uu;
-            });
+            return $uu;
+        });
             
 
-            $sta = 
-            [   
-                'user_cnt' => User::where('status', 'Y')->where('is_admin', 'N')->count(),
-                'admin_cnt' => User::where('is_admin', 'Y')->count(),
-            ];
+        $sta = 
+        [   
+            'user_cnt' => User::where('status', 'Y')->where('is_admin', 'N')->count(),
+            'admin_cnt' => User::where('is_admin', 'Y')->count(),
+        ];
 
-            return view('admin.list', compact('users', 'div', 'search_div', 'keyword', 'sta'));
-        }
-        else 
-        {
-            abort(403);
-        }
+        return view('admin.list', compact('users', 'div', 'search_div', 'keyword', 'sta'));
     }
 
 
     public function add(Request $request)
     {
         Log::info(__METHOD__);
-        // log::info($request);
         
         $request->validate([
             'name' => ['required', 'string','lowercase', 'max:255'],
@@ -338,11 +330,7 @@ class AdminController extends Controller
 
         log::info('[관리자 탈퇴] 요청자: '.auth()->user()->id);
         log::info('[관리자 탈퇴] 대상자: '.$id);
-        
-        if ( (int)auth()->user()->id === (int)$id ) 
-        {
-            abort(403);
-        }
+
 
         DB::beginTransaction();
         try 
@@ -372,7 +360,8 @@ class AdminController extends Controller
 
             return redirect()->back()->with('pw_msg', $msg);
 
-        } catch (\Throwable $e) 
+        } 
+        catch (\Throwable $e) 
         {
             DB::rollBack();
             log::error('관리자 탈퇴 처리 중 오류: ' . $e->getMessage());
@@ -383,7 +372,6 @@ class AdminController extends Controller
             return redirect()->back()
                 ->with('pw_msg', $msg);
         };
-
 
     }
 }

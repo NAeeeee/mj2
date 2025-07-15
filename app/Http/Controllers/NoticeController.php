@@ -166,7 +166,7 @@ class NoticeController extends Controller
         Log::info(__METHOD__);
 
         // 관리자인지 체크
-        if( !array_key_exists(auth()->id(), config('var.admin')) )
+        if( auth()->user()->is_admin === 'Y' && auth()->user()->save_status === 'Y' )
         {
             abort(403);
         }
@@ -180,7 +180,7 @@ class NoticeController extends Controller
         Log::info(__METHOD__);
 
         // 관리자인지 체크
-        if( !array_key_exists(auth()->id(), config('var.admin')) )
+        if( auth()->user()->is_admin === 'Y' && auth()->user()->save_status === 'Y' )
         {
             abort(403);
         }
@@ -271,6 +271,11 @@ class NoticeController extends Controller
 
         $notice = Notice::findOrFail($no);
 
+        if( auth()->user()->is_admin !== 'Y' && ($notice->save_status === 'N' || $notice->is_visible === 'N') )
+        {
+            abort(403);
+        }
+
         // 사진
         $img = [];
         $img = DB::table('post_file')
@@ -296,7 +301,7 @@ class NoticeController extends Controller
         Log::info(__METHOD__);
 
         // 관리자인지 체크
-        if( !array_key_exists(auth()->id(), config('var.admin')) )
+        if( auth()->user()->is_admin === 'Y' && auth()->user()->save_status === 'Y' )
         {
             abort(403);
         }
@@ -328,7 +333,7 @@ class NoticeController extends Controller
         Log::info(__METHOD__);
 
         // 관리자인지 체크
-        if( !array_key_exists(auth()->id(), config('var.admin')) )
+        if( auth()->user()->is_admin === 'Y' && auth()->user()->save_status === 'Y' )
         {
             abort(403);
         }
@@ -442,7 +447,7 @@ class NoticeController extends Controller
         Log::info(__METHOD__);
 
         // 관리자인지 체크
-        if( !array_key_exists(auth()->id(), config('var.admin')) )
+        if( auth()->user()->is_admin === 'Y' && auth()->user()->save_status === 'Y' )
         {
             abort(403);
         }

@@ -44,7 +44,7 @@ class MessageController extends Controller
 
             $user = User::find($msg->sender_id);
 
-            if( array_key_exists($msg->sender_id, config('var.admin')) )
+            if ( $user && $user->is_admin === 'Y' ) 
             {
                 $msg->name = '관리자';
             }
@@ -58,7 +58,7 @@ class MessageController extends Controller
             {
                 $user_r = User::find($msg->receiver_id);
 
-                if( array_key_exists($msg->receiver_id, config('var.admin')) )
+                if( $user_r && $user_r->is_admin === 'Y' ) 
                 {
                     $msg->name_r = '관리자';
                 }
@@ -95,13 +95,13 @@ class MessageController extends Controller
             abort(403);
         }
 
-        if( array_key_exists($message->sender_id, config('var.admin')) ) // 관리자라면
+        $user = User::find($message->sender_id);
+        if( $user && $user->is_admin === 'Y' ) // 관리자라면
         {
             $message->name = '관리자';
         }
         else
         {
-            $user = User::find($message->sender_id);
             $message->name = $user->name;
         }
 

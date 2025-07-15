@@ -17,6 +17,7 @@ class BoardController extends Controller
     public function __construct()
     {
         $this->middleware('auth'); // 로그인한 사용자만
+        $this->middleware('is_admin');
     }
 
     // 게시판 리스트(관리자용)
