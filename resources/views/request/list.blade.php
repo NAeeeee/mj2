@@ -47,7 +47,7 @@
                     @endforeach
                 @else
                     <tr>
-                        <td colspan=6 class="text-center">작성한 글이 없습니다.</td>
+                        <td colspan={{ $cnt }} class="text-center">작성한 글이 없습니다.</td>
                     </tr>
                 @endif
             </tbody>

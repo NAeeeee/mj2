@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
 
 
 // 관리자 기능
-Route::middleware(['auth'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'is_admin'])->prefix('admin')->group(function () {
     Route::get('/list', [AdminController::class, 'list'])->name('admin.list');
     Route::get('/add', function () {
         return view('admin.admin-add');
@@ -109,7 +109,7 @@ Route::prefix('notice')->group(function () {
     Route::get('/show/{no}', [NoticeController::class, 'show'])->name('notice.show');
 
     // 로그인 필요
-    Route::middleware(['auth'])->group(function () {
+    Route::middleware(['auth', 'is_admin'])->group(function () {
         Route::get('/list', [NoticeController::class, 'list'])->name('notice.list');
         Route::get('/create', [NoticeController::class, 'create'])->name('notice.create');
         Route::post('/', [NoticeController::class, 'store'])->name('notice.store');
@@ -122,7 +122,7 @@ Route::prefix('notice')->group(function () {
 // php 정보
 Route::get('/phpinfo', function () {
     phpinfo();
-});
+})->middleware(['auth', 'is_admin']);
 
 Route::get('/error/404', function () {
      return view('error.404');

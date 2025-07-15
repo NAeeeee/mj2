@@ -186,7 +186,14 @@
                     </tr>
                 @empty
                 <tr>
-                    <td colspan=6 class="text-center">작성한 글이 없습니다.</td>
+                    @php
+                        if ( $div === 'O' || $div === 'X' ) {
+                            $cnt = 7;
+                        } else {
+                            $cnt = 6;
+                        }
+                    @endphp
+                    <td colspan={{ $cnt }} class="text-center">작성한 글이 없습니다.</td>
                 </tr>
                 @endforelse
             </tbody>

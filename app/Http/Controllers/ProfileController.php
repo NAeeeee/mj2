@@ -19,6 +19,11 @@ use App\Models\Post;
 class ProfileController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('auth'); // 로그인한 사용자만
+    }
+
     public function main(Request $request)
     {
         Log::info(__METHOD__);
@@ -78,10 +83,15 @@ class ProfileController extends Controller
     {
         Log::info(__METHOD__);
 
+        if( $request->id != auth()->user()->id )
+        {
+            abort(403);
+        }
+
         $user = User::where('id',$request->id)
                 // ->where('status','Y')
                 ->first();
-        // log::info($user);
+
         if( isset($user->created_at) )
         {
             $user->created_date = Carbon::parse($user->created_at)->format('Y-m-d');
@@ -123,7 +133,6 @@ class ProfileController extends Controller
                 return $post;
             });
         }
-        log::info($board);
 
         return view('profile.edit', compact('user', 'board'));
 
@@ -135,7 +144,7 @@ class ProfileController extends Controller
         
         if( isset($request->val) && $request->val == '' )
         {
-            // 오류
+            abort(404);
         }
 
         $user = User::where('id',$request->val)->first();

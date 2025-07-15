@@ -10,6 +10,10 @@
             // 성공 메시지면 창 닫기
             if (msg.includes('수정')) {
                 alertc('완료',msg,'p');
+                setTimeout(() => {
+                    window.close();
+                    window.opener.location.reload();
+                }, 2000);
             }
             else
             {

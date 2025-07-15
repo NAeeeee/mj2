@@ -46,7 +46,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan=6 class="text-center">-</td>
+                        <td colspan=6 class="text-center">검색 결과가 없습니다.</td>
                     </tr>
                 @endforelse
             </tbody>
