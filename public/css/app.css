@@ -269,3 +269,9 @@ input[readonly] {
     display: flex;
     flex-direction: row-reverse;
 }
+
+.admin-div {
+  margin-right: 4px; 
+  margin-left: 4px;
+  margin-top: 6px;
+}
