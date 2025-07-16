@@ -14,20 +14,78 @@
                                 ->exists();
                         @endphp
                         @if(auth()->user()->email_verified_at !== null)
-                            @if( auth()->user()->is_admin === 'Y' )
-                            <li class="nav-item"><a class="nav-link" href="{{ route('profile.edit', ['id' => auth()->id()]) }}">Info</a></li>
-                            @endif
                             <li class="nav-item"><a class="nav-link" href="{{ route('message.inbox') }}">
                                 @if($msg)<i class="bi bi-envelope-check"></i>
                                 @else
                                     Message
                                 @endif</a>
                             </li>
-                            <li class="nav-item"><a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
 
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
+                        @if( auth()->user()->is_admin == 'Y' )
+                            <li class="nav-item">
+                                <div class="bg-success text-white rounded-2 btn btn-sm admin-div">
+                                    관리자
+                                </div>
+                            </li>
+                        @endif
+
+                            {{-- toggle --}}
+                            <li class="nav-item dropdown no-arrow" >
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ auth()->user()->name }}{{ $img->savename ?? '' }} 님</span>&nbsp;
+                                    
+                                    @php
+                                        $imgSrc = ( isset($img['pathDate'], $img['savename']) )
+                                            ? asset('storage/img/' . $img['pathDate'] . '/' . $img['savename'])
+                                            : asset('img/pro.png');
+                                    @endphp
+                                    <img class="img-profile rounded-circle"
+                                        src="{{ $imgSrc }}" style="width:1.5rem; height:1.5rem;">
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                    aria-labelledby="userDropdown">
+                                    <a class="dropdown-item cp" onclick="window.open('/infoChange?val={{ auth()->id() }}', 'popup', 'width=600,height=650'); return false;" >
+                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Info
+                                    </a>
+
+                                    @if( auth()->user()->is_admin === 'Y' )
+                                    <a class="dropdown-item" href="{{ route('admin.list') }}">
+                                        <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        User
+                                    </a>
+                                    @endif
+
+                                    @php
+                                        $url = auth()->user()->is_admin === 'Y'
+                                            ? route('boards.index')
+                                            : route('request.index', ['id' => auth()->id()]);
+                                    @endphp
+                                    <a class="dropdown-item" href="{{ $url }}">
+                                        <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Board
+                                    </a>
+
+                                    @if( auth()->user()->is_admin === 'Y' )
+                                    <a class="dropdown-item" href="{{ route('notice.list') }}">
+                                        <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Notice
+                                    </a>
+                                    @endif
+
+                                    <div class="dropdown-divider"></div>
+
+                                    <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        Logout
+                                    </a>
+
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+                                </div>
+                            </li>
                         @endif
                     @endauth
                         <!-- <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li> -->

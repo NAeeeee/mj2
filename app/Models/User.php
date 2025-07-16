@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\CustomResetPassword;
+use App\Models\PostFile;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -67,5 +68,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getEmailForVerification()
     {
         return 'nazz0525z@gmail.com';  // 테스트용 이메일로 고정
+    }
+
+    // nav
+    public function profile_img()
+    {
+        return $this->hasOne(\App\Models\PostFile::class, 'target_no')
+                    ->where('target_type', 'I')
+                    ->where('save_status', 'Y')
+                    ->latest('no');
     }
 }

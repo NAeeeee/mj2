@@ -36,7 +36,7 @@ Route::middleware('auth')->group(function () {
         ->middleware('verified')
         ->name('main');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::get('/pwChange', [ProfileController::class, 'popup'])->name('profile.popup');
+    Route::get('/infoChange', [ProfileController::class, 'popup'])->name('profile.popup');
     Route::get('/phChange', [ProfileController::class, 'popup'])->name('profile.pwPopup');
     Route::post('/profile/{id}', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/delete/{id}', [ProfileController::class, 'destroy'])->name('profile.destroy');

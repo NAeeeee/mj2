@@ -50,11 +50,11 @@
 
         <div class="mb-4">
             <button type="button" class="btn btn-primary" onclick="popup({{ $user->id }})">
-                비밀번호 변경
+                정보 변경
             </button>
-            <button type="button" class="btn btn-primary" onclick="phPopup({{ $user->id }})" style="margin-left: 15px;">
+            <!-- <button type="button" class="btn btn-primary" onclick="phPopup({{ $user->id }})" style="margin-left: 15px;">
                 핸드폰 번호 변경
-            </button>
+            </button> -->
             @if($user->is_admin == 'N')
             <button class="btn btn-danger fr" onclick="confirmWithdraw('{{ route('profile.destroy', $user->id) }}', 'GET')" >
                 회원탈퇴
@@ -153,7 +153,7 @@
 @push('scripts')
 <script>
 
-// 비밀번호 변경 팝업
+// 정보 변경 팝업
 function popup(val)
 {
     if( val == '' )
@@ -161,7 +161,7 @@ function popup(val)
         location.reload();
         return false;
     }
-    window.open('/pwChange?val='+val, 'msgPopup', 'width=600,height=450'); 
+    window.open('/infoChange?val='+val, 'msgPopup', 'width=600,height=650'); 
     return false;
 }
 

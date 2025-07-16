@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
 use Log;
 use DB;
 use App\Models\Post;
+use App\Models\PostFile;
 
 class ProfileController extends Controller
 {
@@ -150,9 +151,20 @@ class ProfileController extends Controller
         $user = User::where('id',$request->val)->first();
 
         $div = $request->input('div');
-        $view = ($div === 'ph') ? 'profile.ph' : 'profile.pw';
 
-        return view($view, compact('user'));
+        $img = [];
+        $img = (array) DB::table('post_file')
+                ->where('target_no', $request->val)
+                ->where('target_type','I')
+                ->where('save_status', 'Y')
+                ->first();
+
+        if( !empty($img) )
+        {
+            $img['pathDate'] = explode('_', $img['savename'])[0];
+        }
+
+        return view('profile.info', compact('user', 'img'));
     }
 
 
@@ -160,59 +172,117 @@ class ProfileController extends Controller
     {
         Log::info(__METHOD__);
 
-        $request->validate([
-            'pw' => 'required|min:7',
-        ]);
 
         // 유저 찾기
         $user = User::find($id);
 
-        $div = $request->div ?? '';
         $pw = $request->pw ?? '';
         $pw2 = $request->pw_confirmation ?? '';
         $ph = $request->ph ?? '';
+        
+        $file = $request->file('file');
+
+        if( isset($file) )
+        {
+            log::info('파일있음');
+            // 이전에 있던 프로필사진 지우기
+            $profile_img = (Array) DB::table('post_file')
+                        ->where('target_no', $user->id)
+                        ->where('target_type', 'I')
+                        ->where('save_status', 'Y')
+                        ->first();
+
+            if( $profile_img )
+            {
+                log::info('[프로필] '.$profile_img['no'].' 삭제');
+                Postfile::where('no', $profile_img['no'])->update([
+                    'save_status' => 'N',
+                ]);
+            }
+
+            $filename = $file->getClientOriginalName();
+            log::info("파일명 : ".$filename);
+
+            // 1. 경로: storage/app/public/img/날짜
+            $path = 'public/img/' . now()->format('Ymd');
+
+            // 2. 절대경로 구하기(storage/app/public/img/날짜)
+            $fullPath = storage_path('app/public/img/' . now()->format('Ymd'));
+            Log::info('저장 경로: ' . $fullPath);
+
+            $size = $file->getSize();
+
+            if (!\File::exists($fullPath)) 
+            {
+                \File::makeDirectory($fullPath, 0755, true);
+            }
+
+            $saveName = now()->format('Ymd_His') . '_' . $filename;
+            Log::info("저장 파일명 : " . $saveName);
+
+            $file->move($fullPath, $saveName);
+
+            $url = asset(str_replace('public/', 'storage/', $path . '/' . $saveName));
+            Log::info("접근 URL : " . $url);
+
+            // DB에 저장
+            $postFile = new PostFile();
+            $postFile->target_no = $user->id;
+            $postFile->filename = $filename;
+            $postFile->filepath = $fullPath;
+            $postFile->savename = $saveName;
+            $postFile->filesize = $size;
+            $postFile->filetype = $file->getClientMimeType();
+            $postFile->extension = $file->getClientOriginalExtension();
+            $postFile->save_status = 'Y';
+            $postFile->target_type = 'I';   // 프로필
+            $postFile->save();
+        }
+
 
         $result_msg = '';
-        if( $div == '' )    // 비밀번호 변경
+        if( $ph !== '' )
+        {
+            log::info('ph 변경');
+            $ph = str_replace('-', '', $ph);
+            if ( strlen($ph) === 11 ) 
+            {
+                $user->ph = $ph;
+            } 
+            else 
+            {
+                $result_msg = '휴대전화는 11자리로 입력해주세요.';
+
+                return redirect()->back()->with('pw_msg', $result_msg);
+            }
+        }
+        
+
+        if( $pw !== '' )    // 비밀번호 변경
         {
             if( $pw != $pw2 )
             {
                 // 비밀번호 다름 오류 처리
                 $result_msg = '동일한 비밀번호를 입력해주세요.';
+
+                return redirect()->back()->with('pw_msg', $result_msg);
             }
             else if( Hash::check($request->pw, $user->password) )
             {
                 $result_msg = '새 비밀번호가 기존 비밀번호와 같습니다.';
+
+                return redirect()->back()->with('pw_msg', $result_msg);
             }
             else
             {
                 // 비밀번호 변경
                 $user->password = Hash::make($pw);
-                $user->save();
-
-                $result_msg = '비밀번호가 성공적으로 변경되었습니다.';
             }
         }
-        else
-        {
-            // 휴대폰 번호 변경
-            if( !Hash::check($request->pw, $user->password) )
-            {
-                $result_msg = '비밀번호가 일치하지 않습니다.';
-            }
-            else
-            {
-                $user->update([
-                    'ph' => $request->ph,
-                ]);
-
-                $result_msg = '휴대폰 번호가 성공적으로 변경되었습니다.';
-            }
-        } 
+        $result_msg = '정보 수정이 완료되었습니다.';
         log::info('msg = '.$result_msg);
 
         return redirect()->back()->with('pw_msg', $result_msg);
-        // return response()->json(['message' => $result_msg]);
     }
 
     /**
