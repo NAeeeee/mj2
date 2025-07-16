@@ -2,7 +2,7 @@
 <html lang="en" class="dark">
     <head>
         <meta charset="UTF-8">
-        <title>@yield('title', '민지민지')</title>
+        <title>@yield('title', 'MJ')</title>
         
         <!-- css -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
