@@ -76,13 +76,6 @@
                                                 <div class="col-auto">
                                                     <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ $state['post_cnt'] ?? '' }}</div>
                                                 </div>
-                                                <!-- <div class="col">
-                                                    <div class="progress progress-sm mr-2">
-                                                        <div class="progress-bar bg-info" role="progressbar"
-                                                            style="width: {{ $percentage }}%" aria-valuenow="50" aria-valuemin="0"
-                                                            aria-valuemax="100">{{ $percentage }}</div>
-                                                    </div>
-                                                </div> -->
                                             </div>
                                         </div>
                                         <div class="col-auto">
@@ -141,7 +134,7 @@
                                     <tr class="table-dark text-center">
                                         <th scope="col" class="w-5">번호</th>
                                         <th scope="col" class="w-10">항목</th>
-                                        <th scope="col" class="w-70">제목</th>
+                                        <th scope="col" class="w-60">제목</th>
                                         <th scope="col" class="w-10">작성일</th>
                                     </tr>
                                 </thead>
