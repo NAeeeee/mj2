@@ -85,12 +85,12 @@
 
 function chk()
 {
-    var name = document.getElementById('name').value;
-    var email = document.getElementById('email').value;
-    var ph = document.getElementById('ph').value;
-    var pw = document.getElementById('password').value;
-    var pw2 = document.getElementById('password_confirmation').value;
-    var emailrgex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let name = document.getElementById('name').value;
+    let email = document.getElementById('email').value;
+    let ph = document.getElementById('ph').value;
+    let pw = document.getElementById('password').value;
+    let pw2 = document.getElementById('password_confirmation').value;
+    let emailrgex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if( name == '' )
     {
@@ -111,7 +111,7 @@ function chk()
         alertc('확인 요청','휴대폰 번호를 입력해주세요.');
         return false;
     }
-    else if( ph.length < 10)
+    else if( ph.length != 11)
     {
         alertc('확인 요청','휴대폰 번호를 확인해주세요.');
         return false;
@@ -126,17 +126,17 @@ function chk()
         return false;
     }
 
-    if (pw !== pw2 ) {
+    if ( pw !== pw2 ) {
         alertc('확인 요청','비밀번호가 일치하지 않습니다.');
         return false;
     }
 
-    var rgex = /[!@#$%^&*(),.?":{}|<>]/;
+    let rgex = /[!@#$%^&*(),.?":{}|<>]/;
     
-    var all = document.getElementById('all-section');
-    var ls = document.getElementById('loading-section');
+    let all = document.getElementById('all-section');
+    let ls = document.getElementById('loading-section');
 
-    if (!rgex.test(pw)) {
+    if ( !rgex.test(pw) ) {
         alertc('확인 요청',"비밀번호에 특수문자를 최소 1개 이상 포함해야 합니다.");
         return false;
     }
