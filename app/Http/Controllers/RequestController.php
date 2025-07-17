@@ -286,19 +286,15 @@ class RequestController extends Controller
         }
 
         // 글 상태가 'D'(고객확인) 고객이 '확인완료' 버튼을 눌렀을때
-        if( $post->status == 'D' ) 
+        if( $post->status === 'D' ) 
         {
-            $check_msg = DB::table('messages')
-                ->where('post_no', $no)
-                ->where('sender_id', $post->user_id)
-                ->where('div', 'S')
-                ->where('save_status', 'Y')
-                ->where('type', 'confirm_done')
-                ->first();
-            
-            if( !$check_msg )
+            if( $post->confirm_status === 'N' )
             {
                 $post->user_ok = 'N';
+            }
+            else
+            {
+                $post->user_ok = 'Y';
             }
         }
 
