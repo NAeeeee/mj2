@@ -237,6 +237,7 @@ class ProfileController extends Controller
             $postFile->save_status = 'Y';
             $postFile->target_type = 'I';   // 프로필
             $postFile->save();
+            $flag = 'Y';
         }
 
 
@@ -247,7 +248,9 @@ class ProfileController extends Controller
             $ph = str_replace('-', '', $ph);
             if ( strlen($ph) === 11 ) 
             {
-                $user->ph = $ph;
+                $data['ph'] = $ph;
+                $user->update($data);
+                $flag = 'N';
             } 
             else 
             {
@@ -276,13 +279,16 @@ class ProfileController extends Controller
             else
             {
                 // 비밀번호 변경
-                $user->password = Hash::make($pw);
+                $data['password'] = Hash::make($pw);
+                $user->update($data);
+                $flag = 'Y';
             }
         }
         $result_msg = '정보 수정이 완료되었습니다.';
         log::info('msg = '.$result_msg);
 
-        return redirect()->back()->with('pw_msg', $result_msg);
+        return redirect()->back()->with('pw_msg', $result_msg)
+                                ->with('pw_flag', $flag);
     }
 
     /**

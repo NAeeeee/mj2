@@ -6,14 +6,24 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let msg = "{{ session('pw_msg') }}";
+            let pwFlag = "{{ session('pw_flag') }}";
 
             // 성공 메시지면 창 닫기
             if (msg.includes('완료')) {
                 alertc('완료',msg,'p');
                 setTimeout(() => {
-                    window.close(); // 팝업 닫기
-                    window.opener.location.reload();
-                }, 2000); // 2초 뒤 홈으로 이동
+                    if ( pwFlag === 'Y' ) {
+                        if (window.opener && !window.opener.closed && typeof window.opener.logoutUser === 'function') {
+                            window.opener.logoutUser();
+                        }
+                    }
+                    else
+                    {
+                        window.opener.location.reload();
+                    }
+
+                    window.close();
+                }, 2000);
             }
             else
             {

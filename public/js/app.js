@@ -293,3 +293,27 @@ window.searchSumbit = function ()
     var f = $("#searchForm");
     f.submit();
 }
+
+window.logoutUser = function ()
+{
+    fetch('/logout', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => {
+        if (response.ok) {
+            // 로그아웃 성공 시 로그인 페이지로 이동
+            window.location.href = '/login';
+        } else {
+            alert('로그아웃에 실패했습니다.');
+        }
+    })
+    .catch(error => {
+        console.error('Logout error:', error);
+        alert('로그아웃 중 오류가 발생했습니다.');
+    });
+}
+
