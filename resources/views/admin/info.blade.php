@@ -31,13 +31,21 @@
         <div class="card-body">
             <form id="editForm" action="{{ route('admin.infoEdit', $user->id) }}" method="POST">
                 @csrf
+
+                @php
+                    if ( $user->email_verified_at === null || $user->status === 'N' ) {
+                        $d = 'readonly';
+                    } else {
+                        $d = '';
+                    }
+                @endphp
                 <div class="mb-2">
                     <label for="name">이름</label>
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1">
                             <img src="/img/user.png" width="18">
                         </span>
-                        <input type="text" class="form-control" id="name" name="name" oninput="onlyStr(this)" value="{{ $user->user_name }}" >
+                        <input type="text" class="form-control" id="name" name="name" oninput="onlyStr(this)" value="{{ $user->user_name }}" {{ $d }}>
                     </div>
                 </div>
 
@@ -47,14 +55,6 @@
                         <span class="input-group-text" id="basic-addon2">
                             <img src="/img/email.png" width="18">
                         </span>
-                        @php
-
-                            if ( $user->email_verified_at === null) {
-                                $d = 'readonly';
-                            } else {
-                                $d = '';
-                            }
-                        @endphp
                         <input type="email" class="form-control" id="email" name="email" oninput="onlyEmail(this)" value="{{ $user->email_r }}" {{ $d }} >
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                         <span class="input-group-text" id="basic-addon3">
                             <img src="/img/ph.png" width="18">
                         </span>
-                        <input type="text" class="form-control" id="ph" name="ph" oninput="onlyNumber(this)" value="{{ $user->ph_r }}" maxlength=11>
+                        <input type="text" class="form-control" id="ph" name="ph" oninput="onlyNumber(this)" value="{{ $user->ph_r }}" maxlength=11 {{ $d }}>
                     </div>
                 </div>
 
