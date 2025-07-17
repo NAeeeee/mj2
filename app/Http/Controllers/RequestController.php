@@ -256,7 +256,7 @@ class RequestController extends Controller
         {
             log::info($post->no.'번 게시물 상태 : '.$post->status);
             log::info("글쓴이 no : ".$post->user_id);
-            if ( auth()->user()->is_admin !== 'Y' && auth()->id() !== $post->user_id ) 
+            if ( auth()->user()->is_admin === 'Y' || auth()->id() === $post->user_id )
             {
                 log::info('아이디 같음');
                 log::info('진입 아이디 : '.auth()->user()->id);
