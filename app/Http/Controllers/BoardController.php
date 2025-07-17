@@ -57,6 +57,7 @@ class BoardController extends Controller
             {
                 // 답변 완료만
                 $query->whereNotNull('post_replies.no')
+                        ->where('users.status', 'Y')
                         ->whereIn('posts.status',['C', 'D']);
             } 
             elseif ( in_array($div, ['A', 'B', 'C', 'D']) ) 
@@ -67,17 +68,20 @@ class BoardController extends Controller
             elseif ( $div === 'E' ) 
             {
                 // 반려
-                $query->where('posts.status', 'E');
+                $query->where('posts.status', 'E')
+                        ->where('users.status', 'Y');
             }
             elseif ( $div === 'Z' ) 
             {
                 // 처리완료
-                $query->where('posts.status', 'Z');
+                $query->where('posts.status', 'Z')
+                        ->where('users.status', 'Y');
             }
             elseif ( $div === 'del' ) 
             {
                 // 삭제된 게시물
-                $query->where('posts.save_status', 'N');
+                $query->where('posts.save_status', 'N')
+                        ->where('users.status', 'Y');
             }
             elseif ( $div === 'delu' )
             {
