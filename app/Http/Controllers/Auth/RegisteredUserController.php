@@ -43,6 +43,7 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $request->ph = str_replace('-', '', $request->ph);
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,

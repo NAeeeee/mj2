@@ -179,7 +179,7 @@ class AdminController extends Controller
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->ph = $request->ph;
+        $user->ph = str_replace('-', '', $request->ph);
         $user->password = Hash::make($request->pw);
         $user->is_admin = 'Y';
         $user->email_verified_at = Carbon::now();
@@ -315,6 +315,7 @@ class AdminController extends Controller
         {
             $data['password'] = bcrypt($request->pw);
         }
+        $data['ph'] = str_replace('-', '', $request->ph);
 
         $user->update($data);
 

@@ -78,7 +78,7 @@
                         <span class="input-group-text" id="basic-addon5">
                             <img src="/img/key.png" width="18">
                         </span>
-                        <input type="password" class="form-control" id="pw" name="pw" oninput="onlyEngNum(this)" maxlength=20 >
+                        <input type="password" class="form-control" id="pw" name="pw" maxlength=20 >
                     </div>
                 </div>
 
@@ -137,6 +137,49 @@
 <script>
 function editChk()
 {
+    let ph = document.getElementById('ph').value;
+    ph = ph.replace(/-/g, '');
+
+    let email = document.getElementById('email').value;
+    let emailrgex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let name = document.getElementById('name').value;
+    let pw = document.getElementById('pw').value;
+    let rgex = /[!@#$%^&*(),.?":{}|<>]/;
+
+    if( name === '' )
+    {
+        alertc("확인 요청", "이름을 확인해주세요.");
+        return false;
+    }
+
+    if ( !emailrgex.test(email) ) 
+    {
+        alertc("확인 요청", "이메일을 확인해주세요.");
+        return false;
+    }
+
+    if( ph.length != 11 )
+    {
+        alertc('확인 요청','휴대폰 번호를 확인해주세요.');
+        return false;
+    }
+
+    if( pw !== '' )
+    {
+        console.log(pw.length);
+        if( pw.length < 8 )
+        {
+            alertc('확인 요청','비밀번호는 최소 8자 이상이어야 합니다.');
+            return false;
+        }
+
+        if ( !rgex.test(pw) ) 
+        {
+            alertc('확인 요청',"비밀번호에 특수문자를 최소 1개 이상 포함해야 합니다.");
+            return false;
+        }
+    }
+
     $("#editForm").submit();
 }
 </script>
