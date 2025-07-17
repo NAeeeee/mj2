@@ -23,9 +23,9 @@
 
                         @if( auth()->user()->is_admin == 'Y' )
                             <li class="nav-item">
-                                <div class="bg-success text-white rounded-2 btn btn-sm admin-div">
+                                <a class="bg-success text-white rounded-2 btn btn-sm admin-div" href="{{ route('profile.edit', ['id' => auth()->id()]); }}">
                                     관리자
-                                </div>
+                                </a>
                             </li>
                         @endif
 
