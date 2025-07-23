@@ -30,7 +30,7 @@
 
     <div class="card mb-4" id="form-section">
         <div class="card-body">
-        <form method="POST" action="{{ route('admin.add') }}" onsubmit="return handleSubmit(this);">
+        <form method="POST" action="{{ route('admin.add') }}" onsubmit="return infoChk(this);">
             @csrf
             <div class="mb-3">
                 <div class="input-group">
