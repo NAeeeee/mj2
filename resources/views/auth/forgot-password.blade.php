@@ -33,7 +33,7 @@
             <input id="email" type="email" 
                    class="form-control @error('email') is-invalid @enderror
                    @if(session('type') == 'success') is-valid @endif" 
-                   name="email" value="{{ old('email') }}" required autofocus>
+                   name="email" value="{{ old('email') }}" required autofocus oninput="onlyEmail(this);">
             @if( session('type') == 'success' )
                 <div class="valid-feedback">{{ __('passwords.sent') }}</div>
             @endif
