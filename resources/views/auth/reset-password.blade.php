@@ -36,7 +36,7 @@
             <input id="email" type="email" 
                    class="form-control @error('email') is-invalid @enderror" 
                    name="email" value="{{ old('email', $request->email) }}" 
-                   required autofocus autocomplete="username">
+                   required autofocus autocomplete="username" readonly>
             @error('email')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
