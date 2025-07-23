@@ -271,7 +271,7 @@ class NoticeController extends Controller
 
         $notice = Notice::findOrFail($no);
 
-        if( auth()->user()->is_admin !== 'Y' && ($notice->save_status === 'N' || $notice->is_visible === 'N') )
+        if( $notice->save_status === 'N' || $notice->is_visible === 'N' )
         {
             abort(403);
         }
